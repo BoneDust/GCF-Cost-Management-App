@@ -1,1 +1,14 @@
-#GCF Projects Cost Management Solution
+# GCF Projects Cost Management Solution
+
+## [Api](./app/node_api/README.md)
+Node.JS Backend Api 
+___
+
+## [Mobile](./app/mobile/README.md)
+Android and iOS Cost Management Solution Client
+___
+
+## [Continous Integration](./docs/ci/README.md)
+___
+
+## Architecture
