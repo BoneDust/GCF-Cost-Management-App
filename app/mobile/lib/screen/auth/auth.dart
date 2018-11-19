@@ -42,6 +42,7 @@ class AuthScreen extends StatelessWidget{
                   shape: BeveledRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(7.0)),
                   ),
+
                   onPressed: () {
                     //TODO
 
@@ -54,7 +55,7 @@ class AuthScreen extends StatelessWidget{
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   ),
                   onPressed: () {
-                    //TODO
+                    Navigator.popAndPushNamed(context, "/ome");
                   },
                 ),
               ],

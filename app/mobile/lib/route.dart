@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'data/details.dart';
-import 'screens/index.dart';
+import 'screen/index.dart';
 
-class Routes {
+class Route {
 
   final routes = <String, WidgetBuilder>{
     '/Auth': (BuildContext context) => AuthScreen(),
@@ -15,7 +15,7 @@ class Routes {
     '/AdminStatistics': (BuildContext context) => AdminStatistics(),
   };
 
-  Routes () {
+  Route () {
     runApp(new MaterialApp(
       title: Details.COMPANY_TITLE,
       routes: routes,

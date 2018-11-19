@@ -1,4 +1,4 @@
-import 'routes.dart';
+import 'route.dart';
 
-void main() => Routes();
+void main() => Route();
 
