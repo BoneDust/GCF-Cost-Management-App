@@ -1,11 +1,14 @@
+import 'package:cm_mobile/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 
-class AuthScreen extends StatelessWidget{
+class LoginScreen extends StatelessWidget {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final LoginBloc loginBloc = LoginBloc();
+
     return Scaffold(body: SafeArea(
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -13,7 +16,7 @@ class AuthScreen extends StatelessWidget{
             SizedBox(height: 80.0),
             Column(
               children: <Widget>[
-             //   Image.asset('assets/diamond.png'),
+                //   Image.asset('assets/diamond.png'),
                 SizedBox(height: 16.0),
                 Text(
                   'GCF',
@@ -55,13 +58,28 @@ class AuthScreen extends StatelessWidget{
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   ),
                   onPressed: () {
-                    Navigator.popAndPushNamed(context, "/ome");
+                    Navigator.pushReplacementNamed(context, "/Home");
                   },
                 ),
               ],
             ),
           ],
         ))
+    );
+  }
+
+
+  Widget _loadingIndicator() {
+    return Stack(
+      children: <Widget>[
+        Opacity(
+          opacity: 0.3,
+          child: ModalBarrier(dismissible: false, color: Colors.grey),
+        ),
+        Center(
+          child: CircularProgressIndicator(),
+        ),
+      ],
     );
   }
 }

@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
 
-class AdminHomeScreen extends StatelessWidget{
-
+class AdminStatistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text("GCF"),
-        ) ,
+        ),
         body: SafeArea(
-          child: AdminHomeScreen(),
-        )
-    );
+          child: _AdminStatistics(),
+        ));
   }
 }
 
-class _AdminHomeScreen extends StatelessWidget {
+class _AdminStatistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
-        Text("Admin Home Screen")
-      ],
-    );
+        //TODO
+        );
   }
 }

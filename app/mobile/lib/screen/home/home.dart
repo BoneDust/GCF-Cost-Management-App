@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget{
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +18,9 @@ class _Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      //TODO
+      children: <Widget>[
+        Text("Home Screen")
+      ],
     );
   }
 }
