@@ -1,0 +1,144 @@
+service: gcf-api # NOTE: update this with your service name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+custom:
+  userTableName: 'users-table-${self:provider.stage}'
+  clientTableName: 'clients-table-${self:provider.stage}'
+  projectTableName: 'projects-table-${self:provider.stage}'
+  notificationTableName: 'notifications-table-${self:provider.stage}'
+  receiptTableName: 'receipts-table-${self:provider.stage}'
+  stageTableName: 'stages-table-${self:provider.stage}'
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  memorySize: 128
+  region: us-east-1
+  role: arn:aws:iam::675462175633:role/gcf-role
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["ClientsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["ProjectsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["StagesDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["ReceiptsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["NotificationsDynamoDBTable", "Arn" ] }
+  
+  environment:
+    USERS_TABLE: ${self:custom.userTableName}
+    CLIENTS_TABLE: ${self:custom.clientTableName}
+    PROJECTS_TABLE: ${self:custom.projectTableName}
+    NOTIFICATIONS_TABLE: ${self:custom.notificationTableName}
+    RECEIPTS_TABLE: ${self:custom.receiptTableName}
+    STAGES_TABLE: ${self:custom.stageTableName}
+
+
+resources:
+  Resources:
+    UsersDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: userId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
+        TableName: ${self:custom.userTableName}
+
+    ClientsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: clientId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: clientId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
+        TableName: ${self:custom.clientTableName}
+
+    StagesDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: stageId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: stageId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
+        TableName: ${self:custom.stageTableName}
+
+    ReceiptsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: receiptId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: receiptId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
+        TableName: ${self:custom.receiptTableName}
+
+    ProjetsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: projectId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: projectId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
+        TableName: ${self:custom.projectTableName}
+
+    NotificationsDynamoDBTable:
+        Type: 'AWS::DynamoDB::Table'
+        Properties:
+          AttributeDefinitions:
+            -
+              AttributeName: notificationId
+              AttributeType: N
+          KeySchema:
+            -
+              AttributeName: notificationId
+              KeyType: HASH
+          ProvisionedThroughput:
+            ReadCapacityUnits: 3
+            WriteCapacityUnits: 3
+          TableName: ${self:custom.notificationTableName}
