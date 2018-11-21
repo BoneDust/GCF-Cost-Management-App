@@ -18,13 +18,14 @@ class _App extends State<App> {
 
   final routes = <String, WidgetBuilder>{
     '/Auth': (BuildContext context) => LoginScreen(),
-    '/Home': (BuildContext context) => HomeScreen(),
+    '/Home': (BuildContext context) => ForeManHome(),
     '/AdminHome': (BuildContext context) => AdminHomeScreen(),
-    '/Projects': (BuildContext context) => ProjectsScreen(),
+    '/Projects': (BuildContext context) => ForeManProjects(),
     '/AdminProjects': (BuildContext context) => AdminProjectsScreen(),
     '/AdminProfile': (BuildContext context) => AdminProfilesScreen(),
     '/Profile': (BuildContext context) => ProfileScreen(),
     '/AdminStatistics': (BuildContext context) => AdminStatistics(),
+    '/foreman/project' : (BuildContext context) => ForeManProjectScreen(),
   };
 
   _App() {
@@ -38,7 +39,7 @@ class _App extends State<App> {
       child: MaterialApp(
         title: Details.COMPANY_TITLE,
         routes: routes,
-        home: HomeScreen(),
+        home: ForeManTabView(),
       ),
     );
   }
