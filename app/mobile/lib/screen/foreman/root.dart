@@ -2,7 +2,7 @@ import 'package:cm_mobile/screen/foreman/home/home.dart';
 import 'package:cm_mobile/screen/foreman/projects/projects.dart';
 import 'package:flutter/material.dart';
 
-class ForeManTabView extends StatelessWidget{
+class ForeManRoot extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -23,9 +23,8 @@ class ForeManTabView extends StatelessWidget{
               indicatorSize: TabBarIndicatorSize.label,
               unselectedLabelColor: Colors.black,
               labelColor: Colors.black,
-
-
             ),
+
           )
       ),
     );

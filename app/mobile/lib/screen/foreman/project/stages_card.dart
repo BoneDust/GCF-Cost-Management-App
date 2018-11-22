@@ -16,8 +16,11 @@ class _StagesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100.0,
+      height: 110.0,
+      padding: EdgeInsetsDirectional.only(bottom: 10.0),
+
       child: ListView(
+
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           _StageSampleCard("1"),
@@ -38,9 +41,9 @@ class _SampleCardRoot extends StatelessWidget {
   TextStyle subheadingStyle;
 
   _SampleCardRoot() {
-    baseTextStyle = const TextStyle(fontFamily: 'Comfortaa');
+    baseTextStyle = const TextStyle();
     headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0, fontWeight: FontWeight.bold);
+        baseTextStyle.copyWith(fontSize: 18.0);
     subheadingStyle = baseTextStyle.copyWith(
       color: Colors.white,
       fontSize: 12.0,
@@ -56,16 +59,18 @@ class _SampleCardRoot extends StatelessWidget {
               Navigator.pushNamed(context, "/foreman/stages");
             },
             child: Container(
+              padding: EdgeInsets.only(top: 10.0, left: 10.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     new Text("Stages", style: headerStyle),
                     new Row(
                       children: <Widget>[
-                        Text("4", style: headerStyle),
+                        Text("4", style: headerStyle.copyWith(color: Colors.grey)),
                         Icon(
                           Icons.chevron_right,
-                          size: 30.0,
+                          color: Colors.grey,
+                          size: 25.0,
                         ),
                       ],
                     )
@@ -86,7 +91,8 @@ class _StageSampleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 80,
+      width: 100,
+      margin: EdgeInsets.only(left: 7),
       child: Card(
         child: Center(child: Text(title)),
         color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),

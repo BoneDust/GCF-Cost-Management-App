@@ -37,17 +37,16 @@ class _ProjectWidget extends StatelessWidget {
         Navigator.pushNamed(context, "/foreman/project");
       },
       child: Container(
-        height: 120.0,
+        height: 100.0,
         margin: EdgeInsets.symmetric(
-            vertical: 16.0,
-            horizontal: 24.0
+            vertical: 10.0,
+            horizontal: 10.0
         ),
         child: Stack(
           children: <Widget>[
             _ProjectCard(),
             _ProjectThumbnail(),
             _ProjectContentCard(),
-            _ProjectPopMenuButton()
           ],
         ),
       ),
@@ -75,9 +74,9 @@ class _ProjectThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 16.0),
-        height: 80.0,
-        width: 80.0,
+        margin: EdgeInsets.symmetric(vertical: 20.0),
+        height: 60.0,
+        width: 60.0,
         decoration: new BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
@@ -94,7 +93,7 @@ class _ProjectCard extends StatelessWidget{
   Widget build(BuildContext context) {
     return Container(
       height: 120.0,
-      margin: EdgeInsets.only(left: 46.0),
+      margin: EdgeInsets.only(left: 20.0),
       decoration: BoxDecoration(
           color: Colors.blue,
           shape: BoxShape.rectangle,
@@ -103,7 +102,7 @@ class _ProjectCard extends StatelessWidget{
             BoxShadow(
                 color: Colors.black12,
                 blurRadius: 5.0,
-                offset: new Offset(0.0, 10.0)
+                offset: new Offset(0.0, 0.0)
             )
           ]
       ),
@@ -133,13 +132,27 @@ class _ProjectContentCard extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(100.0, 20.0, 16.0, 16.0),
+      margin: EdgeInsets.fromLTRB(75.0, 30.0, 16.0, 16.0),
       child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("Project Name", style: headerStyle),
-          Text("Project Name", style: subheadingStyle),
-          Text("Status"),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Project 1", style: headerStyle),
+                    Text("This is the description of the project haha", style: subheadingStyle),
+                    Text("Currently in progress", style: subheadingStyle,),
+                  ],
+                ),
+                new Row(
+                  children: <Widget>[
+                    _ProjectPopMenuButton()
+                  ],
+                )
+              ]),
+
         ],
       ),
     );

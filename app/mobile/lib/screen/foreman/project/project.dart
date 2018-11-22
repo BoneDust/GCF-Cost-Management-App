@@ -6,6 +6,10 @@ class ForeManProjectScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       body: _ForeManProject(),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.pushNamed(context, "/foreman/create_receipt");
+      },
+      child: Icon(Icons.add),),
     );
   }
 }
@@ -34,11 +38,13 @@ class _ForeManProject extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               StagesCard(),
+              Padding(padding: EdgeInsets.only(bottom: 20),),
               ReceiptsCard(),
-              ProjectDetailsCard(),
-              RecentActivityCard()
+              Padding(padding: EdgeInsets.only(bottom: 20),),
+              DetailsCard(),
+              Padding(padding: EdgeInsets.only(bottom: 50),),
             ],
-          ),
+          )
         )
     );
   }
