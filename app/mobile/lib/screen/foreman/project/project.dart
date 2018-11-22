@@ -28,15 +28,18 @@ class _ForeManProject extends StatelessWidget {
           ),
         )
       ];
-    }, body: ListView(
-      children: <Widget>[
-        RecentActivityCard(),
-        ReceiptsCard(),
-        ProjectDetailsCard()
-
-      ],
-    ),
-
+    },
+        body: Material(
+          color: Colors.black12,
+          child: ListView(
+            children: <Widget>[
+              StagesCard(),
+              ReceiptsCard(),
+              ProjectDetailsCard(),
+              RecentActivityCard()
+            ],
+          ),
+        )
     );
   }
 }

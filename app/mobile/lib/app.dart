@@ -26,6 +26,8 @@ class _App extends State<App> {
     '/Profile': (BuildContext context) => ProfileScreen(),
     '/AdminStatistics': (BuildContext context) => AdminStatistics(),
     '/foreman/project' : (BuildContext context) => ForeManProjectScreen(),
+    '/foreman/stages': (BuildContext context) => ForeManStages(),
+
   };
 
   _App() {

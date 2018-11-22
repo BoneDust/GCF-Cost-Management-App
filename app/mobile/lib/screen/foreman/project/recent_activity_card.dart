@@ -12,7 +12,6 @@ class RecentActivityCard extends BaseProjectCard{
         _RecentActivityDetailsCard(),
         _RecentActivityDetailsCard(),
         _RecentActivityDetailsCard()
-
       ],
     );
   }
@@ -41,7 +40,6 @@ class _RecentActivityDetailsCard extends StatelessWidget {
               children: <Widget>[
                 Text("Whaaaaaaaaaaaa"),
                 Text("Whaaaaaaaaaaaa"),
-
               ],
             )
 
