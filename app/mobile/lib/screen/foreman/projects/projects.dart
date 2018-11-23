@@ -5,7 +5,28 @@ class ForeManProjects extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Projects"),
+          title: Row(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, "/foreman/menu");
+                },
+                child: Container(
+                    height: 40.0,
+                    width: 40.0,
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: AssetImage("assets/images.jpeg"),
+                            fit: BoxFit.cover
+                        )
+                    )
+                ),
+              ),
+              Padding(padding: EdgeInsets.only(left: 10),),
+              Text("Projects")
+            ],
+          ),
         ) ,
         body: SafeArea(
           child: _ProjectsScreen(),
@@ -15,19 +36,34 @@ class ForeManProjects extends StatelessWidget{
 }
 
 class _ProjectsScreen extends StatelessWidget {
+  List<_ProjectWidget> projects = [
+    _ProjectWidget(),
+    _ProjectWidget(),
+    _ProjectWidget(),
+    _ProjectWidget(),
+    _ProjectWidget(),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
       children: <Widget>[
-        _ProjectWidget(),
-        _ProjectWidget(),
-        _ProjectWidget(),
-        _ProjectWidget()
+        Expanded(
+            child: ListView.builder
+              (
+              itemCount: projects.length,
+              padding: EdgeInsets.only(bottom: 100, top: 30),
+              itemBuilder: (BuildContext context, int index) {
+                return projects[index];
+              },
+            )
+        ),
 
       ],
     );
   }
 }
+
 
 class _ProjectWidget extends StatelessWidget {
   @override

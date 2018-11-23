@@ -9,7 +9,7 @@ class ForeManProjectScreen extends StatelessWidget{
       floatingActionButton: FloatingActionButton(onPressed: () {
         Navigator.pushNamed(context, "/foreman/create_receipt");
       },
-      child: Icon(Icons.add),),
+        child: Icon(Icons.add_a_photo),),
     );
   }
 }

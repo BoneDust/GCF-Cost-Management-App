@@ -6,3 +6,4 @@ export 'stages/index.dart';
 export 'receipt/index.dart';
 export 'receipts/index.dart';
 export 'stage/index.dart';
+export 'menu/index.dart';

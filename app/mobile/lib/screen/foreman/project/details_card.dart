@@ -41,7 +41,6 @@ class _ReceiptsCardRoot extends StatelessWidget {
                   ]),
             )),
         _DetailsCard(),
-
       ],
     );
   }
