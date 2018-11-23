@@ -8,121 +8,273 @@ const app = express();
 const USERS_TABLE = process.env.USERS_TABLE;
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-app.use(bodyParser.json({ strict: true})); //i dont know what this does
+app.use(bodyParser.json({ strict: true})); // to support JSON-encoded bodies
+
+app.use(bodyParser.urlencoded({ extended: true})); // to support URL-encoded bodies
 
 //endpoint function that returns all users
 app.get('/users', (req, res) => {
-	const params = {
-		TableName: USERS_TABLE,
-	};
+    if(req.headers.token && req.headers.token.includes("admin")){
+        const params = {
+            TableName: USERS_TABLE,
+        };
 
-	// fetch all users from the database
-  	dynamoDb.scan(params, (error, result) => {
-		if (error){
-			//console.log(error);
-			const errorStatusCode = error.statusCode || 501;
-			const response = {
-				users: null,
-				message: err.message,
-			};
-			res.status(errorStatusCode).json(response);
-			return;
-		}
-		const response = {
-			user: result.Items,
-			message: "a list  of all users",
-		};
-		res.json(response);
-	});
+        // fetch all users from the database
+        dynamoDb.scan(params, (error, result) => {
+            if (error){
+                //console.log(error);
+                const errorStatusCode = error.statusCode || 503;
+                const response = {
+                    users: {},
+                    message: err.message,
+                };
+                res.status(errorStatusCode).json(response);
+                return;
+            }
+            const response = {
+                user: result.Items,
+                message: "a list  of all users",
+            };
+            res.json(response);
+        });
+    }
+    else
+    {
+        const errorStatusCode = 401;
+        const response = {
+            error: "User not authorised to make this request",
+        };
+        res.status(errorStatusCode).json(response);
+    }
 });
 
-//endpoint function that returns a user by id
-app.get('/users/:userId', (req, res) => {
+//endpoint function that returns a username
+app.get('/users/:username', (req, res) => {
 
-	const params = {
-		TableName: USERS_TABLE,
-		Key: {
-			userId: req.params.userId,
-		},
-	};
+    if(req.headers.token && req.headers.token.includes("admin")){
+        const params = {
+            TableName: USERS_TABLE,
+            Key: {
+                username: req.params.username,
+            },
+        };
 
-	dynamoDb.get(params, (error, result) => {
-		if (error) {
-			//console.log(error);
-			const errorStatusCode = 400;
-			const response = {
-				error: "Could not retrieve user",
-			};
-		  	res.status(errorStatusCode).json(response);
-		}
+        dynamoDb.get(params, (error, result) => {
+            if (error) {
+                //console.log(error);
+                const errorStatusCode = 503;
+                const response = {
+                    error: "Could not retrieve user",
+                };
+                res.status(errorStatusCode).json(response);
+            }
 
-		if (result.Item) {
-			const user = result.Item;//const  {userId, name, surname, username, password, imgUrl, email, priviledge} = result.Item; need to check this out
-			const response = {
-				user: user,
-				message: "User retrieved successfully",
-			};
-			res.json(response);
-		}
-		else {
-			const errorStatusCode = 404;
-			const response = {
-				error: "User not found",
-			};
-		  	res.status(errorStatusCode).json(response);
-		}
-	});
-})
-// TODO: boooom need to body-bodyParser
+            if (result.Item) {
+                const user = result.Item;
+                const responseStatusCode = 200;
+                const response = {
+                    user: user,
+                    message: "User retrieved successfully",
+                };
+                res.status(responseStatusCode).json(response);
+            }
+            else {
+                const errorStatusCode = 404;
+                const response = {
+                    error: "User not found",
+                };
+                res.status(errorStatusCode).json(response);
+            }
+        });
+    }
+    else
+    {
+        const errorStatusCode = 401;
+        const response = {
+            error: "User not authorised to make this request",
+        };
+        res.status(errorStatusCode).json(response);
+    }
+});
+
+
 //endpoint function that create a new user
 app.post('/users', (req, res) => {
 
-	const { userId, name } = req.body;
-	const params = {
-		TableName: USERS_TABLE,
-		Item: {
-			userId: uuid.v1(),
-			name: data.text,
-			surname: false,
-			username: timestamp,
-			password: timestamp,
-			imgUrl: ,
-			email: ,
-			priviledge: ,
-		},
-	};
+   // if(req.body.token && req.body.token.includes("admin")){
+        const user = req.body;
+        if (user.username && user.name && user.surname && user.password && user.imgUrl && user.email && user.priviledge)
+        {
+            const params = {
+                TableName: USERS_TABLE,
+                Item: {
+                    username: user.username,
+                    name: user.name,
+                    surname: user.surname,
+                    password: user.password,
+                    imgUrl: user.imgUrl,
+                    email: user.email,
+                    priviledge: user.priviledge,
+                },
+            };
+        
+            dynamoDb.put(params, (error) => {
+                if (error) {
+                    //console.log(error);
+                    const errorStatusCode = 503;
+                    const response = {
+                        error: error.message,
+                    };
+                    res.status(errorStatusCode).json(response);
+                    return;
+                }
+                const responseStatusCode = 200;
+                const response = {
+                    user: user,
+                    message: "User successfully created",
+                };
+                res.status(responseStatusCode).json(response);
+            });
+        }
+        else{
+            const errorStatusCode = 400;
+            const response = {
+                error: "Incomplete user supplied",
+            }
+            res.status(errorStatusCode).json(response);
+        }
+   /* }
+    else
+    {
+        const errorStatusCode = 401;
+        const response = {
+            error: "User not authorised to make this request",
+        };
+        res.status(errorStatusCode).json(response);
+    }*/
 
-	dynamoDb.put(params, (error) => {
-    	if (error) {
-      		//console.log(error);
-			const errorStatusCode = 400;
-			const response = {
-				error: "Could not create user",
-			};
-		  	res.status(errorStatusCode).json(response);
-    	}
-    	res.json({ userId, name });
-	});
 });
 
 
 //endpoint function thats logs in a user and sends that user a unique api key/ or priviledge key
 app.post('/users/login', (req, res) => {
+    
+    const user = req.body;
+    if (user.username && user.password){
+        const params = {
+            TableName: USERS_TABLE,
+            Key: {
+                username: user.username,
+            },
+        };
+    
+        dynamoDb.get(params, (error, result) => {
+            if (error) {
+                  //console.log(error);
+                const errorStatusCode = 503;
+                const response = {
+                    error: "Could not authenticate user",
+                };
+                res.status(errorStatusCode).json(response);
+                return;
+            } 
+            if (result.Item)
+            {
+                if (result.Item.password === user.password)
+                {
+                    const responseStatusCode = 202;
 
+                    const response = {
+                        token: result.Item.priviledge + "_" + uuid.v1(),
+                    };
+                    res.status(responseStatusCode).json(response);
+                } 
+                else{
+                    const errorStatusCode = 404;
+                    const response = {
+                        error: "Invalid password",
+                    };
+                  res.status(errorStatusCode).json(response);
+               }
+            }
+            else
+            {
+                const errorStatusCode = 404;
+                const response = {
+                    error: "Invalid username",
+                };
+                  res.status(errorStatusCode).json(response);
+            }
+        
+        });   
+    }
+    else{
+        const errorStatusCode = 400;
+        const response = {
+            error: "Incomplete user credentials supplied",
+        }
+        res.status(errorStatusCode).json(response);
+    }
+  
 })
 
 
 
-//endpoint function that updates  a user by id
-app.put('/users/:id', (req, res) => {
+//endpoint function that updates  a username
+/*app.put('/users/:username', (req, res) => {
+    if(req.body.token && req.body.token.includes("admin")){
+    
 
-})
+        const params = {
+            TableName: USERS_TABLE,
+            Key: {
+              username: req.params.username,
+            },
+            ExpressionAttributeNames: {
+              '#todo_text': 'text',
+            },
+            ExpressionAttributeValues: {
+              ':text': data.text,
+              ':checked': data.checked,
+              ':updatedAt': timestamp,
+            },
+            UpdateExpression: 'SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt',
+            ReturnValues: 'ALL_NEW',
+          };
+        
+          // update the todo in the database
+          dynamoDb.update(params, (error, result) => {
+            // handle potential errors
+            if (error) {
+              console.error(error);
+              callback(null, {
+                statusCode: error.statusCode || 501,
+                headers: { 'Content-Type': 'text/plain' },
+                body: 'Couldn\'t fetch the todo item.',
+              });
+              return;
+            }
 
-//endpoint function that deletes a users by id
+
+
+    }
+
+    else
+    {
+        const errorStatusCode = 401;
+        const response = {
+            error: "User not authorised to make this request",
+        };
+        res.status(errorStatusCode).json(response);
+    }
+
+})*/
+
+/*endpoint function that deletes a users by id
 app.delete('/users/:id', (req, res) => {
 
 })
-
+*/
 
 
 // Handle in-valid route
