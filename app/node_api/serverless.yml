@@ -5,12 +5,12 @@ service: gcf-api # NOTE: update this with your service name
 # frameworkVersion: "=X.X.X"
 
 custom:
-  userTableName: 'users-Table-${self:provider.stage}'
-  clientTableName: 'clients-Table-${self:provider.stage}'
-  projectTableName: 'projects-Table-${self:provider.stage}'
-  notificationTableName: 'notifications-Table-${self:provider.stage}'
-  receiptTableName: 'receipts-Table-${self:provider.stage}'
-  stageTableName: 'stages-Table-${self:provider.stage}'
+  userTableName: 'user-Table-${self:provider.stage}'
+  clientTableName: 'client-Table-${self:provider.stage}'
+  projectTableName: 'project-Table-${self:provider.stage}'
+  notificationTableName: 'notification-Table-${self:provider.stage}'
+  receiptTableName: 'receipt-Table-${self:provider.stage}'
+  stageTableName: 'stage-Table-${self:provider.stage}'
 
 provider:
   name: aws
@@ -56,7 +56,7 @@ functions:
           cors: true
 
       - http:
-          path: users/{username}
+          path: users/{userid}
           method: get
           cors: true
 
@@ -68,7 +68,18 @@ functions:
       - http:
           path: users
           method: post
-          cors: true 
+          cors: true
+      
+      - http:
+          path: users/{userId}
+          method: put
+          cors: true
+      
+      - http:
+          path: users/{userId}
+          method: delete
+          cors: true
+
 
 resources:
   Resources:
@@ -77,15 +88,29 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: username
+            AttributeName: userId
+            AttributeType: N
+          -
+            AttributeName: email
             AttributeType: S
         KeySchema:
           -
-            AttributeName: username
+            AttributeName: userId
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: emailIndex
+            KeySchema:
+              -
+                AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: KEYS_ONLY
+            ProvisionedThroughput:
+              ReadCapacityUnits: 2
+              WriteCapacityUnits: 2
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.userTableName}
 
     ClientsDynamoDBTable:
@@ -93,15 +118,15 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: clientName
-            AttributeType: S
+            AttributeName: clientId
+            AttributeType: N
         KeySchema:
           -
-            AttributeName: clientName
+            AttributeName: clientId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.clientTableName}
 
     StagesDynamoDBTable:
@@ -109,15 +134,15 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: stageName
-            AttributeType: S
+            AttributeName: stageId
+            AttributeType: N
         KeySchema:
           -
-            AttributeName: stageName
+            AttributeName: stageId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.stageTableName}
 
     ReceiptsDynamoDBTable:
@@ -125,15 +150,15 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: receiptName
-            AttributeType: S
+            AttributeName: receiptId
+            AttributeType: N
         KeySchema:
           -
-            AttributeName: receiptName
+            AttributeName: receiptId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.receiptTableName}
 
     ProjetsDynamoDBTable:
@@ -141,15 +166,15 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: projectName
-            AttributeType: S
+            AttributeName: projectId
+            AttributeType: N
         KeySchema:
           -
-            AttributeName: projectName
+            AttributeName: projectId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.projectTableName}
 
     NotificationsDynamoDBTable:
@@ -157,13 +182,13 @@ resources:
         Properties:
           AttributeDefinitions:
             -
-              AttributeName: notificationName
-              AttributeType: S
+              AttributeName: notificationId
+              AttributeType: N
           KeySchema:
             -
-              AttributeName: notificationName
+              AttributeName: notificationId
               KeyType: HASH
           ProvisionedThroughput:
-            ReadCapacityUnits: 3
-            WriteCapacityUnits: 3
+            ReadCapacityUnits: 2
+            WriteCapacityUnits: 2
           TableName: ${self:custom.notificationTableName}
