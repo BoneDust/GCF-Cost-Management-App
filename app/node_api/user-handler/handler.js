@@ -87,7 +87,7 @@ app.get('/users/:userId', (req, res) => {
         }
         const errorStatusCode = 404;
         const response = {
-            error: "UserId " +req.params.userId + " not found",
+            error: "UserId " + req.params.userId + " not found",
         };
         res.status(errorStatusCode).json(response);
     }
@@ -100,7 +100,7 @@ app.get('/users/:userId', (req, res) => {
         res.status(errorStatusCode).json(response);
     }
 });
-
+//create token table. if user logs out delete said token. isValidAdmin() && isValidUser()
 
 //endpoint function that create a new user
 app.post('/users', (req, res) => {
@@ -124,7 +124,6 @@ app.post('/users', (req, res) => {
         
             dynamoDb.put(params, (error) => {
                 if (error) {
-                    //console.log(error);
                     const errorStatusCode = error.statusCode || 503;
                     const response = {
                         error: error.message,
@@ -176,13 +175,11 @@ app.post('/users/login', (req, res) => {
                 ":email": user.email,
                 ":password": user.password,
             },
-            Limit: 1,
         };
     
         dynamoDb.query(params, (error, result) => {
             if (error)
             {
-                //console.log(error);
                 const errorStatusCode = error.statusCode || 503;
                 const response = {
                     error: error.message,
@@ -267,8 +264,8 @@ app.put('/users/:userId', (req, res) => {
         }
         else
         {
-            const errorStatusCode = 400;
-            const message = isNaN(req.params.userId)? "UserId " +req.params.userId + " not found":"Incomplete user supplied.";
+            const errorStatusCode = isNaN(req.params.userId)? 404 : 400;
+            const message = isNaN(req.params.userId)? "UserId " +req.params.userId + " not found" : "Incomplete user supplied.";
             const response = {
                 error:  message,
             }
@@ -290,33 +287,45 @@ app.put('/users/:userId', (req, res) => {
 app.delete('/users/:userid', (req, res) => {
     if(req.headers.token && req.headers.token.includes("admin"))
     {
-        const userId = req.params.userId;
-        const params = {
-            TableName: USERS_TABLE,
-            Key: {
-                userId: userId,
-            },
-        }
-
-        dynamoDb.delete(params, (error, result) => {
-            if (error)
-            {
-                //console.log(error);
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-            } 
-            if (result)
-            {
-                const responseStatusCode = 200;
-                const response = {
-                    message : "User successfully deleted",
-                };
-                res.status(responseStatusCode).json(response);
+        if (!isNaN(req.params.userId))
+        {
+            const userId = req.params.userId;
+            const params = {
+                TableName: USERS_TABLE,
+                Key: {
+                    userId: userId,
+                },
             }
-        });
+
+            dynamoDb.delete(params, (error, result) => {
+                if (error)
+                {
+                    //console.log(error);
+                    const errorStatusCode = error.statusCode || 503;
+                    const response = {
+                        error: error.message,
+                    };
+                    res.status(errorStatusCode).json(response);
+                } 
+                if (result)
+                {
+                    const responseStatusCode = 200;
+                    const response = {
+                        message : "User successfully deleted",
+                    };
+                    res.status(responseStatusCode).json(response);
+                }
+            });
+        }
+        else
+        {
+            const errorStatusCode = 404;
+            const message = "UserId " +req.params.userId + " not found";
+            const response = {
+                error:  message,
+            }
+            res.status(errorStatusCode).json(response);
+         }
     }
     else
     {
