@@ -1,7 +1,7 @@
 const express = require('express');
 const serverless = require('serverless-http');
 const bodyParser = require('body-parser');
-const uuid = require('uuid');//will be used to create the jwt token
+const uuid = require('uuid');//will be used to create the jwt token boon
 const AWS = require('aws-sdk');
 const app = express();
 
