@@ -5,12 +5,12 @@ service: gcf-api # NOTE: update this with your service name
 # frameworkVersion: "=X.X.X"
 
 custom:
-  userTableName: 'users-table-${self:provider.stage}'
-  clientTableName: 'clients-table-${self:provider.stage}'
-  projectTableName: 'projects-table-${self:provider.stage}'
-  notificationTableName: 'notifications-table-${self:provider.stage}'
-  receiptTableName: 'receipts-table-${self:provider.stage}'
-  stageTableName: 'stages-table-${self:provider.stage}'
+  userTableName: 'user-Table-${self:provider.stage}'
+  clientTableName: 'client-Table-${self:provider.stage}'
+  projectTableName: 'project-Table-${self:provider.stage}'
+  notificationTableName: 'notification-Table-${self:provider.stage}'
+  receiptTableName: 'receipt-Table-${self:provider.stage}'
+  stageTableName: 'stage-Table-${self:provider.stage}'
 
 provider:
   name: aws
@@ -45,6 +45,42 @@ provider:
     STAGES_TABLE: ${self:custom.stageTableName}
 
 
+
+functions:
+  usersFunction:
+    handler: user-handler/handler.handler
+    events:
+      - http:
+          path: users
+          method: get
+          cors: true
+
+      - http:
+          path: users/{userid}
+          method: get
+          cors: true
+
+      - http:
+          path: users/login
+          method: post
+          cors: true
+          
+      - http:
+          path: users
+          method: post
+          cors: true
+      
+      - http:
+          path: users/{userId}
+          method: put
+          cors: true
+      
+      - http:
+          path: users/{userId}
+          method: delete
+          cors: true
+
+
 resources:
   Resources:
     UsersDynamoDBTable:
@@ -54,13 +90,33 @@ resources:
           -
             AttributeName: userId
             AttributeType: N
+          -
+            AttributeName: email
+            AttributeType: S
+          -
+            AttributeName: password
+            AttributeType: S 
         KeySchema:
           -
             AttributeName: userId
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: authIndex
+            KeySchema:
+              -
+                AttributeName: email
+                KeyType: HASH
+              - 
+                AttributeName: password
+                KeyType: RANGE 
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.userTableName}
 
     ClientsDynamoDBTable:
@@ -75,8 +131,8 @@ resources:
             AttributeName: clientId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.clientTableName}
 
     StagesDynamoDBTable:
@@ -91,8 +147,8 @@ resources:
             AttributeName: stageId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.stageTableName}
 
     ReceiptsDynamoDBTable:
@@ -107,8 +163,8 @@ resources:
             AttributeName: receiptId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.receiptTableName}
 
     ProjetsDynamoDBTable:
@@ -123,8 +179,8 @@ resources:
             AttributeName: projectId
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 3
-          WriteCapacityUnits: 3
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
         TableName: ${self:custom.projectTableName}
 
     NotificationsDynamoDBTable:
@@ -139,6 +195,6 @@ resources:
               AttributeName: notificationId
               KeyType: HASH
           ProvisionedThroughput:
-            ReadCapacityUnits: 3
-            WriteCapacityUnits: 3
+            ReadCapacityUnits: 2
+            WriteCapacityUnits: 2
           TableName: ${self:custom.notificationTableName}
