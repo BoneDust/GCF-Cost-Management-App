@@ -93,21 +93,27 @@ resources:
           -
             AttributeName: email
             AttributeType: S
+          -
+            AttributeName: password
+            AttributeType: S 
         KeySchema:
           -
             AttributeName: userId
             KeyType: HASH
         GlobalSecondaryIndexes:
-          - IndexName: emailIndex
+          - IndexName: authIndex
             KeySchema:
               -
                 AttributeName: email
                 KeyType: HASH
+              - 
+                AttributeName: password
+                KeyType: RANGE 
             Projection:
-              ProjectionType: KEYS_ONLY
+              ProjectionType: ALL
             ProvisionedThroughput:
-              ReadCapacityUnits: 2
-              WriteCapacityUnits: 2
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 2
           WriteCapacityUnits: 2

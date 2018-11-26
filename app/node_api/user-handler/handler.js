@@ -53,40 +53,43 @@ app.get('/users/:userId', (req, res) => {
 
     if (req.headers.token && req.headers.token.includes("admin"))
     {
-        const params = {
-            TableName: USERS_TABLE,
-            Key: {
-                userId: req.params.userId,
-            },
+        if (!isNaN(req.params.userId))
+        {
+            const params = {
+                TableName: USERS_TABLE,
+                Key: {
+                    userId: parseInt(req.params.userId),
+                },
+            };
+
+            dynamoDb.get(params, (error, result) => {
+                if (error)
+                {
+                    const errorStatusCode = error.statusCode || 503;
+                    const response = {
+                        error: error.message,
+                    };
+                    res.status(errorStatusCode).json(response);
+                    return;
+                }
+                if (result.Count > 0)
+                {
+                    const user = result.Item;
+                    const responseStatusCode = 200;
+                    const response = {
+                        user: user,
+                        message: "User retrieved successfully",
+                    };
+                    res.status(responseStatusCode).json(response);
+                    return;
+                }
+            });
+        }
+        const errorStatusCode = 404;
+        const response = {
+            error: "UserId " +req.params.userId + " not found",
         };
-
-        dynamoDb.get(params, (error, result) => {
-            if (error)
-            {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-            }
-
-            if (result.Item) {
-                const user = result.Item;
-                const responseStatusCode = 200;
-                const response = {
-                    user: user,
-                    message: "User retrieved successfully",
-                };
-                res.status(responseStatusCode).json(response);
-            }
-            else {
-                const errorStatusCode = 404;
-                const response = {
-                    error: "User not found",
-                };
-                res.status(errorStatusCode).json(response);
-            }
-        });
+        res.status(errorStatusCode).json(response);
     }
     else
     {
@@ -102,7 +105,7 @@ app.get('/users/:userId', (req, res) => {
 //endpoint function that create a new user
 app.post('/users', (req, res) => {
 
-   // if(req.headers.token && req.headers.token.includes("admin")){
+    if(req.headers.token && req.headers.token.includes("admin")){
         const user = req.body;
         if (user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege)
         {
@@ -146,7 +149,7 @@ app.post('/users', (req, res) => {
             }
             res.status(errorStatusCode).json(response);
         }
-   /* }
+    }
     else
     {
         const errorStatusCode = 401;
@@ -154,7 +157,7 @@ app.post('/users', (req, res) => {
             error: "User not authorised to make this request. Add token to request header",
         };
         res.status(errorStatusCode).json(response);
-    }*/
+    }
 
 });
 
@@ -167,12 +170,13 @@ app.post('/users/login', (req, res) => {
     {
         const params = {
             TableName: USERS_TABLE,
-            IndexName: "emailIndex",
+            IndexName: "authIndex",
             KeyConditionExpression: "email = :email and password = :password",
             ExpressionAttributeValues: {
                 ":email": user.email,
                 ":password": user.password,
             },
+            Limit: 1,
         };
     
         dynamoDb.query(params, (error, result) => {
@@ -187,22 +191,22 @@ app.post('/users/login', (req, res) => {
             } 
             if (result.Items)
             {
-              /*  var items = []
-                items.concat(result.Items);
-                const responseStatusCode = 200;
-                const response = {
-                    token: item[0].priviledge + "_" + uuid.v1(),
-                };
-                res.status(responseStatusCode).json(response);
-            */}
-            else
-            {
-                const errorStatusCode = 404;
-                const response = {
-                    error: "Incorrect username or password",
-                };
-                  res.status(errorStatusCode).json(response);
+                for (var item in result.Items)
+                {
+                    const responseStatusCode = 200;
+                    const response = {
+                        token: result.Items[item].privilege + "_" + uuid.v1(), // or token: result.Items[0].privilege + ...
+                    };
+                    res.status(responseStatusCode).json(response);
+                    return;
+                }
             }
+            const errorStatusCode = 404;
+            const response = {
+                error: "Incorrect username or password",
+            };
+            res.status(errorStatusCode).json(response);
+            
         });   
     }
     else
@@ -221,9 +225,9 @@ app.put('/users/:userId', (req, res) => {
     if(req.headers.token && req.headers.token.includes("admin"))
     {
         const user = req.body;
-        const userId = req.params.userId
-        if (user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege)
+        if (!isNan(req.params.userId) && user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege)
         {
+            const userId = parseInt(req.params.userId);
             const params = {
                 TableName: USERS_TABLE,
                 Key: {
@@ -264,8 +268,9 @@ app.put('/users/:userId', (req, res) => {
         else
         {
             const errorStatusCode = 400;
+            const message = isNaN(req.params.userId)? "UserId " +req.params.userId + " not found":"Incomplete user supplied.";
             const response = {
-                error: "Incomplete user supplied. Supply email, name, surname, imgUrl,  privilege and password",
+                error:  message,
             }
             res.status(errorStatusCode).json(response);
          }
