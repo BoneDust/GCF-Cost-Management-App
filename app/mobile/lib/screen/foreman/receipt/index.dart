@@ -1,2 +1,2 @@
 export 'receipt.dart';
-export 'create_receipt.dart';
+export 'package:cm_mobile/screen/foreman/receipt/create_receipt/create_receipt.dart';

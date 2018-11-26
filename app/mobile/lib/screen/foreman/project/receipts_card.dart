@@ -32,7 +32,8 @@ class _ReceiptsCardRoot extends StatelessWidget {
               Navigator.pushNamed(context, "/foreman/stages");
             },
             child: Container(
-              padding: EdgeInsets.only(top: 10.0, left: 10.0),
+              color: Colors.white,
+              padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

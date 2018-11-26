@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'base_project_card.dart';
+import 'base_home_card.dart';
 
 
-class DetailsCard  extends BaseProjectCard{
-  DetailsCard() : super("Uploaded Receipts");
+class HomeNotificationsCard  extends BaseHomeCard{
+  HomeNotificationsCard() : super("Uploaded Receipts");
 
   @override
   Widget setChildren() {
-    return _ReceiptsCardRoot();
+    return _HomeNotificationsCard();
   }
 }
-class _ReceiptsCardRoot extends StatelessWidget {
+class _HomeNotificationsCard extends StatelessWidget {
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _ReceiptsCardRoot() {
+  _HomeNotificationsCard() {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);
@@ -34,16 +34,16 @@ class _ReceiptsCardRoot extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Details", style: headerStyle)
+                    Text("Notifications", style: headerStyle)
                   ]),
             ),
-        _DetailsCard(),
+        _NotificationCard(),
       ],
     );
   }
 }
 
-class _DetailsCard extends StatelessWidget {
+class _NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -51,27 +51,22 @@ class _DetailsCard extends StatelessWidget {
           ListTile(
             title: Text("Project 1"),
             subtitle: Text("project"),
-            leading: Icon(Icons.assignment),
           ),
           Divider(color: Colors.black54,),
           ListTile(
             title: Text("Company 1"),
             subtitle: Text("company"),
-            leading: Icon(Icons.business_center),
           ),
           Divider(color: Colors.black54,),
           ListTile(
             title: Text("11/11/11"),
             subtitle: Text("Start Date"),
-            leading: Icon(Icons.date_range),
 
           ),
           Divider(color: Colors.black54,),
           ListTile(
             title: Text("11/11/11"),
             subtitle: Text("End Date"),
-            leading: Icon(Icons.date_range),
-
           )
         ],
     );
