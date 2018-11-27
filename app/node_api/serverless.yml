@@ -95,7 +95,7 @@ resources:
             AttributeType: S
           -
             AttributeName: password
-            AttributeType: S 
+            AttributeType: S
         KeySchema:
           -
             AttributeName: userId
@@ -115,8 +115,8 @@ resources:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
         ProvisionedThroughput:
-          ReadCapacityUnits: 2
-          WriteCapacityUnits: 2
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
         TableName: ${self:custom.userTableName}
 
     ClientsDynamoDBTable:
