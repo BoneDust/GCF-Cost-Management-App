@@ -16,6 +16,39 @@ app.use(bodyParser.urlencoded({ extended: true})); // to support URL-encoded bod
 app.get('/users', (req, res) => {
     if(req.headers.token && req.headers.token.includes("admin"))
     {
+        if (req.query.search)
+        {
+            const filterParams = {
+                TableName: USERS_TABLE,
+                ExpressionAttributeNames: {
+                    "#name": "name",
+                },
+                FilterExpression: "contains(#name, :phrase) or contains(surname, :phrase)",
+                ExpressionAttributeValues: {
+                    ":phrase": req.query.search,
+                },
+            };
+
+            dynamoDb.scan(filterParams, (error, result) => {
+                if (error)
+                {
+                    const errorStatusCode = error.statusCode || 503;
+                    const response = {
+                        error: error.message,
+                    };
+                    res.status(errorStatusCode).json(response);
+                } 
+                if (result.Items)
+                {
+                    const responseStatusCode = 200;
+                    const response = {
+                        users: result.Items,        
+                    };
+                    res.status(responseStatusCode).json(response);
+                }
+            });
+            return;
+        }
         const params = {
             TableName: USERS_TABLE,
         };
@@ -53,12 +86,12 @@ app.get('/users/:userId', (req, res) => {
 
     if (req.headers.token && req.headers.token.includes("admin"))
     {
-        if (!isNaN(req.params.userId))
+        if (isNaN(req.params.userId) === false)
         {
             const params = {
                 TableName: USERS_TABLE,
                 Key: {
-                    userId: parseInt(req.params.userId),
+                    userId: parseInt(req.params.userId)
                 },
             };
 
@@ -222,13 +255,15 @@ app.put('/users/:userId', (req, res) => {
     if(req.headers.token && req.headers.token.includes("admin"))
     {
         const user = req.body;
-        if (!isNan(req.params.userId) && user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege)
+        if (isNaN(req.params.userId) === false && user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege)
         {
-            const userId = parseInt(req.params.userId);
             const params = {
                 TableName: USERS_TABLE,
                 Key: {
-                    userId: userId,
+                    userId: parseInt(req.params.userId),
+                },
+                ExpressionAttributeNames: {
+                    "#name": "name",
                 },
                 ExpressionAttributeValues: { 
                     ":name" : user.name,
@@ -238,13 +273,12 @@ app.put('/users/:userId', (req, res) => {
                     ":imgUrl" : user.imgUrl,
                     ":privilege" : user.privilege,
                 },
-                UpdateExpression: "SET name = :name, surname = :surname, email = :email, password = :password, imgUrl =:imgUrl, privilege = :privilege",
+                UpdateExpression: "SET #name = :name, surname = :surname, email = :email, password = :password, imgUrl =:imgUrl, privilege = :privilege",
             };
 
             dynamoDb.update(params, (error, result) => {        
                 if (error)
                 {
-                    //console.log(error);
                     const errorStatusCode = error.statusCode || 503;
                     const response = {
                         error: error.message,
@@ -255,7 +289,6 @@ app.put('/users/:userId', (req, res) => {
                 {
                     const responseStatusCode = 200;
                     const response = {
-                        user : user,
                         message: "User updated successfully.", 
                     };
                     res.status(responseStatusCode).json(response);
@@ -265,7 +298,7 @@ app.put('/users/:userId', (req, res) => {
         else
         {
             const errorStatusCode = isNaN(req.params.userId)? 404 : 400;
-            const message = isNaN(req.params.userId)? "UserId " +req.params.userId + " not found" : "Incomplete user supplied.";
+            const message = isNaN(req.params.userId)? "UserId " + req.params.userId + " not found" : "Incomplete user supplied.";
             const response = {
                 error:  message,
             }
@@ -284,12 +317,12 @@ app.put('/users/:userId', (req, res) => {
 });
 
 //endpoint function that deletes a users by id
-app.delete('/users/:userid', (req, res) => {
+app.delete('/users/:userId', (req, res) => {
     if(req.headers.token && req.headers.token.includes("admin"))
     {
         if (!isNaN(req.params.userId))
         {
-            const userId = req.params.userId;
+            const userId = parseInt(req.params.userId);
             const params = {
                 TableName: USERS_TABLE,
                 Key: {
@@ -300,7 +333,6 @@ app.delete('/users/:userid', (req, res) => {
             dynamoDb.delete(params, (error, result) => {
                 if (error)
                 {
-                    //console.log(error);
                     const errorStatusCode = error.statusCode || 503;
                     const response = {
                         error: error.message,
@@ -311,6 +343,7 @@ app.delete('/users/:userid', (req, res) => {
                 {
                     const responseStatusCode = 200;
                     const response = {
+                        user: result.Item,
                         message : "User successfully deleted",
                     };
                     res.status(responseStatusCode).json(response);
