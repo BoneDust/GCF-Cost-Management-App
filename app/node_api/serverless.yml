@@ -80,6 +80,34 @@ functions:
           method: delete
           cors: true
 
+  stagesFunction:
+    handler: stage-handler/handler.handler
+    events:
+      - http:
+          path: stages
+          method: get
+          cors: true
+
+      - http:
+          path: stages/{stageid}
+          method: get
+          cors: true
+          
+      - http:
+          path: stages
+          method: post
+          cors: true
+      
+      - http:
+          path: stages/{stageid}
+          method: put
+          cors: true
+      
+      - http:
+          path: stages/{stageid}
+          method: delete
+          cors: true
+
 
 resources:
   Resources:
