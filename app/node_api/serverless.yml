@@ -107,7 +107,34 @@ functions:
           path: stages/{stageid}
           method: delete
           cors: true
+        
+  receiptsFunction:
+    handler: receipt-handler/handler.handler
+    events:
+      - http:
+          path: receipts
+          method: get
+          cors: true
 
+      - http:
+          path: receipts/{receiptid}
+          method: get
+          cors: true
+          
+      - http:
+          path: receipts
+          method: post
+          cors: true
+      
+      - http:
+          path: stages/{stageid}
+          method: put
+          cors: true
+      
+      - http:
+          path: receipts/{receiptid}
+          method: delete
+          cors: true
 
 resources:
   Resources:

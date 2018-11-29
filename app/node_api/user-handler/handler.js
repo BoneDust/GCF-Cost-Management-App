@@ -10,14 +10,12 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 var userCount = 0;
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true})); // to support URL-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
 
 //endpoint function that returns all users
 app.get('/users', (req, res) => {
-    if(req.headers.token && req.headers.token.includes("admin"))
-    {
-        if (req.query.search)
-        {
+    if (req.headers.token && req.headers.token.includes("admin")) {
+        if (req.query.search) {
             const filterParams = {
                 TableName: USERS_TABLE,
                 ExpressionAttributeNames: {
@@ -30,19 +28,17 @@ app.get('/users', (req, res) => {
             };
 
             dynamoDb.scan(filterParams, (error, result) => {
-                if (error)
-                {
+                if (error) {
                     const errorStatusCode = error.statusCode || 503;
                     const response = {
                         error: error.message,
                     };
                     res.status(errorStatusCode).json(response);
-                } 
-                if (result.Items)
-                {
+                }
+                if (result.Items) {
                     const responseStatusCode = 200;
                     const response = {
-                        users: result.Items,        
+                        users: result.Items,
                     };
                     res.status(responseStatusCode).json(response);
                 }
@@ -55,8 +51,7 @@ app.get('/users', (req, res) => {
 
         // fetch all users from the database might change later due to pagination
         dynamoDb.scan(params, (error, result) => {
-            if (error)
-            {
+            if (error) {
                 const errorStatusCode = error.statusCode || 503;
                 const response = {
                     error: error.message,
@@ -71,8 +66,7 @@ app.get('/users', (req, res) => {
             res.json(response);
         });
     }
-    else
-    {
+    else {
         const errorStatusCode = 401;
         const response = {
             error: "User not authorised to make this request. Add token key to request header",
@@ -84,10 +78,8 @@ app.get('/users', (req, res) => {
 //endpoint function that returns a user by userID
 app.get('/users/:userId', (req, res) => {
 
-    if (req.headers.token && req.headers.token.includes("admin"))
-    {
-        if (isNaN(req.params.userId) === false)
-        {
+    if (req.headers.token && req.headers.token.includes("admin")) {
+        if (isNaN(req.params.userId) === false) {
             const params = {
                 TableName: USERS_TABLE,
                 Key: {
@@ -96,8 +88,7 @@ app.get('/users/:userId', (req, res) => {
             };
 
             dynamoDb.get(params, (error, result) => {
-                if (error)
-                {
+                if (error) {
                     const errorStatusCode = error.statusCode || 503;
                     const response = {
                         error: error.message,
@@ -105,8 +96,7 @@ app.get('/users/:userId', (req, res) => {
                     res.status(errorStatusCode).json(response);
                     return;
                 }
-                if (result.Count > 0)
-                {
+                if (result.Count > 0) {
                     const user = result.Item;
                     const responseStatusCode = 200;
                     const response = {
@@ -124,8 +114,7 @@ app.get('/users/:userId', (req, res) => {
         };
         res.status(errorStatusCode).json(response);
     }
-    else
-    {
+    else {
         const errorStatusCode = 401;
         const response = {
             error: "User not authorised to make this request. Add token to request header",
@@ -138,10 +127,9 @@ app.get('/users/:userId', (req, res) => {
 //endpoint function that create a new user
 app.post('/users', (req, res) => {
 
-    if(req.headers.token && req.headers.token.includes("admin")){
+    if (req.headers.token && req.headers.token.includes("admin")) {
         const user = req.body;
-        if (user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege)
-        {
+        if (user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege) {
             const params = {
                 TableName: USERS_TABLE,
                 Item: {
@@ -154,7 +142,7 @@ app.post('/users', (req, res) => {
                     privilege: user.privilege,
                 },
             };
-        
+
             dynamoDb.put(params, (error) => {
                 if (error) {
                     const errorStatusCode = error.statusCode || 503;
@@ -173,8 +161,7 @@ app.post('/users', (req, res) => {
                 res.status(responseStatusCode).json(response);
             });
         }
-        else
-        {
+        else {
             const errorStatusCode = 400;
             const response = {
                 error: "Incomplete user supplied. Supply email, name, surname, imgUrl,  privilege and password lol",
@@ -182,8 +169,7 @@ app.post('/users', (req, res) => {
             res.status(errorStatusCode).json(response);
         }
     }
-    else
-    {
+    else {
         const errorStatusCode = 401;
         const response = {
             error: "User not authorised to make this request. Add token to request header",
@@ -196,10 +182,9 @@ app.post('/users', (req, res) => {
 
 //endpoint function thats logs in a user and sends that user a unique token key/ or priviledge key
 app.post('/users/login', (req, res) => {
-    
+
     const user = req.body;
-    if (user.email && user.password)
-    {
+    if (user.email && user.password) {
         const params = {
             TableName: USERS_TABLE,
             IndexName: "authIndex",
@@ -209,20 +194,17 @@ app.post('/users/login', (req, res) => {
                 ":password": user.password,
             },
         };
-    
+
         dynamoDb.query(params, (error, result) => {
-            if (error)
-            {
+            if (error) {
                 const errorStatusCode = error.statusCode || 503;
                 const response = {
                     error: error.message,
                 };
                 res.status(errorStatusCode).json(response);
-            } 
-            if (result.Items)
-            {
-                for (var item in result.Items)
-                {
+            }
+            if (result.Items) {
+                for (var item in result.Items) {
                     const responseStatusCode = 200;
                     const response = {
                         token: result.Items[item].privilege + "_" + uuid.v1(), // or token: result.Items[0].privilege + ...
@@ -236,27 +218,24 @@ app.post('/users/login', (req, res) => {
                 error: "Incorrect username or password",
             };
             res.status(errorStatusCode).json(response);
-            
-        });   
+
+        });
     }
-    else
-    {
+    else {
         const errorStatusCode = 400;
         const response = {
             error: "Incomplete user credentials supplied",
         }
         res.status(errorStatusCode).json(response);
     }
-  
+
 })
 
 //endpoint function that updates  a user by userId
 app.put('/users/:userId', (req, res) => {
-    if(req.headers.token && req.headers.token.includes("admin"))
-    {
+    if (req.headers.token && req.headers.token.includes("admin")) {
         const user = req.body;
-        if (isNaN(req.params.userId) === false && user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege)
-        {
+        if (isNaN(req.params.userId) === false && user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege) {
             const params = {
                 TableName: USERS_TABLE,
                 Key: {
@@ -265,48 +244,44 @@ app.put('/users/:userId', (req, res) => {
                 ExpressionAttributeNames: {
                     "#name": "name",
                 },
-                ExpressionAttributeValues: { 
-                    ":name" : user.name,
-                    ":surname" : user.surname,
-                    ":email" : user.email,
-                    ":password" : user.password,
-                    ":imgUrl" : user.imgUrl,
-                    ":privilege" : user.privilege,
+                ExpressionAttributeValues: {
+                    ":name": user.name,
+                    ":surname": user.surname,
+                    ":email": user.email,
+                    ":password": user.password,
+                    ":imgUrl": user.imgUrl,
+                    ":privilege": user.privilege,
                 },
                 UpdateExpression: "SET #name = :name, surname = :surname, email = :email, password = :password, imgUrl =:imgUrl, privilege = :privilege",
             };
 
-            dynamoDb.update(params, (error, result) => {        
-                if (error)
-                {
+            dynamoDb.update(params, (error, result) => {
+                if (error) {
                     const errorStatusCode = error.statusCode || 503;
                     const response = {
                         error: error.message,
                     };
                     res.status(errorStatusCode).json(response);
                 }
-                if(result)
-                {
+                if (result) {
                     const responseStatusCode = 200;
                     const response = {
-                        message: "User updated successfully.", 
+                        message: "User updated successfully.",
                     };
                     res.status(responseStatusCode).json(response);
                 }
-          });
+            });
         }
-        else
-        {
-            const errorStatusCode = isNaN(req.params.userId)? 404 : 400;
-            const message = isNaN(req.params.userId)? "UserId " + req.params.userId + " not found" : "Incomplete user supplied.";
+        else {
+            const errorStatusCode = isNaN(req.params.userId) ? 404 : 400;
+            const message = isNaN(req.params.userId) ? "UserId " + req.params.userId + " not found" : "Incomplete user supplied.";
             const response = {
-                error:  message,
+                error: message,
             }
             res.status(errorStatusCode).json(response);
-         }
+        }
     }
-    else
-    {
+    else {
         const errorStatusCode = 401;
         const response = {
             error: "User not authorised to make this request. Add token to request header",
@@ -318,10 +293,8 @@ app.put('/users/:userId', (req, res) => {
 
 //endpoint function that deletes a users by id
 app.delete('/users/:userId', (req, res) => {
-    if(req.headers.token && req.headers.token.includes("admin"))
-    {
-        if (!isNaN(req.params.userId))
-        {
+    if (req.headers.token && req.headers.token.includes("admin")) {
+        if (!isNaN(req.params.userId)) {
             const userId = parseInt(req.params.userId);
             const params = {
                 TableName: USERS_TABLE,
@@ -331,37 +304,33 @@ app.delete('/users/:userId', (req, res) => {
             }
 
             dynamoDb.delete(params, (error, result) => {
-                if (error)
-                {
+                if (error) {
                     const errorStatusCode = error.statusCode || 503;
                     const response = {
                         error: error.message,
                     };
                     res.status(errorStatusCode).json(response);
-                } 
-                if (result)
-                {
+                }
+                if (result) {
                     const responseStatusCode = 200;
                     const response = {
                         user: result.Item,
-                        message : "User successfully deleted",
+                        message: "User successfully deleted",
                     };
                     res.status(responseStatusCode).json(response);
                 }
             });
         }
-        else
-        {
+        else {
             const errorStatusCode = 404;
-            const message = "UserId " +req.params.userId + " not found";
+            const message = "UserId " + req.params.userId + " not found";
             const response = {
-                error:  message,
+                error: message,
             }
             res.status(errorStatusCode).json(response);
-         }
+        }
     }
-    else
-    {
+    else {
         const errorStatusCode = 401;
         const response = {
             error: "User not authorised to make this request. Add token to request header",
@@ -373,9 +342,9 @@ app.delete('/users/:userId', (req, res) => {
 
 
 // Handle in-valid route
-app.all('*', function(req, res) {
-  const response = { data: null, message: 'Route not found!!' }
-  res.status(400).send(response)
+app.all('*', function (req, res) {
+    const response = { data: null, message: 'Route not found!!' }
+    res.status(400).send(response)
 });
 
 // wrap express app instance with serverless http function
