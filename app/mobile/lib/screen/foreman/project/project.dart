@@ -9,7 +9,7 @@ class ForeManProjectScreen extends StatelessWidget{
       floatingActionButton: FloatingActionButton(onPressed: () {
         Navigator.pushNamed(context, "/foreman/create_receipt");
       },
-        child: Icon(Icons.add_a_photo),),
+        child: ImageIcon(AssetImage("assets/icons/add_receipt.png")),),
     );
   }
 }
@@ -36,7 +36,9 @@ class _ForeManProject extends StatelessWidget {
         body: Material(
           color: Colors.black12,
           child: ListView(
+            padding: EdgeInsets.only(left: 3, right: 3),
             children: <Widget>[
+              Padding(padding: EdgeInsets.only(bottom: 20),),
               StagesCard(),
               Padding(padding: EdgeInsets.only(bottom: 20),),
               ReceiptsCard(),

@@ -27,10 +27,17 @@ class ForeManProjects extends StatelessWidget{
               Text("Projects")
             ],
           ),
+
         ) ,
         body: SafeArea(
           child: _ProjectsScreen(),
-        )
+        ),
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          Navigator.pushNamed(context, "/foreman/create_receipt");
+        },
+          child: ImageIcon(AssetImage("assets/icons/add_receipt.png")),)
+
+
     );
   }
 }
@@ -52,7 +59,7 @@ class _ProjectsScreen extends StatelessWidget {
             child: ListView.builder
               (
               itemCount: projects.length,
-              padding: EdgeInsets.only(bottom: 100, top: 30),
+              padding: EdgeInsets.only(bottom: 30, top: 30),
               itemBuilder: (BuildContext context, int index) {
                 return projects[index];
               },
@@ -68,7 +75,8 @@ class _ProjectsScreen extends StatelessWidget {
 class _ProjectWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      enableFeedback: true,
       onTap: (){
         Navigator.pushNamed(context, "/foreman/project");
       },

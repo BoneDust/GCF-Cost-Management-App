@@ -1,22 +1,22 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'base_project_card.dart';
+import 'base_home_card.dart';
 
-class StagesCard  extends BaseProjectCard{
-  StagesCard() : super("Uploaded Receipts");
+class RecentReceiptCard  extends BaseHomeCard{
+  RecentReceiptCard() : super("Uploaded Receipts");
 
   @override
   Widget setChildren() {
-    return _ReceiptsCardRoot();
+    return _RecentReceiptsCardRoot();
   }
 }
-class _ReceiptsCardRoot extends StatelessWidget {
+class _RecentReceiptsCardRoot extends StatelessWidget {
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _ReceiptsCardRoot() {
+  _RecentReceiptsCardRoot() {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);
@@ -39,7 +39,7 @@ class _ReceiptsCardRoot extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    new Text("Stages", style: headerStyle),
+                    new Text("Recent Receipts", style: headerStyle),
                     new Row(
                       children: <Widget>[
                         Text("4", style: headerStyle.copyWith(color: Colors.grey)),
@@ -52,51 +52,41 @@ class _ReceiptsCardRoot extends StatelessWidget {
                     )
                   ]),
             )),
-        _StagesCard(),
+        _Receipts(),
       ],
     );
   }
 }
 
 
-class _StagesCard extends StatelessWidget {
+class _Receipts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 110.0,
       padding: EdgeInsetsDirectional.only(bottom: 10.0),
 
-      child: ListView(
-
-        scrollDirection: Axis.horizontal,
+      child: Column(
         children: <Widget>[
-          _StageSampleCard("1"),
-          _StageSampleCard("2"),
-          _StageSampleCard("3"),
-          _StageSampleCard("4"),
-          _StageSampleCard("5"),
-          _StageSampleCard("6")
+          _ReceiptsCard(),
+          _ReceiptsCard(),
+          _ReceiptsCard(),
+
         ],
       ),
     );
   }
 }
 
-class _StageSampleCard extends StatelessWidget {
-  String title;
-  static var rng = new Random();
-
-  _StageSampleCard(this.title);
-
+class _ReceiptsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      margin: EdgeInsets.only(left: 7),
-      child: Card(
-        child: Center(child: Text(title)),
-        color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
-            rng.nextInt(255), rng.nextInt(255)),
+    return ListTile(
+      title: Text("Payment made to "),
+      subtitle: Text("This content was made to that guy"),
+      leading: Image(
+        image: AssetImage("assets/images.jpeg"),
+        width: 60,
+        height: 60,
       ),
     );
   }

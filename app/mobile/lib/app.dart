@@ -32,6 +32,7 @@ class _App extends State<App> {
     '/foreman/receipt': (BuildContext context) => ForeManReceiptScreen(),
     '/foreman/create_receipt': (BuildContext context) => ForeManCreateReceiptScreen(),
     '/foreman/menu': (BuildContext context) => ForeManMenu(),
+    '/camera_screen': (BuildContext context) => CameraScreen(),
 
   };
 
