@@ -14,8 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true})); // to support URL-encoded bod
 
 //endpoint function that returns all stages
 app.get('/stages', (req, res) => {
-    if(req.headers.token && req.headers.token.includes("admin"))
-    {
+
         if (req.query.search)
         {
             const filterParams = {
@@ -70,22 +69,12 @@ app.get('/stages', (req, res) => {
             };
             res.json(response);
         });
-    }
-    else
-    {
-        const errorStatusCode = 401;
-        const response = {
-            error: "User not authorised to make this request. Add token key to request header",
-        };
-        res.status(errorStatusCode).json(response);
-    }
+
 });
 
 //endpoint function that returns a stage by stageID
 app.get('/stages/:stageId', (req, res) => {
-    if (req.headers.token && req.headers.token.includes("admin"))
-    {
-        if (isNaN(req.params.stageId) === false)
+    if (isNaN(req.params.stageId) === false)
         {
             const params = {
                 TableName: STAGES_TABLE,
@@ -122,28 +111,19 @@ app.get('/stages/:stageId', (req, res) => {
             error: "StageId " + req.params.stageId + " not found",
         };
         res.status(errorStatusCode).json(response);
-    }
-    else
-    {
-        const errorStatusCode = 401;
-        const response = {
-            error: "User not authorised to make this request. Add token to request header",
-        };
-        res.status(errorStatusCode).json(response);
-    }
 });
 
 //endpoint function that create a new stage
 app.post('/stages', (req, res) => {
-    if(req.headers.token && req.headers.token.includes("admin")){
         const stage = req.body;
-        if (stage.project_id && stage.name && stage.description && stage.status && stage.before_pict_url && stage.start_date && estimated_duration)
+        if (stage.project_id && stage.stage_name && stage.description && stage.status && stage.before_pict_url && stage.start_date && estimated_duration)
         {
             const params = {
                 TableName: STAGES_TABLE,
                 Item: {
                     stageId: stageCount + 1,
-                    name: stage.name,
+                    project_id: stage.project_id,
+                    stage_name: stage.stage_name,
                     description: stage.description,
                     status: stage.status,
                     before_pict_url: stage.before_pict_url,
@@ -180,18 +160,109 @@ app.post('/stages', (req, res) => {
             }
             res.status(errorStatusCode).json(response);
         }
-    }
-    else
-    {
-        const errorStatusCode = 401;
-        const response = {
-            error: "User not authorised to make this request. Add token to request header",
-        };
-        res.status(errorStatusCode).json(response);
-    }
 });
 
-TODO: //stage/stageid {put}{delete}
+TODO: ///stage/stageid {put}{delete}
+
+//endpoint function that updates  a stage by stageId
+app.put('/stages/:stageId', (req, res) => {
+        const stage = req.body;
+        if (isNaN(req.params.stageId) === false && stage.project_id && stage.stage_name && stage.description && stage.status && stage.before_pict_url && stage.after_pic_url)
+        {
+            const params = {
+                TableName: STAGES_TABLE,
+                Key: {
+                    stageId: parseInt(req.params.stageId),
+                },
+                ExpressionAttributeValues: {
+                    ":project_id": stage.project_id,
+                    ":stage_name": stage.stage_name,
+                    ":description": stage.description,
+                    ":status": stage.status,
+                    ":before_pict_url": stage.before_pict_url,
+                    ":after_pic_url": stage.after_pic_url,
+                    ":start_date": stage.start_date,
+                    ":end_date": stage.end_date,
+                    ":estimated_duration": stage.estimated_duration,
+                },
+                UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, status = :status, before_pict_url = :before_pict_url, after_pic_url = after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration",
+            };
+
+            dynamoDb.update(params, (error, result) => {        
+                if (error)
+                {
+                    const errorStatusCode = error.statusCode || 503;
+                    const response = {
+                        error: error.message,
+                    };
+                    res.status(errorStatusCode).json(response);
+                }
+                if(result)
+                {
+                    const responseStatusCode = 200;
+                    const response = {
+                        message: "Stage updated successfully.", 
+                    };
+                    res.status(responseStatusCode).json(response);
+                }
+          });
+        }
+        else
+        {
+            const errorStatusCode = isNaN(req.params.stageId)? 404 : 400;
+            const message = isNaN(req.params.stageId)? "StageId " + req.params.userId + " not found" : "Incomplete stage supplied.";
+            const response = {
+                error:  message,
+            }
+            res.status(errorStatusCode).json(response);
+         }
+    
+});
+
+//endpoint function that deletes a users by id
+app.delete('/stages/:stageId', (req, res) => {
+
+        if (!isNaN(req.params.userId))
+        {
+            const userId = parseInt(req.params.userId);
+            const params = {
+                TableName: USERS_TABLE,
+                Key: {
+                    userId: userId,
+                },
+            }
+
+            dynamoDb.delete(params, (error, result) => {
+                if (error)
+                {
+                    const errorStatusCode = error.statusCode || 503;
+                    const response = {
+                        error: error.message,
+                    };
+                    res.status(errorStatusCode).json(response);
+                } 
+                if (result)
+                {
+                    const responseStatusCode = 200;
+                    const response = {
+                        stage: result.Item,
+                        message : "Stage successfully deleted",
+                    };
+                    res.status(responseStatusCode).json(response);
+                }
+            });
+        }
+        else
+        {
+            const errorStatusCode = 404;
+            const message = "StageId " +req.params.stageId + " not found";
+            const response = {
+                error:  message,
+            }
+            res.status(errorStatusCode).json(response);
+         }
+});
+///
 
 // Handle in-valid route
 app.all('*', function(req, res) {
