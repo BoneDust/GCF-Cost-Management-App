@@ -14,33 +14,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bo
 
 //endpoint function that returns all reciepts
 app.get('/reciepts', (req, res) => {
-    if (req.query.search) {
-        const filterParams = {
-            TableName: RECEIPTS_TABLE,
-            FilterExpression: "contains(#reciept, :phrase)",
-            ExpressionAttributeValues: {
-                ":phrase": req.query.search,
-            },
-        };
-
-        dynamoDb.scan(filterParams, (error, result) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-            }
-            if (result.Items) {
-                const responseStatusCode = 200;
-                const response = {
-                    reciepts: result.Items,
-                };
-                res.status(responseStatusCode).json(response);
-            }
-        });
-        return;
-    }
     const params = {
         TableName: RECEIPTS_TABLE,
     };
@@ -150,7 +123,7 @@ app.put('/receipt/:receiptId', (req, res) => {
     const receipt = req.body;
     if (isNaN(req.params.receiptId) === false && receipt.project_id && receipt.supplier && receipt.description && receipt.total_cost && receipt.pic_url && receipt.purchase_date) {
         const params = {
-            TableName: STAGES_TABLE,
+            TableName: RECEIPTS_TABLE,
             Key: {
                 receiptId: parseInt(req.params.receiptId),
             },
@@ -184,7 +157,7 @@ app.put('/receipt/:receiptId', (req, res) => {
     }
     else {
         const errorStatusCode = isNaN(req.params.receiptId) ? 404 : 400;
-        const message = isNaN(req.params.stageId) ? "recieptId " + req.params.receiptId + " not found" : "Incomplete reciept supplied.";
+        const message = isNaN(req.params.recieptId) ? "recieptId " + req.params.receiptId + " not found" : "Incomplete reciept supplied.";
         const response = {
             error: message,
         }
