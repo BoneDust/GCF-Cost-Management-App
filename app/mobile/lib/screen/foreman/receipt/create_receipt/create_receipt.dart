@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cm_mobile/screen/foreman/receipt/image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -28,9 +29,14 @@ class _ForeManCreateReceiptState extends State<_ForeManCreateReceiptScreen> {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       _image = image;
-      previewImage = Image(
-        image: FileImage(_image),
-        fit: BoxFit.fill,
+      previewImage = GestureDetector(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptImageViewer(image: _image,)));
+        },
+        child: Image(
+          image: FileImage(_image),
+          fit: BoxFit.fill,
+        ),
       );
     });
   }
