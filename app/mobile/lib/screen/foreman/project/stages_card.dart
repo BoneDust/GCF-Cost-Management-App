@@ -1,10 +1,14 @@
+import 'dart:collection';
 import 'dart:math';
 
+import 'package:cm_mobile/model/stage.dart';
 import 'package:flutter/material.dart';
 import 'base_project_card.dart';
 
 class StagesCard  extends BaseProjectCard{
-  StagesCard() : super("Uploaded Receipts");
+  HashSet<Stage> stages;
+
+  StagesCard(this.stages) : super("Uploaded Receipts");
 
   @override
   Widget setChildren() {
@@ -60,33 +64,30 @@ class _ReceiptsCardRoot extends StatelessWidget {
 
 
 class _StagesCard extends StatelessWidget {
+  HashSet<Stage> stages;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 110.0,
       padding: EdgeInsetsDirectional.only(bottom: 10.0),
 
-      child: ListView(
-
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          _StageSampleCard("1"),
-          _StageSampleCard("2"),
-          _StageSampleCard("3"),
-          _StageSampleCard("4"),
-          _StageSampleCard("5"),
-          _StageSampleCard("6")
-        ],
+      child: ListView.builder(
+        itemCount: stages.length,
+        padding: EdgeInsets.only(bottom: 30, top: 30),
+        itemBuilder: (BuildContext context, int index) {
+          return _StageSampleCard(stages.elementAt(index),);
+        },
       ),
     );
   }
 }
 
 class _StageSampleCard extends StatelessWidget {
-  String title;
+  Stage stage;
   static var rng = new Random();
 
-  _StageSampleCard(this.title);
+  _StageSampleCard(this.stage);
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +95,7 @@ class _StageSampleCard extends StatelessWidget {
       width: 100,
       margin: EdgeInsets.only(left: 7),
       child: Card(
-        child: Center(child: Text(title)),
+        child: Center(child: Text(stage.name)),
         color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
             rng.nextInt(255), rng.nextInt(255)),
       ),

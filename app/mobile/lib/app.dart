@@ -25,13 +25,11 @@ class _App extends State<App> {
     '/AdminProfile': (BuildContext context) => AdminProfilesScreen(),
     '/Profile': (BuildContext context) => ProfileScreen(),
     '/AdminStatistics': (BuildContext context) => AdminStatistics(),
-    '/foreman/project' : (BuildContext context) => ForeManProjectScreen(),
     '/foreman/stages': (BuildContext context) => ForeManStagesScreen(),
     '/foreman/stage': (BuildContext context) => ForeManStageScreen(),
     '/foreman/receipts': (BuildContext context) => ForeManReceiptsScreen(),
     '/foreman/receipt': (BuildContext context) => ForeManReceiptScreen(),
     '/foreman/create_receipt': (BuildContext context) => ForeManCreateReceiptScreen(),
-    '/foreman/menu': (BuildContext context) => ForeManMenu(),
 
   };
 

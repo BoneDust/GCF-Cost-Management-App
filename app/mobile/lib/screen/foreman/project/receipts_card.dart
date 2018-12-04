@@ -1,26 +1,34 @@
+import 'dart:collection';
+
+import 'package:cm_mobile/model/receipt.dart';
+import 'package:cm_mobile/model/stage.dart';
 import 'package:flutter/material.dart';
 import 'base_project_card.dart';
 
 class ReceiptsCard  extends BaseProjectCard{
-  ReceiptsCard() : super("Uploaded Receipts");
+  HashSet<Receipt> receipts;
+
+  ReceiptsCard(this.receipts) : super("Uploaded Receipts");
 
   @override
   Widget setChildren() {
-    return _ReceiptsCardRoot();
+    return _ReceiptsCardRoot(receipts);
   }
 }
 class _ReceiptsCardRoot extends StatelessWidget {
+  HashSet<Receipt> receipts;
+
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _ReceiptsCardRoot() {
+  _ReceiptsCardRoot(this.receipts) {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);
     subheadingStyle = baseTextStyle.copyWith(
-        color: Colors.white,
-        fontSize: 12.0,);
+      color: Colors.white,
+      fontSize: 12.0,);
   }
 
   @override
@@ -50,9 +58,13 @@ class _ReceiptsCardRoot extends StatelessWidget {
                     )
                   ]),
             )),
-        _ReceiptsCard(),
-        _ReceiptsCard(),
-        _ReceiptsCard(),
+        ListView.builder(
+          itemCount: receipts.length,
+          padding: EdgeInsets.only(bottom: 30, top: 30),
+          itemBuilder: (BuildContext context, int index) {
+            return _ReceiptsCard(receipts.elementAt(index));
+          },
+        )
 
       ],
     );
@@ -60,11 +72,15 @@ class _ReceiptsCardRoot extends StatelessWidget {
 }
 
 class _ReceiptsCard extends StatelessWidget {
+  Receipt receipt;
+
+  _ReceiptsCard(this.receipt);
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text("Payment made to "),
-      subtitle: Text("This content was made to that guy"),
+      title: Text("Payment made to " + receipt.supplier),
+      subtitle: Text("Description: " + receipt.description),
       leading: Image(
         image: AssetImage("assets/images.jpeg"),
         width: 60,
