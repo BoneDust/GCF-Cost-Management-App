@@ -5,310 +5,98 @@ import 'package:cm_mobile/screen/foreman/projects/projects_list.dart';
 import 'package:flutter/material.dart';
 
 class ForeManProjects extends StatelessWidget{
-  HashSet<Project> projects = HashSet < Project
-
-  >
-
-      .
-
-  from
-
-  (
-
-  [
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  12
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  13
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  17
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  10
-
-  )
-
-  ]
-
-  );
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return ProjectStateContainer(
-        child: ForeManProjectsView(), projects: projects);
-  }
-
-}
-
-class ForeManProjectsView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    ProjectStateContainerState projectStateContainer = ProjectStateContainer.of(
-        context);
-
-    // TODO: implement build
-    return Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, "/foreman/menu");
-                },
-                child: Container(
-                    height: 40.0,
-                    width: 40.0,
-                    decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: AssetImage("assets/images.jpeg"),
-                            fit: BoxFit.cover
-                        )
-                    )
+    return ProjectsInheritedWidget(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Row(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/foreman/menu");
+                  },
+                  child: Container(
+                      height: 40.0,
+                      width: 40.0,
+                      decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: AssetImage("assets/images.jpeg"),
+                              fit: BoxFit.cover
+                          )
+                      )
+                  ),
                 ),
-              ),
-              Padding(padding: EdgeInsets.only(left: 10),),
-              Text("Projects")
-            ],
-          ),
+                Padding(padding: EdgeInsets.only(left: 10),),
+                Text("Projects")
+              ],
+            ),
 
-        ) ,
-        body: ProjectsList(),
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          Navigator.pushNamed(context, "/foreman/create_receipt");
-        },
-          child: ImageIcon(AssetImage("assets/icons/add_receipt.png")),)
+          ),
+            body: ProjectsList(),
+            floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/foreman/create_receipt");
+                  },
+                child: ImageIcon(AssetImage("assets/icons/add_receipt.png"))
+            )
+      )
     );
   }
 }
 
 
-class ProjectStateContainer extends StatefulWidget {
-  final Widget child;
-  HashSet<Project> projects = HashSet < Project
+//Inherited Widget is used to pass the collection of projects
 
-  >
+class ProjectsInherited extends InheritedWidget {
+  ProjectsInherited({
+    Key key,
+    @required Widget child,
+    @required this.data,
+  }) : super(key: key, child: child);
 
-      .
-
-  from
-
-  (
-
-  [
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  12
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  13
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  17
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  10
-
-  )
-
-  ]
-
-  );
-
-  ProjectStateContainer({
-    @required this.child,
-    this.projects,
-  });
-
-  static ProjectStateContainerState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_InheritedStateContainer)
-    as _InheritedStateContainer)
-        .data;
-  }
+  final ProjectsInheritedWidgetState data;
 
   @override
-  ProjectStateContainerState createState() => new ProjectStateContainerState();
+  bool updateShouldNotify(ProjectsInherited oldWidget) {
+    return true;
+  }
 }
 
-class ProjectStateContainerState extends State<ProjectStateContainer> {
-  HashSet<Project> projects = HashSet < Project
+class ProjectsInheritedWidget extends StatefulWidget {
+  ProjectsInheritedWidget({
+    Key key,
+    this.child,
+  }): super(key: key);
 
-  >
+  final Widget child;
 
-      .
+  @override
+  ProjectsInheritedWidgetState createState() => new ProjectsInheritedWidgetState();
 
-  from
+  static ProjectsInheritedWidgetState of(BuildContext context){
+    return (context.inheritFromWidgetOfExactType(ProjectsInherited) as ProjectsInherited).data;
+  }
+}
 
-  (
+class ProjectsInheritedWidgetState extends State<ProjectsInheritedWidget>{
 
-  [
+  HashSet<Project> projects = HashSet<Project>.from([Project(id: 12), Project(id: 13)]);
 
-  Project
+  int get itemsCount => projects.length;
 
-  (
-
-  id
-
-      :
-
-  12
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  13
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  17
-
-  )
-
-  ,
-
-  Project
-
-  (
-
-  id
-
-      :
-
-  10
-
-  )
-
-  ]
-
-  );
-
-  void updateUserInfo(HashSet<Project> projects) {
-    setState(() {
+  void setProjects(HashSet<Project> projects){
+    setState((){
       this.projects = projects;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return new _InheritedStateContainer(
+  Widget build(BuildContext context){
+    return new ProjectsInherited(
       data: this,
       child: widget.child,
     );
   }
-}
-
-class _InheritedStateContainer extends InheritedWidget {
-  final ProjectStateContainerState data;
-
-  _InheritedStateContainer({
-    Key key,
-    @required this.data,
-    @required Widget child,
-  }) : super(key: key, child: child);
-
-  @override
-  bool updateShouldNotify(_InheritedStateContainer old) => true;
 }

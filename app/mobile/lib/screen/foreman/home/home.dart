@@ -7,7 +7,7 @@ class ForeManHome  extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Row(
+            title: Row(
             children: <Widget>[
               GestureDetector(
                 onTap: () {

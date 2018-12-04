@@ -31,7 +31,6 @@ class Project {
       this.startDate = "",
       this.endDate = "",
       this.receipts,
-      this.stages,
       this.teamSize});
 
   @override

@@ -12,10 +12,7 @@ class ProjectContainer extends StatelessWidget {
     return InkWell(
       enableFeedback: true,
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ForeManProjectScreen(project)));
+        showProjectScreen(context);
       },
       child: Container(
         height: 100.0,
@@ -32,20 +29,10 @@ class ProjectContainer extends StatelessWidget {
   }
 
   showProjectScreen(BuildContext context) {
-    Navigator.pushNamed(context, "/foreman/project");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ForeManProjectScreen(project)));
   }
 }
 
-class _ProjectPopMenuButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-        itemBuilder: (_) => <PopupMenuItem<String>>[
-              PopupMenuItem<String>(child: Text("Edit"), value: "Edit"),
-              PopupMenuItem<String>(child: Text("Remove"), value: "Remove"),
-            ]);
-  }
-}
 
 class _ProjectThumbnail extends StatelessWidget {
   @override
@@ -116,9 +103,6 @@ class _ProjectContentCard extends StatelessWidget {
                 ),
               ],
             ),
-            new Row(
-              children: <Widget>[_ProjectPopMenuButton()],
-            )
           ]),
         ],
       ),
