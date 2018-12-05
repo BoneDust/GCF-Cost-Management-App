@@ -13,7 +13,6 @@ class StagesCard  extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-
     return stages == null || stages.isEmpty ? Column() : _StagesCardRoot();
   }
 }

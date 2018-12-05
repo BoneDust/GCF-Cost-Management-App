@@ -39,7 +39,7 @@ class _App extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
         title: Details.COMPANY_TITLE,
         routes: routes,
         home: ForeManRoot(),

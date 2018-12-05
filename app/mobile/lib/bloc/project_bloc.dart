@@ -4,21 +4,24 @@ import 'package:cm_mobile/bloc/base_bloc.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/service/api_service.dart';
 
-class ProjectsBloc implements BlocBase{
+class ProjectsBloc implements BlocBase {
   List<Project> _projects;
 
   ApiService _apiService = ApiService();
 
-  StreamController<List<Project>> _projectsController = StreamController<List<Project>>();
+  StreamController<List<Project>> _projectsController =
+  StreamController<List<Project>>();
 
-  Sink<List<Project>> get _inProjects => _projectsController. sink;
+  Sink<List<Project>> get _inProjects => _projectsController.sink;
+
   Stream<List<Project>> get outProject => _projectsController.stream;
 
   @override
   void dispose() {
     _projectsController.close();
   }
-  ProjectsBloc(){
+
+  ProjectsBloc() {
     _getAllProjects();
   }
 
@@ -30,7 +33,7 @@ class ProjectsBloc implements BlocBase{
   }
 }
 
-class ProjectBloc implements BlocBase{
+class ProjectBloc implements BlocBase {
   Project _project;
   String _projectId;
 
@@ -40,14 +43,16 @@ class ProjectBloc implements BlocBase{
 
   ProjectBloc(this._projectId);
 
-  Sink<Project> get _inProject => _projectController. sink;
+  Sink<Project> get _inProject => _projectController.sink;
+
   Stream<Project> get outProject => _projectController.stream;
 
   @override
   void dispose() {
     _projectController.close();
   }
-  ProjectsBloc(){
+
+  ProjectsBloc() {
     _getProject();
   }
 

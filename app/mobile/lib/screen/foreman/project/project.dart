@@ -36,8 +36,9 @@ class _ForeManProject extends StatelessWidget {
     return StreamBuilder<Project>(
       stream: projectBloc.outProject,
       initialData: Project(),
-      builder: (BuildContext context, AsyncSnapshot<Project> snapshot){
-        return NestedScrollView(headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      builder: (BuildContext context, AsyncSnapshot<Project> snapshot) {
+        return NestedScrollView(headerSliverBuilder: (BuildContext context,
+            bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
               expandedHeight: 200.0,
@@ -60,10 +61,10 @@ class _ForeManProject extends StatelessWidget {
                   children: <Widget>[
                     Padding(padding: EdgeInsets.only(bottom: 20),),
                     StagesCard(snapshot.data.stages),
-                 //   Padding(padding: EdgeInsets.only(bottom: 20),),
-                 //   ReceiptsCard(),
-                //    Padding(padding: EdgeInsets.only(bottom: 20),),
-                 //   DetailsCard(),
+                    //   Padding(padding: EdgeInsets.only(bottom: 20),),
+                    //   ReceiptsCard(),
+                    //    Padding(padding: EdgeInsets.only(bottom: 20),),
+                    //   DetailsCard(),
                   ],
                 )
             )

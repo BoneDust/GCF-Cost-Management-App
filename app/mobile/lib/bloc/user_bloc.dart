@@ -1,6 +1,6 @@
 import 'base_bloc.dart';
 
-class UserBloc extends BlocBase{
+class UserBloc extends BlocBase {
 
   @override
   void dispose() {
