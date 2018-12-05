@@ -39,13 +39,10 @@ class _App extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthenticationBloc>(
-      bloc: _authenticationBloc,
-      child: MaterialApp(
+    return  MaterialApp(
         title: Details.COMPANY_TITLE,
         routes: routes,
         home: ForeManRoot(),
-      ),
     );
   }
 

@@ -16,7 +16,8 @@ class Project {
   String startDate;
   String endDate;
   HashSet<Receipt> receipts;
-  HashSet<Stage> stages;
+
+  List<Stage> stages;
   int teamSize;
 
   Project(
@@ -40,4 +41,8 @@ class Project {
 
   @override
   int get hashCode => id.hashCode;
+
+  Project.fromJson(Map json)
+      : id = json['id'];
+
 }

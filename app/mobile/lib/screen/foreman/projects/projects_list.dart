@@ -6,11 +6,13 @@ import 'package:cm_mobile/screen/foreman/projects/projects.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProjectsList extends StatelessWidget {
+  List<Project> projects;
+
+  ProjectsList(this.projects);
 
   @override
   Widget build(BuildContext context) {
-    final ProjectsInheritedWidgetState state = ProjectsInheritedWidget.of(context);
-    HashSet<Project> projects = state.projects;
+
 
     return Column(
       children: <Widget>[
@@ -28,4 +30,5 @@ class ProjectsList extends StatelessWidget {
       ],
     );
   }
+
 }

@@ -5,7 +5,7 @@ import 'index.dart';
 class ForeManStageScreen extends StatelessWidget {
   Stage stage;
 
-  ForeManStageScreen(this.stage)
+  ForeManStageScreen(this.stage);
 
   @override
   Widget build(BuildContext context) {

@@ -48,8 +48,7 @@ class _DetailsCardRoot extends StatelessWidget {
 class _DetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ProjectInheritedWidgetState state = ProjectInheritedWidget.of(context);
-    Project project = state.project;
+    Project project;
 
     return Column(
       children: <Widget>[

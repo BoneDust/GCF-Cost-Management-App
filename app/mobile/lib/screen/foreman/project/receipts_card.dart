@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 class ReceiptsCard extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    final ProjectInheritedWidgetState state = ProjectInheritedWidget.of(context);
-    HashSet<Receipt> receipts = state.project.receipts;
+    HashSet<Receipt> receipts;
 
     return receipts == null || receipts.isEmpty ? Column() : _ReceiptsCardRoot();
   }
@@ -31,8 +30,7 @@ class _ReceiptsCardRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ProjectInheritedWidgetState state = ProjectInheritedWidget.of(context);
-    HashSet<Receipt> receipts = state.project.receipts;
+    HashSet<Receipt> receipts;
 
     return Card(
         shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),

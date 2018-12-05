@@ -1,20 +1,24 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/screen/foreman/project/project.dart';
 import 'package:flutter/material.dart';
 
 class StagesCard  extends StatelessWidget{
+  List<Stage> stages;
+
+  StagesCard(this.stages);
+
   @override
   Widget build(BuildContext context) {
-    final ProjectInheritedWidgetState state = ProjectInheritedWidget.of(context);
-    HashSet<Stage> stages = state.project.stages;
 
     return stages == null || stages.isEmpty ? Column() : _StagesCardRoot();
   }
 }
 class _StagesCardRoot extends StatelessWidget {
+  HashSet<Stage> stages;
 
   TextStyle baseTextStyle;
   TextStyle headerStyle;
@@ -31,8 +35,6 @@ class _StagesCardRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ProjectInheritedWidgetState state = ProjectInheritedWidget.of(context);
-    HashSet<Stage> stages = state.project.stages;
     return  Card(
         shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
         child: Column(
@@ -71,8 +73,7 @@ class _StagesCardRoot extends StatelessWidget {
 class _StagesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ProjectInheritedWidgetState state = ProjectInheritedWidget.of(context);
-    HashSet<Stage> stages = state.project.stages;
+    HashSet<Stage> stages;
 
     return Container(
       height: 110.0,
