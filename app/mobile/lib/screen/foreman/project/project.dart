@@ -1,6 +1,7 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 
@@ -11,8 +12,13 @@ class ForeManProjectScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    final ServicesContainerState servicesContainerState = ServicesContainer.of(
+        context);
+    final ProjectBloc projectBloc = ProjectBloc(
+        project.id.toString(), servicesContainerState.apiService);
+
     return BlocProvider(
-      bloc: ProjectBloc(project.id.toString()),
+      bloc: projectBloc,
       child: Scaffold(
         body: _ForeManProject(project),
         floatingActionButton: FloatingActionButton(onPressed: () {

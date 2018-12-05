@@ -7,23 +7,25 @@ import 'package:cm_mobile/screen/foreman/project/project.dart';
 import 'package:flutter/material.dart';
 
 class StagesCard  extends StatelessWidget{
-  List<Stage> stages;
+  final List<Stage> stages;
 
   StagesCard(this.stages);
 
   @override
   Widget build(BuildContext context) {
-    return stages == null || stages.isEmpty ? Column() : _StagesCardRoot();
+    return stages == null || stages.isEmpty ? Column() : _StagesCardRoot(
+        stages);
   }
 }
+
 class _StagesCardRoot extends StatelessWidget {
-  HashSet<Stage> stages;
+  final List<Stage> stages;
 
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _StagesCardRoot() {
+  _StagesCardRoot(this.stages) {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);
@@ -61,7 +63,7 @@ class _StagesCardRoot extends StatelessWidget {
                         )
                       ]),
                 )),
-            _StagesCard(),
+            _StagesCard(stages),
           ],
         )
     );;
@@ -70,10 +72,12 @@ class _StagesCardRoot extends StatelessWidget {
 
 
 class _StagesCard extends StatelessWidget {
+  final List<Stage> stages;
+
+  _StagesCard(this.stages);
+
   @override
   Widget build(BuildContext context) {
-    HashSet<Stage> stages;
-
     return Container(
       height: 110.0,
       padding: EdgeInsetsDirectional.only(bottom: 10.0),
@@ -90,7 +94,7 @@ class _StagesCard extends StatelessWidget {
 }
 
 class _StageSampleCard extends StatelessWidget {
-  Stage stage;
+  final Stage stage;
   static var rng = new Random();
 
   _StageSampleCard(this.stage);

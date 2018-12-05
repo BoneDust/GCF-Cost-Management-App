@@ -7,7 +7,9 @@ import 'package:cm_mobile/service/api_service.dart';
 class ProjectsBloc implements BlocBase {
   List<Project> _projects;
 
-  ApiService _apiService = ApiService();
+  ApiService _apiService;
+
+  ProjectsBloc(this._apiService);
 
   StreamController<List<Project>> _projectsController =
   StreamController<List<Project>>();
@@ -21,11 +23,7 @@ class ProjectsBloc implements BlocBase {
     _projectsController.close();
   }
 
-  ProjectsBloc() {
-    _getAllProjects();
-  }
-
-  void _getAllProjects() {
+  void getAllProjects() {
     _apiService.getAll().then((projects) {
       _projects = projects;
       _inProjects.add(_projects);
@@ -35,29 +33,26 @@ class ProjectsBloc implements BlocBase {
 
 class ProjectBloc implements BlocBase {
   Project _project;
-  String _projectId;
+  final String _id;
 
-  ApiService _apiService = ApiService();
+  final ApiService _apiService;
 
   StreamController<Project> _projectController = StreamController<Project>();
-
-  ProjectBloc(this._projectId);
 
   Sink<Project> get _inProject => _projectController.sink;
 
   Stream<Project> get outProject => _projectController.stream;
+
+
+  ProjectBloc(this._id, this._apiService);
 
   @override
   void dispose() {
     _projectController.close();
   }
 
-  ProjectsBloc() {
-    _getProject();
-  }
-
   void _getProject() {
-    _apiService.get(_projectId).then((project) {
+    _apiService.get(_id).then((project) {
       _project = project;
       _inProject.add(_project);
     });

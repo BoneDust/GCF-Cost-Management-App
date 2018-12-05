@@ -1,5 +1,7 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/authentication_bloc.dart';
+import 'package:cm_mobile/service/api_service.dart';
+import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:flutter/material.dart';
 import 'data/details.dart';
 import 'screen/index.dart';
@@ -14,7 +16,7 @@ class App extends StatefulWidget {
 }
 
 class _App extends State<App> {
-  final AuthenticationBloc _authenticationBloc = AuthenticationBloc();
+  final ApiService _apiService = ApiService();
 
   final routes = <String, WidgetBuilder>{
     '/Auth': (BuildContext context) => LoginScreen(),
@@ -33,16 +35,14 @@ class _App extends State<App> {
 
   };
 
-  _App() {
-    _authenticationBloc.onAppStart();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ServicesContainer(
+      child: MaterialApp(
         title: Details.COMPANY_TITLE,
         routes: routes,
         home: ForeManRoot(),
+      ),
     );
   }
 
