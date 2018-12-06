@@ -1,8 +1,5 @@
-import 'dart:collection';
-
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/screen/foreman/projects/project_container.dart';
-import 'package:cm_mobile/screen/foreman/projects/projects.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProjectsList extends StatelessWidget {

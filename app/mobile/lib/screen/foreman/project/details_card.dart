@@ -1,27 +1,12 @@
 import 'package:cm_mobile/model/project.dart';
-import 'package:cm_mobile/screen/foreman/project/project.dart';
 import 'package:flutter/material.dart';
 
 
 class DetailsCard  extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    return _DetailsCardRoot();
-  }
-}
-class _DetailsCardRoot extends StatelessWidget {
-  TextStyle baseTextStyle;
-  TextStyle headerStyle;
-  TextStyle subheadingStyle;
 
-  _DetailsCardRoot() {
-    baseTextStyle = const TextStyle();
-    headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0);
-    subheadingStyle = baseTextStyle.copyWith(
-      color: Colors.white,
-      fontSize: 12.0,);
-  }
+  Project project;
+
+  DetailsCard(this.project);
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +20,10 @@ class _DetailsCardRoot extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Details", style: headerStyle)
+                    Text("Details")
                   ]),
             ),
-            _DetailsCard(),
+            _DetailsCard(project),
           ],
         )
     );
@@ -46,9 +31,13 @@ class _DetailsCardRoot extends StatelessWidget {
 }
 
 class _DetailsCard extends StatelessWidget {
+
+  Project project ;
+
+  _DetailsCard(this.project);
+
   @override
   Widget build(BuildContext context) {
-    Project project;
 
     return Column(
       children: <Widget>[

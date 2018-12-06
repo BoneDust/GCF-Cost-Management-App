@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:cm_mobile/model/receipt.dart';
+import 'package:cm_mobile/model/stage.dart';
 import 'package:http/http.dart' as http;
 import 'package:cm_mobile/model/project.dart';
 import 'dart:convert';
@@ -8,7 +10,7 @@ class ApiService {
   String _url = "";
 
   Future<List<Project>> getAll() async {
-    List<Project> resultList = [Project(id: 1)];
+    List<Project> resultList = [Project(id: 1), Project(id: 1), Project(id: 1), Project(id: 1), Project(id: 1), Project(id: 1), Project(id: 1)];
     await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
@@ -21,7 +23,12 @@ class ApiService {
   }
 
   Future<Project> get(String id) async {
-    Project result = Project(id: 1);
+    Project result = Project(
+        id: 1,
+        stages: [Stage(), Stage(), Stage()]
+        , receipts: [
+          Receipt(supplier: "sdfsd", description: "sdfsdfds"),
+    ]);
     await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
@@ -31,5 +38,5 @@ class ApiService {
 //         .then((list) => list.forEach((item) => resultList.add(Project.fromJson(item))));
 
     return result;
-  }
+   }
 }

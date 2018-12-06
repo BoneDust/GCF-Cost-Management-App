@@ -1,26 +1,45 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/service/api_service.dart';
 import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 
-class ForeManProjectScreen extends StatelessWidget{
+class ForeManProjectScreen extends StatefulWidget {
   Project project;
 
   ForeManProjectScreen(this.project);
 
   @override
-  Widget build(BuildContext context) {
-    final ServicesContainerState servicesContainerState = ServicesContainer.of(
-        context);
-    final ProjectBloc projectBloc = ProjectBloc(
-        project.id.toString(), servicesContainerState.apiService);
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _ForeManProjectScreenState(project);
+  }
 
+}
+class _ForeManProjectScreenState extends State<ForeManProjectScreen>{
+  Project project;
+
+  _ForeManProjectScreenState(this.project);
+
+  ProjectBloc projectBloc;
+
+  @override
+  void initState() {
+    projectBloc  = ProjectBloc(project.id.toString(), ApiService());
+    projectBloc.getProject();
+    print("it was ran");
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return BlocProvider(
+      key: Key("bloc"),
       bloc: projectBloc,
       child: Scaffold(
-        body: _ForeManProject(project),
+        body: _ForeManProject(),
         floatingActionButton: FloatingActionButton(onPressed: () {
           Navigator.pushNamed(context, "/foreman/create_receipt");
         },
@@ -31,9 +50,6 @@ class ForeManProjectScreen extends StatelessWidget{
 }
 
 class _ForeManProject extends StatelessWidget {
-  Project project;
-
-  _ForeManProject(this.project);
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +83,10 @@ class _ForeManProject extends StatelessWidget {
                   children: <Widget>[
                     Padding(padding: EdgeInsets.only(bottom: 20),),
                     StagesCard(snapshot.data.stages),
-                    //   Padding(padding: EdgeInsets.only(bottom: 20),),
-                    //   ReceiptsCard(),
-                    //    Padding(padding: EdgeInsets.only(bottom: 20),),
-                    //   DetailsCard(),
+                    Padding(padding: EdgeInsets.only(bottom: 20),),
+                    ReceiptsCard(snapshot.data.receipts),
+                    Padding(padding: EdgeInsets.only(bottom: 20),),
+                    DetailsCard(snapshot.data),
                   ],
                 )
             )

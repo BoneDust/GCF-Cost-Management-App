@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/screen/foreman/project/project.dart';
+import 'package:cm_mobile/screen/foreman/stage/stage.dart';
 import 'package:flutter/material.dart';
 
 class StagesCard  extends StatelessWidget{
@@ -13,8 +14,7 @@ class StagesCard  extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return stages == null || stages.isEmpty ? Column() : _StagesCardRoot(
-        stages);
+    return stages == null || stages.isEmpty ? Column() : _StagesCardRoot(stages);
   }
 }
 
@@ -104,11 +104,20 @@ class _StageSampleCard extends StatelessWidget {
     return Container(
       width: 100,
       margin: EdgeInsets.only(left: 7),
-      child: Card(
-        child: Center(child: Text(stage.name)),
-        color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
-            rng.nextInt(255), rng.nextInt(255)),
+      child: GestureDetector(
+        onTap: () =>  _showStage(context, stage),
+        child: Card(
+          child: Center(child: Text(stage.name)),
+          color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
+              rng.nextInt(255), rng.nextInt(255)),
+        ),
       ),
     );
   }
+  _showStage(BuildContext context, Stage stage) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+        ForeManStageScreen(stage)
+    ));
+  }
+
 }

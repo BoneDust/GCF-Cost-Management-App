@@ -18,6 +18,7 @@ class _ForeManHomeState extends State<ForeManHome>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -45,10 +46,6 @@ class _ForeManHomeState extends State<ForeManHome>
       ) ,
       body: _ForeManHome(),
 
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.pushNamed(context, "/foreman/create_receipt");
-      },
-        child: ImageIcon(AssetImage("assets/icons/add_receipt.png")),),
     );
   }
 

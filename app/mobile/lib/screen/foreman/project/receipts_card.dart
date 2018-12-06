@@ -6,20 +6,26 @@ import 'package:cm_mobile/screen/foreman/project/project.dart';
 import 'package:flutter/material.dart';
 
 class ReceiptsCard extends StatelessWidget{
+  List<Receipt> receipts;
+
+  ReceiptsCard(this.receipts);
+
+
   @override
   Widget build(BuildContext context) {
-    HashSet<Receipt> receipts;
 
-    return receipts == null || receipts.isEmpty ? Column() : _ReceiptsCardRoot();
+
+    return receipts == null || receipts.isEmpty ? Column() : _ReceiptsCardRoot(receipts);
   }
 }
 class _ReceiptsCardRoot extends StatelessWidget {
+  List<Receipt> receipts;
 
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _ReceiptsCardRoot() {
+  _ReceiptsCardRoot(this.receipts) {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);
@@ -30,7 +36,6 @@ class _ReceiptsCardRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HashSet<Receipt> receipts;
 
     return Card(
         shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
@@ -49,7 +54,7 @@ class _ReceiptsCardRoot extends StatelessWidget {
                         new Text("Uploaded Receipts", style: headerStyle),
                         new Row(
                           children: <Widget>[
-                            Text("4", style: headerStyle.copyWith(color: Colors.grey)),
+                            Text(receipts.length.toString(), style: headerStyle.copyWith(color: Colors.grey)),
                             Icon(
                               Icons.chevron_right,
                               color: Colors.grey,
@@ -59,13 +64,18 @@ class _ReceiptsCardRoot extends StatelessWidget {
                         )
                       ]),
                 )),
-            ListView.builder(
-              itemCount: receipts.length,
-              padding: EdgeInsets.only(bottom: 30, top: 30),
-              itemBuilder: (BuildContext context, int index) {
-                return _ReceiptsCard(receipts.elementAt(index));
-              },
+            Container(
+              height: 200,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: receipts.length,
+                padding: EdgeInsets.only(bottom: 30, top: 30),
+                itemBuilder: (BuildContext context, int index) {
+                  return _ReceiptsCard(receipts.elementAt(index));
+                },
+              ),
             )
+
 
           ],
         )
@@ -74,7 +84,7 @@ class _ReceiptsCardRoot extends StatelessWidget {
 }
 
 class _ReceiptsCard extends StatelessWidget {
-  Receipt receipt;
+ final Receipt receipt;
 
   _ReceiptsCard(this.receipt);
 
