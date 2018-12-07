@@ -1,22 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'base_home_card.dart';
 
-class RecentReceiptCard  extends BaseHomeCard{
-  RecentReceiptCard() : super("Uploaded Receipts");
-
-  @override
-  Widget setChildren() {
-    return _RecentReceiptsCardRoot();
-  }
-}
-class _RecentReceiptsCardRoot extends StatelessWidget {
+class RecentReceiptCard extends StatelessWidget {
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _RecentReceiptsCardRoot() {
+  RecentReceiptCard() {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);

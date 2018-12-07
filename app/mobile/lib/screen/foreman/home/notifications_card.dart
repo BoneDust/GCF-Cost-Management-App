@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
-import 'base_home_card.dart';
 
 
-class HomeNotificationsCard  extends BaseHomeCard{
-  HomeNotificationsCard() : super("Uploaded Receipts");
-
-  @override
-  Widget setChildren() {
-    return _HomeNotificationsCard();
-  }
-}
-class _HomeNotificationsCard extends StatelessWidget {
+class HomeNotificationsCard extends StatelessWidget {
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _HomeNotificationsCard() {
+  HomeNotificationsCard() {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);
@@ -26,21 +17,40 @@ class _HomeNotificationsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.only(top: 10.0, left: 10.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Notifications", style: headerStyle)
-                  ]),
-            ),
-        _NotificationCard(),
-      ],
+    return Card(
+      child: Column(
+        children: <Widget>[
+          ExpansionTile(
+
+              title: Text("Notifications")
+          ),
+        ],
+      ),
     );
+//    return Column(
+//      children: <Widget>[
+//        Container(
+//          color: Colors.white,
+//          padding: EdgeInsets.only(top: 10.0, left: 10.0),
+//              child: Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: [
+//                    Text("Notifications", style: headerStyle)
+//                  ]),
+//            ),
+//        _NotificationCard(),
+//      ],
+//    );
   }
+}
+
+class _TopTenNotications extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Column();
+  }
+
 }
 
 class _NotificationCard extends StatelessWidget {

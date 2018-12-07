@@ -59,9 +59,9 @@ class _ForeManHome extends StatelessWidget {
       children: <Widget>[
         Padding(padding: EdgeInsets.only(top: 20.0),),
         HomeNotificationsCard(),
-        Padding(padding: EdgeInsets.only(top: 20.0),),
-        RecentReceiptCard(),
-        Padding(padding: EdgeInsets.only(top: 40.0),),
+        //  Padding(padding: EdgeInsets.only(top: 20.0),),
+        //  RecentReceiptCard(),
+        //  Padding(padding: EdgeInsets.only(top: 40.0),),
 
       ],
     );
