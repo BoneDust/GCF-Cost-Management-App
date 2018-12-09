@@ -69,6 +69,11 @@ functions:
           cors: true
           
       - http:
+          path: users/logout
+          method: post
+          cors: true
+      
+      - http:
           path: users
           method: post
           cors: true
@@ -111,6 +116,25 @@ functions:
   #         method: delete
   #         cors: true
 
+      # - http:
+      #     path: receipts/{receiptid}
+      #     method: get
+      #     cors: true
+          
+      # - http:
+      #     path: receipts
+      #     method: post
+      #     cors: true
+      
+      # - http:
+      #     path: stages/{stageid}
+      #     method: put
+      #     cors: true
+      
+      # - http:
+      #     path: receipts/{receiptid}
+      #     method: delete
+      #     cors: true
 
 resources:
   Resources:

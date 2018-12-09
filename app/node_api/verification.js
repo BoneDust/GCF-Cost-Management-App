@@ -1,87 +1,61 @@
-const AWS = require('aws-sdk');
-const TOKEN_TABLE = process.env.TOKENS_TABLE;
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const AWS = require('aws-sdk')
+const TOKEN_TABLE = process.env.TOKENS_TABLE
+const dynamoDb = new AWS.DynamoDB.DocumentClient()
 
 module.exports = {
-    isValidAdmin: function(token)
-    {
-        if (!token)
-            return (false);
-        else
-        {
+
+    isValidAdmin: async function (tokenKey) {
+
+        if (tokenKey !== undefined) {
             const params = {
                 TableName: TOKEN_TABLE,
                 Key: {
-                    token: token,
-                },
-            };
-            dynamoDb.get(params, (error, result) => {
-                if (error)
-                    return (false);
-                else if (result.Count > 0)
-                {
-                    const key = result.Item;
-                    if (key.privilege === 'admin')
-                        return (true);
-                    else
-                        return (false);
+                    token: tokenKey
                 }
-                else
-                    return (false);
-            });
+            }
+            const data = await dynamoDb.get(params).promise()
+            return (data.Item !== undefined && data.Item.privilege === "admin")
         }
+        else
+            return false
     },
 
-    isValidUser: function(token)
-    {
-        if (!token)
-            return (false);
-        else
-        {
+    isValidUser: async function (tokenKey) {
+
+        if (tokenKey !== undefined) {
             const params = {
                 TableName: TOKEN_TABLE,
                 Key: {
-                    token: token,
-                },
-            };
-            dynamoDb.get(params, (error, result) => {
-                if (error)
-                    return (false);
-                else if (result.Count > 0)
-                    return (true);
-                else
-                    return (false);
-            });
+                    token: tokenKey
+                }
+            }
+            const data = await dynamoDb.get(params).promise()
+            return (data.Item !== undefined)
         }
+        else
+            return false
     },
 
-    saveUsertoken: function(token, privilege)
-    {
+    saveAccessToken: async function (tokenKey, privilege) {
+
         const params = {
             TableName: TOKEN_TABLE,
             Item: {
-                token: token,
-                privilege: privilege,
-            },
-        };    
-        dynamoDb.put(params, (error) =>{
-            if(error)
-                console.log(error);
-        });
+                token: tokenKey,
+                privilege: privilege
+            }
+        }
+        /*const result =*/ await dynamoDb.put(params).promise()
+        //return (result)
     },
 
-    deleteUserToken: function (token)
-    {
+    deleteUserToken: async function (tokenKey) {
         const params = {
             TableName: TOKEN_TABLE,
             Key: {
-                token: token,
-            },
-        }    
-        dynamoDb.delete(params, (error)  =>
-        {
-            if (error)
-                console.log(error);
-        });
+                token: tokenKey
+            }
+        }
+        await dynamoDb.delete(params).promise()
     }
-};
+}
