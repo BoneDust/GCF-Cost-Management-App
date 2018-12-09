@@ -45,8 +45,7 @@ module.exports = {
                 privilege: privilege
             }
         }
-        /*const result =*/ await dynamoDb.put(params).promise()
-        //return (result)
+        await dynamoDb.put(params).promise()
     },
 
     deleteUserToken: async function (tokenKey) {
