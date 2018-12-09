@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 
 
-class HomeNotificationsCard extends StatelessWidget {
-  TextStyle baseTextStyle;
-  TextStyle headerStyle;
-  TextStyle subheadingStyle;
-
-  HomeNotificationsCard() {
-    baseTextStyle = const TextStyle();
-    headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0);
-    subheadingStyle = baseTextStyle.copyWith(
-      color: Colors.white,
-      fontSize: 12.0,);
+class ForemanHomeNotifications extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _ForemanHomeNotificationsState();
   }
+}
+
+class _ForemanHomeNotificationsState extends State<ForemanHomeNotifications> {
+
+  bool isDown = true;
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +20,15 @@ class HomeNotificationsCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           ExpansionTile(
-
-              title: Text("Notifications")
+            title: Row(
+              children: <Widget>[
+                Text("Notifications"),
+              ],
+            ),
+            children: <Widget>[
+              _TopThreeNotification(),
+              _NotificationActions()
+            ],
           ),
         ],
       ),
@@ -44,41 +50,47 @@ class HomeNotificationsCard extends StatelessWidget {
   }
 }
 
-class _TopTenNotications extends StatelessWidget {
+
+class NotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column();
+    return Container(
+      decoration: BoxDecoration(
+        border: BorderDirectional(bottom: BorderSide(color: Colors.grey)),
+      ),
+      child: ListTile(
+        dense: true,
+        title: Text("You have been assigned to a project"),
+        subtitle: Text("Standard bank project created by Dale. "),
+        trailing: Text("8 Dec"),
+      ),
+    );
   }
-
 }
 
-class _NotificationCard extends StatelessWidget {
+class _TopThreeNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
         children: <Widget>[
-          ListTile(
-            title: Text("Project 1"),
-            subtitle: Text("project"),
-          ),
-          Divider(color: Colors.black54,),
-          ListTile(
-            title: Text("Company 1"),
-            subtitle: Text("company"),
-          ),
-          Divider(color: Colors.black54,),
-          ListTile(
-            title: Text("11/11/11"),
-            subtitle: Text("Start Date"),
-
-          ),
-          Divider(color: Colors.black54,),
-          ListTile(
-            title: Text("11/11/11"),
-            subtitle: Text("End Date"),
-          )
-        ],
+          NotificationTile(),
+          NotificationTile(),
+          NotificationTile(),
+        ]
     );
   }
+}
+
+class _NotificationActions extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        FlatButton(child: Text("All Notifications"), onPressed: () {}),
+
+      ],
+    );
+  }
+
 }

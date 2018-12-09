@@ -1,5 +1,5 @@
+import 'package:cm_mobile/screen/foreman/home/grid_menu.dart';
 import 'package:cm_mobile/screen/foreman/home/notifications_card.dart';
-import 'package:cm_mobile/screen/foreman/home/recent_receipt_card.dart';
 import 'package:flutter/material.dart';
 
 class ForeManHome extends StatefulWidget {
@@ -7,7 +7,6 @@ class ForeManHome extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _ForeManHomeState();
   }
-
 }
 
 class _ForeManHomeState extends State<ForeManHome>
@@ -44,25 +43,25 @@ class _ForeManHomeState extends State<ForeManHome>
           ],
         ),
       ) ,
-      body: _ForeManHome(),
+      body: _ForeManHomeBody(),
 
     );
   }
 
 }
 
-
-class _ForeManHome extends StatelessWidget {
+class _ForeManHomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        Padding(padding: EdgeInsets.only(top: 20.0),),
-        HomeNotificationsCard(),
-        //  Padding(padding: EdgeInsets.only(top: 20.0),),
-        //  RecentReceiptCard(),
-        //  Padding(padding: EdgeInsets.only(top: 40.0),),
-
+    return CustomScrollView(
+      slivers: <Widget>[
+         SliverList(
+          delegate:  SliverChildListDelegate([
+            ForemanHomeNotifications(),
+            Padding(padding: EdgeInsets.only(top: 10),)
+          ])
+        ),
+        SliverGridMenu()
       ],
     );
   }

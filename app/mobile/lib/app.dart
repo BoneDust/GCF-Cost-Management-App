@@ -27,9 +27,7 @@ class _App extends State<App> {
     '/AdminProfile': (BuildContext context) => AdminProfilesScreen(),
     '/Profile': (BuildContext context) => ProfileScreen(),
     '/AdminStatistics': (BuildContext context) => AdminStatistics(),
-    '/foreman/stages': (BuildContext context) => ForeManStagesScreen(),
     '/foreman/receipts': (BuildContext context) => ForeManReceiptsScreen(),
-    '/foreman/receipt': (BuildContext context) => ForeManReceiptScreen(),
     '/foreman/create_receipt': (BuildContext context) => ForeManCreateReceiptScreen(),
     '/foreman/menu': (BuildContext context) => ForeManMenu(),
 
@@ -38,7 +36,7 @@ class _App extends State<App> {
   @override
   Widget build(BuildContext context) {
     return ServicesContainer(
-      child: MaterialApp(
+      child:  MaterialApp(
         title: Details.COMPANY_TITLE,
         routes: routes,
         home: ForeManRoot(),

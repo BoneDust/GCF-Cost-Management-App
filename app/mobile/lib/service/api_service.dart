@@ -28,6 +28,10 @@ class ApiService {
         stages: [Stage(), Stage(), Stage()]
         , receipts: [
           Receipt(supplier: "sdfsd", description: "sdfsdfds"),
+          Receipt(supplier: "sdfsd", description: "sdfsdfds"),
+          Receipt(supplier: "sdfsd", description: "sdfsdfds"),
+          Receipt(supplier: "sdfsd", description: "sdfsdfds"),
+
     ]);
     await Future.delayed(Duration(seconds: 2));
 

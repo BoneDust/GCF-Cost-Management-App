@@ -18,15 +18,16 @@ class ForeManRoot extends StatelessWidget{
               ForeManProjects()
             ]),
             bottomNavigationBar: Material(
-              color: Colors.grey,
+              type: MaterialType.card,
+              elevation: 20.0,
               child:  TabBar(tabs: [
                 Tab(icon: Icon(Icons.home)),
-                Tab(icon: Icon(Icons.assessment))
+                Tab(icon: Icon(Icons.assignment))
               ],
                 indicatorColor: Colors.red,
                 indicatorSize: TabBarIndicatorSize.label,
-                unselectedLabelColor: Colors.black,
-                labelColor: Colors.black,
+                unselectedLabelColor: Colors.grey,
+                labelColor: Colors.blue,
               ),
 
             )

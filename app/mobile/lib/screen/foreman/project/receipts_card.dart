@@ -3,10 +3,12 @@ import 'dart:collection';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/screen/foreman/project/project.dart';
+import 'package:cm_mobile/screen/foreman/receipt/receipt.dart';
+import 'package:cm_mobile/screen/foreman/receipts/receipts_list.dart';
 import 'package:flutter/material.dart';
 
 class ReceiptsCard extends StatelessWidget{
-  List<Receipt> receipts;
+  final List<Receipt> receipts;
 
   ReceiptsCard(this.receipts);
 
@@ -19,7 +21,7 @@ class ReceiptsCard extends StatelessWidget{
   }
 }
 class _ReceiptsCardRoot extends StatelessWidget {
-  List<Receipt> receipts;
+  final List<Receipt> receipts;
 
   TextStyle baseTextStyle;
   TextStyle headerStyle;
@@ -36,6 +38,7 @@ class _ReceiptsCardRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   var topThreeReceipts = receipts.take(3).toList();
 
     return Card(
         shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
@@ -43,7 +46,9 @@ class _ReceiptsCardRoot extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, "/foreman/stages");
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                      ForemanReceiptsList(receipts: receipts, appBarTitle: "Receipts",)
+                  ));
                 },
                 child: Container(
                   color: Colors.white,
@@ -63,20 +68,13 @@ class _ReceiptsCardRoot extends StatelessWidget {
                           ],
                         )
                       ]),
-                )),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: receipts.length,
-                padding: EdgeInsets.only(bottom: 30, top: 30),
-                itemBuilder: (BuildContext context, int index) {
-                  return _ReceiptsCard(receipts.elementAt(index));
-                },
-              ),
+                )
+            ),
+            Column(
+              children: topThreeReceipts.map((receipt){
+                return _ReceiptsCard(receipt);
+              }).toList(),
             )
-
-
           ],
         )
     );
@@ -90,13 +88,29 @@ class _ReceiptsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text("Payment made to " + receipt.supplier),
-      subtitle: Text("Description: " + receipt.description),
-      leading: Image(
-        image: AssetImage("assets/images.jpeg"),
-        width: 60,
-        height: 60,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey))
+      ),
+      child: ListTile(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              ForeManReceiptScreen()));
+          },
+        trailing: Text("2d"),
+        title: Text("Payment made to " + receipt.supplier),
+        subtitle: Text("Description: " + receipt.description),
+        leading: Container(
+          height: 50,
+          width: 50,
+          decoration:  BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  image: AssetImage("assets/images.jpeg"),
+                  fit: BoxFit.cover
+              )
+          ),
+        ),
       ),
     );
   }

@@ -1,15 +1,21 @@
 import 'dart:math';
 
+import 'package:cm_mobile/model/stage.dart';
+import 'package:cm_mobile/screen/foreman/stage/stage.dart';
 import 'package:flutter/material.dart';
 
 class ForeManStagesScreen extends StatelessWidget {
+  final List<Stage> stages;
+
+  const ForeManStagesScreen({Key key, @required this.stages}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Stages"),
       ),
-      body: _StagesScreen(),
+      body: _StagesScreen(stages: stages,),
       floatingActionButton: FloatingActionButton(onPressed: () {
         Navigator.pushNamed(context, "/foreman/create_receipt");
       },
@@ -19,6 +25,10 @@ class ForeManStagesScreen extends StatelessWidget {
 }
 
 class _StagesScreen extends StatelessWidget {
+  final List<Stage> stages;
+
+  const _StagesScreen({Key key, @required this.stages}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -27,26 +37,9 @@ class _StagesScreen extends StatelessWidget {
         Center(
           heightFactor: 1,
           child: Wrap(
-            children: <Widget>[
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-              _StageSampleCard("1"),
-            ],
+            children: stages.map((stage) {
+              return _StageSampleCard(stage);
+            }).toList() ,
           ),
         ),
         Padding(padding: EdgeInsets.only(top: 20.0),),
@@ -54,13 +47,14 @@ class _StagesScreen extends StatelessWidget {
       ],
     );
   }
+
 }
 
 class _StageSampleCard extends StatelessWidget {
-  String title;
+  final Stage stage;
   static var rng = new Random();
 
-  _StageSampleCard(this.title);
+  _StageSampleCard(this.stage);
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +63,13 @@ class _StageSampleCard extends StatelessWidget {
       height: 100,
       margin: EdgeInsets.only(left: 7),
       child: InkWell(
-        onTap: () {Navigator.pushNamed(context, "/foreman/stage"); },
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+              ForeManStageScreen(stage)
+          ));
+        },
         child:  Card(
-          child: Center(child: Text(title)),
+          child: Center(child: Text(stage.name)),
           color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
               rng.nextInt(255), rng.nextInt(255)),
         ),

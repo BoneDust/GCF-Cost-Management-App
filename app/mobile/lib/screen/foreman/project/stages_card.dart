@@ -5,6 +5,7 @@ import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/screen/foreman/project/project.dart';
 import 'package:cm_mobile/screen/foreman/stage/stage.dart';
+import 'package:cm_mobile/screen/foreman/stages/stages.dart';
 import 'package:flutter/material.dart';
 
 class StagesCard  extends StatelessWidget{
@@ -42,7 +43,9 @@ class _StagesCardRoot extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, "/foreman/stages");
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                      ForeManStagesScreen(stages: stages,)
+                  ));
                 },
                 child: Container(
                   color: Colors.white,
@@ -62,7 +65,8 @@ class _StagesCardRoot extends StatelessWidget {
                           ],
                         )
                       ]),
-                )),
+                )
+            ),
             _StagesCard(stages),
           ],
         )
