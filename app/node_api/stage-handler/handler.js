@@ -208,34 +208,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bo
 
 //endpoint function that returns all stages
 app.get('/stages', (req, res) => {
-
-    if (req.query.search) {
-        const filterParams = {
-            TableName: STAGES_TABLE,
-            FilterExpression: "contains(stage, :phrase)",
-            ExpressionAttributeValues: {
-                ":phrase": req.query.search,
-            },
-        };
-
-        dynamoDb.scan(filterParams, (error, result) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-            }
-            if (result.Items) {
-                const responseStatusCode = 200;
-                const response = {
-                    stages: result.Items,
-                };
-                res.status(responseStatusCode).json(response);
-            }
-        });
-        return;
-    }
     const params = {
         TableName: STAGES_TABLE,
     };
