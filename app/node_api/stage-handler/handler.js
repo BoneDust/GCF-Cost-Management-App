@@ -1,13 +1,13 @@
-const express = require('express');
-const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
-const uuid = require('uuid');//will be used to create the jwt token boon
-const AWS = require('aws-sdk');
-const app = express();
+// const express = require('express');
+// const serverless = require('serverless-http');
+// const bodyParser = require('body-parser');
+// const uuid = require('uuid');//will be used to create the jwt token boon
+// const AWS = require('aws-sdk');
+// const app = express();
 
-const STAGES_TABLE = process.env.STAGES_TABLE;
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-var stageCount = 0;
+// const STAGES_TABLE = process.env.STAGES_TABLE;
+// const dynamoDb = new AWS.DynamoDB.DocumentClient();
+// var stageCount = 0;
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies

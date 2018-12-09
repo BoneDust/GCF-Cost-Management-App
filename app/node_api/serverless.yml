@@ -11,6 +11,7 @@ custom:
   notificationTableName: 'notification-Table-${self:provider.stage}'
   receiptTableName: 'receipt-Table-${self:provider.stage}'
   stageTableName: 'stage-Table-${self:provider.stage}'
+  tokenTableName: 'token-Table-${self:provider.stage}'
 
 provider:
   name: aws
@@ -35,6 +36,7 @@ provider:
         - { "Fn::GetAtt": ["StagesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["ReceiptsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["NotificationsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["TokensDynamoDBTable", "Arn" ] }
   
   environment:
     USERS_TABLE: ${self:custom.userTableName}
@@ -43,6 +45,7 @@ provider:
     NOTIFICATIONS_TABLE: ${self:custom.notificationTableName}
     RECEIPTS_TABLE: ${self:custom.receiptTableName}
     STAGES_TABLE: ${self:custom.stageTableName}
+    TOKENS_TABLE: ${self:custom.tokenTableName}
 
 
 
@@ -66,6 +69,11 @@ functions:
           cors: true
           
       - http:
+          path: users/logout 
+          method: post
+          cors: true
+      
+      - http:
           path: users
           method: post
           cors: true
@@ -80,61 +88,53 @@ functions:
           method: delete
           cors: true
 
-  stagesFunction:
-    handler: stage-handler/handler.handler
-    events:
-      - http:
-          path: stages
-          method: get
-          cors: true
+  # stagesFunction:
+  #   handler: stage-handler/handler.handler
+  #   events:
+  #     - http:
+  #         path: stages
+  #         method: get
+  #         cors: true
 
-      - http:
-          path: stages/{stageid}
-          method: get
-          cors: true
+  #     - http:
+  #         path: stages/{stageid}
+  #         method: get
+  #         cors: true
           
-      - http:
-          path: stages
-          method: post
-          cors: true
+  #     - http:
+  #         path: stages
+  #         method: post
+  #         cors: true
       
-      - http:
-          path: stages/{stageid}
-          method: put
-          cors: true
+  #     - http:
+  #         path: stages/{stageid}
+  #         method: put
+  #         cors: true
       
-      - http:
-          path: stages/{stageid}
-          method: delete
-          cors: true
-        
-  receiptsFunction:
-    handler: receipt-handler/handler.handler
-    events:
-      - http:
-          path: receipts
-          method: get
-          cors: true
+  #     - http:
+  #         path: stages/{stageid}
+  #         method: delete
+  #         cors: true
 
-      - http:
-          path: receipts/{receiptid}
-          method: get
-          cors: true
+      # - http:
+      #     path: receipts/{receiptid}
+      #     method: get
+      #     cors: true
           
-      - http:
-          path: receipts
-          method: post
-          cors: true
+      # - http:
+      #     path: receipts
+      #     method: post
+      #     cors: true
       
-      - http:
-          path: stages/{stageid}
-          method: put
-          cors: true
+      # - http:
+      #     path: stages/{stageid}
+      #     method: put
+      #     cors: true
       
-      - http:
-          path: receipts/{receiptid}
-          method: delete
-          cors: true
+      # - http:
+      #     path: receipts/{receiptid}
+      #     method: delete
+      #     cors: true
 
 resources:
   Resources:
@@ -239,17 +239,34 @@ resources:
         TableName: ${self:custom.projectTableName}
 
     NotificationsDynamoDBTable:
-        Type: 'AWS::DynamoDB::Table'
-        Properties:
-          AttributeDefinitions:
-            -
-              AttributeName: notificationId
-              AttributeType: N
-          KeySchema:
-            -
-              AttributeName: notificationId
-              KeyType: HASH
-          ProvisionedThroughput:
-            ReadCapacityUnits: 2
-            WriteCapacityUnits: 2
-          TableName: ${self:custom.notificationTableName}
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: notificationId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: notificationId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
+        TableName: ${self:custom.notificationTableName}
+
+    TokensDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: token
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: token
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tokenTableName}
+
