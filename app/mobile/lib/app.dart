@@ -1,10 +1,10 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/authentication_bloc.dart';
+import 'package:cm_mobile/screen/admin/root.dart';
 import 'package:flutter/material.dart';
 import 'data/details.dart';
 import 'screen/index.dart';
 import 'bloc/authentication_bloc.dart';
-
 
 class App extends StatefulWidget {
   @override
@@ -20,20 +20,21 @@ class _App extends State<App> {
     '/Auth': (BuildContext context) => LoginScreen(),
     '/Home': (BuildContext context) => ForeManHome(),
     '/AdminHome': (BuildContext context) => AdminHomeScreen(),
+    '/AdminMenu': (BuildContext context) => AdminMenu(),
     '/Projects': (BuildContext context) => ForeManProjects(),
     '/AdminProjects': (BuildContext context) => AdminProjectsScreen(),
     '/AdminProfile': (BuildContext context) => AdminProfilesScreen(),
     '/Profile': (BuildContext context) => ProfileScreen(),
     '/AdminStatistics': (BuildContext context) => AdminStatistics(),
-    '/foreman/project' : (BuildContext context) => ForeManProjectScreen(),
+    '/foreman/project': (BuildContext context) => ForeManProjectScreen(),
     '/foreman/stages': (BuildContext context) => ForeManStagesScreen(),
     '/foreman/stage': (BuildContext context) => ForeManStageScreen(),
     '/foreman/receipts': (BuildContext context) => ForeManReceiptsScreen(),
     '/foreman/receipt': (BuildContext context) => ForeManReceiptScreen(),
-    '/foreman/create_receipt': (BuildContext context) => ForeManCreateReceiptScreen(),
+    '/foreman/create_receipt': (BuildContext context) =>
+        ForeManCreateReceiptScreen(),
     '/foreman/menu': (BuildContext context) => ForeManMenu(),
     '/camera_screen': (BuildContext context) => CameraScreen(),
-
   };
 
   _App() {
@@ -47,7 +48,7 @@ class _App extends State<App> {
       child: MaterialApp(
         title: Details.COMPANY_TITLE,
         routes: routes,
-        home: ForeManRoot(),
+        home: AdminRoot(),
       ),
     );
   }
@@ -93,8 +94,3 @@ class _App extends State<App> {
 //    );
 //  }
 }
-
-
-
-
-
