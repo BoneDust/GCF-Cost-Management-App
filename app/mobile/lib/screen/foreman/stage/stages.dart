@@ -15,11 +15,7 @@ class ForeManStagesScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Stages"),
       ),
-      body: _StagesScreen(stages: stages,),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.pushNamed(context, "/foreman/create_receipt");
-      },
-        child: ImageIcon(AssetImage("assets/icons/add_receipt.png")),),
+      body: _StagesScreen(stages: stages,)
     );
   }
 }

@@ -69,7 +69,7 @@ class _ProjectCard extends StatelessWidget {
 }
 
 class _ProjectContentCard extends StatelessWidget {
-  Project project;
+  final Project project;
 
   TextStyle baseTextStyle;
   TextStyle headerStyle;

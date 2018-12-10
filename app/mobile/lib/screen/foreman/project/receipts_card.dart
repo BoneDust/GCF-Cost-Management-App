@@ -2,9 +2,10 @@ import 'dart:collection';
 
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
+import 'package:cm_mobile/screen/foreman/receipt/receipt_tile.dart';
 import 'package:cm_mobile/screen/foreman/project/project.dart';
 import 'package:cm_mobile/screen/foreman/receipt/receipt.dart';
-import 'package:cm_mobile/screen/foreman/receipts/receipts_list.dart';
+import 'package:cm_mobile/screen/foreman/receipt/receipts_list.dart';
 import 'package:flutter/material.dart';
 
 class ReceiptsCard extends StatelessWidget{
@@ -15,8 +16,6 @@ class ReceiptsCard extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-
-
     return receipts == null || receipts.isEmpty ? Column() : _ReceiptsCardRoot(receipts);
   }
 }
@@ -72,46 +71,11 @@ class _ReceiptsCardRoot extends StatelessWidget {
             ),
             Column(
               children: topThreeReceipts.map((receipt){
-                return _ReceiptsCard(receipt);
+                return ReceiptTile(receipt);
               }).toList(),
             )
           ],
         )
-    );
-  }
-}
-
-class _ReceiptsCard extends StatelessWidget {
- final Receipt receipt;
-
-  _ReceiptsCard(this.receipt);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey))
-      ),
-      child: ListTile(
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>
-              ForeManReceiptScreen()));
-          },
-        trailing: Text("2d"),
-        title: Text("Payment made to " + receipt.supplier),
-        subtitle: Text("Description: " + receipt.description),
-        leading: Container(
-          height: 50,
-          width: 50,
-          decoration:  BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  image: AssetImage("assets/images.jpeg"),
-                  fit: BoxFit.cover
-              )
-          ),
-        ),
-      ),
     );
   }
 }

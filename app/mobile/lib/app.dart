@@ -16,8 +16,6 @@ class App extends StatefulWidget {
 }
 
 class _App extends State<App> {
-  final ApiService _apiService = ApiService();
-
   final routes = <String, WidgetBuilder>{
     '/Auth': (BuildContext context) => LoginScreen(),
     '/Home': (BuildContext context) => ForeManHome(),
@@ -27,7 +25,6 @@ class _App extends State<App> {
     '/AdminProfile': (BuildContext context) => AdminProfilesScreen(),
     '/Profile': (BuildContext context) => ProfileScreen(),
     '/AdminStatistics': (BuildContext context) => AdminStatistics(),
-    '/foreman/receipts': (BuildContext context) => ForeManReceiptsScreen(),
     '/foreman/create_receipt': (BuildContext context) => ForeManCreateReceiptScreen(),
     '/foreman/menu': (BuildContext context) => ForeManMenu(),
 
@@ -43,47 +40,6 @@ class _App extends State<App> {
       ),
     );
   }
-
-//  Widget _rootPage() {
-//    return BlocBuilder<AuthenticationEvent, AuthenticationState>(
-//      bloc: _authenticationBloc,
-//      builder: (BuildContext context, AuthenticationState state) {
-//        List<Widget> widgets = [];
-//
-//        if (state.isAuthenticated) {
-//          widgets.add(HomePage());
-//        } else {
-//          widgets.add(LoginPage());
-//        }
-//
-//        if (state.isInitializing) {
-//          widgets.add(SplashPage());
-//        }
-//
-//        if (state.isLoading) {
-//          widgets.add(_loadingIndicator());
-//        }
-//
-//        return Stack(
-//          children: widgets,
-//        );
-//      },
-//    );
-//  }
-//
-//  Widget _loadingIndicator() {
-//    return Stack(
-//      children: <Widget>[
-//        Opacity(
-//          opacity: 0.3,
-//          child: ModalBarrier(dismissible: false, color: Colors.grey),
-//        ),
-//        Center(
-//          child: CircularProgressIndicator(),
-//        ),
-//      ],
-//    );
-//  }
 }
 
 

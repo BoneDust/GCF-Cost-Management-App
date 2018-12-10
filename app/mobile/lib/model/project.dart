@@ -13,8 +13,8 @@ class Project {
   String status;
   double expenditure;
   User foreman;
-  String startDate;
-  String endDate;
+  DateTime startDate;
+  DateTime endDate;
   List<Receipt> receipts;
 
   List<Stage> stages;
@@ -29,8 +29,8 @@ class Project {
     this.status = "",
     this.expenditure = 0.0,
     this.foreman,
-    this.startDate = "",
-    this.endDate = "",
+    this.startDate,
+    this.endDate,
     this.receipts,
     this.stages,
     this.teamSize

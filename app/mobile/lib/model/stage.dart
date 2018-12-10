@@ -6,21 +6,20 @@ class Stage {
   String status;
   String beforePicture;
   String afterPicture;
-  String startDate;
-  String endDate;
-  String estimatedDuration;
+  DateTime startDate;
+  DateTime endDate;
+  int estimatedDaysDuration;
 
-  Stage(
-      {this.id = 0,
-      this.projectId = 0,
-      this.name = "",
-      this.description = "",
-      this.status = "",
-      this.beforePicture = "",
-      this.afterPicture = "",
-      this.startDate = "",
-      this.endDate = "",
-      this.estimatedDuration = ""});
+  Stage({
+    this.id = 0,
+    this.projectId = 0,
+    this.name = "",
+    this.description = "",
+    this.status = "",
+    this.beforePicture = "",
+    this.afterPicture = "",
+    this.endDate,
+    this.estimatedDaysDuration = 2});
 
   @override
   bool operator ==(Object other) =>

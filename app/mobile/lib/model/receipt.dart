@@ -5,7 +5,7 @@ class Receipt {
   String description;
   double totalCost;
   String picture;
-  String purchaseDate;
+  DateTime purchaseDate;
 
   Receipt(
       {this.id = 0,
@@ -14,7 +14,7 @@ class Receipt {
       this.description = "",
       this.totalCost = 0,
       this.picture = "",
-      this.purchaseDate = ""});
+      this.purchaseDate});
 
   @override
   bool operator ==(Object other) =>

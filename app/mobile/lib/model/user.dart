@@ -8,6 +8,7 @@ class User {
   String contactNo;
   String privileges;
 
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

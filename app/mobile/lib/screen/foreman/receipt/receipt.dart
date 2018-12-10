@@ -1,53 +1,47 @@
+import 'package:cm_mobile/model/receipt.dart';
 import 'package:flutter/material.dart';
 
 class ForeManReceiptScreen extends  StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _ForeManReceiptScreen(),
-    );
-  }
-}
+  final Receipt receipt;
 
-class _ForeManReceiptScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _ForeManCreateReceiptState();
-  }
-}
-
-class _ForeManCreateReceiptState extends State<_ForeManReceiptScreen> {
+  ForeManReceiptScreen(this.receipt);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return CustomScrollView(
-      slivers: <Widget>[
-        new SliverAppBar(
-          floating: true,
-          expandedHeight: 300.0,
-          flexibleSpace: new FlexibleSpaceBar(
-            background: Image(
+    return Material(
+      child: CustomScrollView(
+        slivers: <Widget>[
+          new SliverAppBar(
+            floating: true,
+            expandedHeight: 300.0,
+            flexibleSpace: new FlexibleSpaceBar(
+              background: Image(
                 image: AssetImage("assets/images.jpeg"),
-              fit: BoxFit.cover,
-            ) ,
+                fit: BoxFit.cover,
+              ) ,
+            ),
           ),
-        ),
-        new SliverPadding(
-          padding: new EdgeInsets.all(16.0),
-          sliver: new SliverList(
-            delegate: new SliverChildListDelegate([
-              _ReceiptFields()
-            ]),
+          SliverPadding(
+            padding: EdgeInsets.all(16.0),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                _ReceiptFields(receipt)
+              ]),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
 }
 
 class _ReceiptFields extends StatelessWidget {
+  final Receipt receipt;
+
+  _ReceiptFields(this.receipt);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -56,7 +50,7 @@ class _ReceiptFields extends StatelessWidget {
           width: double.infinity,
           child: Card(
             child: ListTile(
-              title: Text("R200"),
+              title: Text(receipt.totalCost.toString()),
               subtitle: Text("Amount"),
             ),
           ),
@@ -65,7 +59,7 @@ class _ReceiptFields extends StatelessWidget {
           width: double.infinity,
           child: Card(
             child: ListTile(
-              title: Text("Builder's warehouse"),
+              title: Text(receipt.supplier),
               subtitle: Text("Supplier"),
             ),
           ),
@@ -74,7 +68,7 @@ class _ReceiptFields extends StatelessWidget {
           width: double.infinity,
           child: Card(
             child: ListTile(
-              title: Text("Brought these things where ever"),
+              title: Text(receipt.description),
               subtitle: Text("Description"),
             ),
           ),

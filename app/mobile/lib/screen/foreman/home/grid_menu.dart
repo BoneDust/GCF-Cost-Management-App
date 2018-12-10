@@ -1,4 +1,4 @@
-import 'package:cm_mobile/screen/foreman/receipts/receipts_list.dart';
+import 'package:cm_mobile/screen/foreman/receipt/receipts_list.dart';
 import 'package:flutter/material.dart';
 
 class SliverGridMenu extends StatelessWidget{

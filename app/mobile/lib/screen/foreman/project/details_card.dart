@@ -1,12 +1,22 @@
 import 'package:cm_mobile/model/project.dart';
 import 'package:flutter/material.dart';
 
-
-class DetailsCard  extends StatelessWidget{
-
+class DetailsCard extends StatelessWidget{
   Project project;
 
   DetailsCard(this.project);
+
+  @override
+  Widget build(BuildContext context) {
+    return project == null ? Column() : _DetailsCardRoot(project);
+  }
+}
+
+class _DetailsCardRoot  extends StatelessWidget{
+
+  Project project;
+
+  _DetailsCardRoot(this.project);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +42,7 @@ class DetailsCard  extends StatelessWidget{
 
 class _DetailsCard extends StatelessWidget {
 
-  Project project ;
+  final Project project ;
 
   _DetailsCard(this.project);
 
@@ -43,25 +53,25 @@ class _DetailsCard extends StatelessWidget {
       children: <Widget>[
         ListTile(
           title: Text(project.name),
-          subtitle: Text(project.description),
+          subtitle: Text("Name"),
           leading: Icon(Icons.assignment),
         ),
         Divider(color: Colors.black54,),
         ListTile(
-          title: Text("Company 1"),
-          subtitle: Text("company"),
+          title: Text(project.clientId.toString()),
+          subtitle: Text("Company"),
           leading: Icon(Icons.business_center),
         ),
         Divider(color: Colors.black54,),
         ListTile(
-          title: Text("11/11/11"),
+          title: Text(project.startDate.toString()),
           subtitle: Text("Start Date"),
           leading: Icon(Icons.date_range),
 
         ),
         Divider(color: Colors.black54,),
         ListTile(
-          title: Text("11/11/11"),
+          title: Text(project.endDate.toIso8601String()),
           subtitle: Text("End Date"),
           leading: Icon(Icons.date_range),
 
