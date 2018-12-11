@@ -1,0 +1,4 @@
+enum Privilege {
+  ADMIN,
+  FOREMAN
+}

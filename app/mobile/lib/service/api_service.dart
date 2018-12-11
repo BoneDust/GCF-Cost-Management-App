@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
@@ -65,4 +66,18 @@ class ApiService {
       startDate: DateTime.now(),
       teamSize: 6
   );
+
+  Future<User> getUser(String id) async {
+    User result = User(privileges: Privilege.FOREMAN) ;
+    await Future.delayed(Duration(seconds: 2));
+
+//     await _client.get(Uri.parse(_url))
+//         .then((response) => response.body)
+//         .then(json.decode)
+//         .then((json) => json["results"])
+//         .then((list) => list.forEach((item) => resultList.add(Project.fromJson(item))));
+
+    return result;
+  }
+
 }

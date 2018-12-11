@@ -1,3 +1,5 @@
+import 'package:cm_mobile/enums/privilege_enum.dart';
+
 class User {
   int id;
   String name;
@@ -6,8 +8,11 @@ class User {
   String password;
   String pictureUrl;
   String contactNo;
-  String privileges;
+  Privilege privileges;
 
+
+  User({this.id, this.name, this.surname, this.username, this.password,
+      this.pictureUrl, this.contactNo, this.privileges});
 
   @override
   bool operator ==(Object other) =>
