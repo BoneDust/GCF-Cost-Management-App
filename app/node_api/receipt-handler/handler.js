@@ -13,34 +13,45 @@ app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
 
 //endpoint function that returns all reciepts
-app.get('/reciepts', (req, res) => {
+
+
+///Done: get all by projectID
+///TODO: make sure it works correctly.
+
+app.get('/reciepts/:project_id', (req, res) => {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
-            const params = {
-                TableName: RECEIPTS_TABLE,
-            };
-
-            // fetch all receipt from the database might change later due to pagination
-            dynamoDb.scan(params, (error, result) => {
-                if (error) {
-                    const errorStatusCode = error.statusCode || 503;
-                    const response = {
-                        error: error.message,
-                    };
-                    res.status(errorStatusCode).json(response);
-                    return;
+            if (isNaN(req.params.project_id) === false) {
+                const params = {
+                    TableName: STAGES_TABLE,
+                    FilterExpression: "project_id = :project_id",
+                    ExpressionAttributeValues: {
+                        ":project_id": req.params.search
+                    }
                 }
-                const response = {
-                    receipt: result.Items,
-                    message: "A list  of all receipts",
-                };
-                res.json(response);
-            });
+
+                // fetch all receipt from the database might change later due to pagination
+                dynamoDb.scan(params, (error, result) => {
+                    if (error) {
+                        const errorStatusCode = error.statusCode || 503;
+                        const response = {
+                            error: error.message,
+                        };
+                        res.status(errorStatusCode).json(response);
+                        return;
+                    }
+                    const response = {
+                        receipt: result.Items,
+                        message: "A list  of all receipts",
+                    };
+                    res.json(response);
+                });
+            }
+            else
+                res.status(404).json({ error: "Project ID " + req.params.userId + " not found" })
         }
         else
-            res.status(401).json({
-                error: "User not authorised to make this request."
-            })
+            res.status(401).json({ error: "User not authorised to make this request." })
     }).catch(error => { res.status(400).json({ error: error.message }) })
 });
 
