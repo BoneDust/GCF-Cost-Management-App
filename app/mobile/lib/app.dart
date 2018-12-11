@@ -1,10 +1,14 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/authentication_bloc.dart';
+import 'package:cm_mobile/screen/admin/root.dart';
+import 'package:cm_mobile/screen/foreman/menu/menu.dart';
+import 'package:cm_mobile/screen/foreman/root.dart';
+import 'package:cm_mobile/widget/projects/projects.dart';
+import 'package:cm_mobile/widget/receipt/create_receipt.dart';
+import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:flutter/material.dart';
 import 'data/details.dart';
 import 'screen/index.dart';
-import 'bloc/authentication_bloc.dart';
-
 
 class App extends StatefulWidget {
   @override
@@ -14,86 +18,29 @@ class App extends StatefulWidget {
 }
 
 class _App extends State<App> {
-  final AuthenticationBloc _authenticationBloc = AuthenticationBloc();
-
   final routes = <String, WidgetBuilder>{
     '/Auth': (BuildContext context) => LoginScreen(),
     '/Home': (BuildContext context) => ForeManHome(),
     '/AdminHome': (BuildContext context) => AdminHomeScreen(),
-    '/Projects': (BuildContext context) => ForeManProjects(),
+    '/admin/menu': (BuildContext context) => AdminMenu(),
+    '/projects': (BuildContext context) => ProjectsWidget(),
     '/AdminProjects': (BuildContext context) => AdminProjectsScreen(),
     '/AdminProfile': (BuildContext context) => AdminProfilesScreen(),
     '/Profile': (BuildContext context) => ProfileScreen(),
     '/AdminStatistics': (BuildContext context) => AdminStatistics(),
-    '/foreman/project' : (BuildContext context) => ForeManProjectScreen(),
-    '/foreman/stages': (BuildContext context) => ForeManStagesScreen(),
-    '/foreman/stage': (BuildContext context) => ForeManStageScreen(),
-    '/foreman/receipts': (BuildContext context) => ForeManReceiptsScreen(),
-    '/foreman/receipt': (BuildContext context) => ForeManReceiptScreen(),
-    '/foreman/create_receipt': (BuildContext context) => ForeManCreateReceiptScreen(),
+    '/foreman/create_receipt': (BuildContext context) => CreateReceiptWidget(),
     '/foreman/menu': (BuildContext context) => ForeManMenu(),
 
   };
 
-  _App() {
-    _authenticationBloc.onAppStart();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthenticationBloc>(
-      bloc: _authenticationBloc,
-      child: MaterialApp(
+    return ServicesContainer(
+      child:  MaterialApp(
         title: Details.COMPANY_TITLE,
         routes: routes,
         home: ForeManRoot(),
       ),
     );
   }
-
-//  Widget _rootPage() {
-//    return BlocBuilder<AuthenticationEvent, AuthenticationState>(
-//      bloc: _authenticationBloc,
-//      builder: (BuildContext context, AuthenticationState state) {
-//        List<Widget> widgets = [];
-//
-//        if (state.isAuthenticated) {
-//          widgets.add(HomePage());
-//        } else {
-//          widgets.add(LoginPage());
-//        }
-//
-//        if (state.isInitializing) {
-//          widgets.add(SplashPage());
-//        }
-//
-//        if (state.isLoading) {
-//          widgets.add(_loadingIndicator());
-//        }
-//
-//        return Stack(
-//          children: widgets,
-//        );
-//      },
-//    );
-//  }
-//
-//  Widget _loadingIndicator() {
-//    return Stack(
-//      children: <Widget>[
-//        Opacity(
-//          opacity: 0.3,
-//          child: ModalBarrier(dismissible: false, color: Colors.grey),
-//        ),
-//        Center(
-//          child: CircularProgressIndicator(),
-//        ),
-//      ],
-//    );
-//  }
 }
-
-
-
-
-

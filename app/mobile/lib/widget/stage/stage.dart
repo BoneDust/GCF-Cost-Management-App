@@ -1,12 +1,17 @@
+import 'package:cm_mobile/model/stage.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 
 class ForeManStageScreen extends StatelessWidget {
+  Stage stage;
+
+  ForeManStageScreen(this.stage);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Stage"),
+          title: Text(stage.name),
         ) ,
         body: SafeArea(
           child: _StageScreen(),

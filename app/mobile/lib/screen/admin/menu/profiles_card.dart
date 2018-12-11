@@ -1,28 +1,19 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'base_project_card.dart';
 
-class StagesCard  extends BaseProjectCard{
-  StagesCard() : super("Uploaded Receipts");
-
-  @override
-  Widget setChildren() {
-    return _ReceiptsCardRoot();
-  }
-}
-class _ReceiptsCardRoot extends StatelessWidget {
+class AdminProfilesCard extends StatelessWidget {
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _ReceiptsCardRoot() {
+  AdminProfilesCard() {
     baseTextStyle = const TextStyle();
-    headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0);
+    headerStyle = baseTextStyle.copyWith(fontSize: 18.0);
     subheadingStyle = baseTextStyle.copyWith(
       color: Colors.white,
-      fontSize: 12.0,);
+      fontSize: 12.0,
+    );
   }
 
   @override
@@ -31,7 +22,7 @@ class _ReceiptsCardRoot extends StatelessWidget {
       children: <Widget>[
         GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, "/foreman/stages");
+              Navigator.pushNamed(context, "/AdminProfile");
             },
             child: Container(
               color: Colors.white,
@@ -39,10 +30,11 @@ class _ReceiptsCardRoot extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    new Text("Stages", style: headerStyle),
+                    new Text("Profiles", style: headerStyle),
                     new Row(
                       children: <Widget>[
-                        Text("4", style: headerStyle.copyWith(color: Colors.grey)),
+                        Text("4",
+                            style: headerStyle.copyWith(color: Colors.grey)),
                         Icon(
                           Icons.chevron_right,
                           color: Colors.grey,
@@ -52,41 +44,38 @@ class _ReceiptsCardRoot extends StatelessWidget {
                     )
                   ]),
             )),
-        _StagesCard(),
+        _ProfilesCard(),
       ],
     );
   }
 }
 
-
-class _StagesCard extends StatelessWidget {
+class _ProfilesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 110.0,
       padding: EdgeInsetsDirectional.only(bottom: 10.0),
-
       child: ListView(
-
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          _StageSampleCard("1"),
-          _StageSampleCard("2"),
-          _StageSampleCard("3"),
-          _StageSampleCard("4"),
-          _StageSampleCard("5"),
-          _StageSampleCard("6")
+          _ProfileSampleCard("1"),
+          _ProfileSampleCard("2"),
+          _ProfileSampleCard("3"),
+          _ProfileSampleCard("4"),
+          _ProfileSampleCard("5"),
+          _ProfileSampleCard("6")
         ],
       ),
     );
   }
 }
 
-class _StageSampleCard extends StatelessWidget {
+class _ProfileSampleCard extends StatelessWidget {
   String title;
   static var rng = new Random();
 
-  _StageSampleCard(this.title);
+  _ProfileSampleCard(this.title);
 
   @override
   Widget build(BuildContext context) {

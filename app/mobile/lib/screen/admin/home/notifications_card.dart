@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 
-class ForemanHomeNotifications extends StatefulWidget {
+class AdminHomeNotifications extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _ForemanHomeNotificationsState();
+    return _AdminHomeNotificationsState();
   }
 }
 
-class _ForemanHomeNotificationsState extends State<ForemanHomeNotifications> {
+class _AdminHomeNotificationsState extends State<AdminHomeNotifications> {
 
   bool isDown = true;
 
@@ -82,7 +82,7 @@ class _TopThreeNotification extends StatelessWidget {
   }
 }
 
-class _NotificationActions extends StatelessWidget{
+class _NotificationActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
