@@ -1,7 +1,6 @@
 const express = require('express');
 const serverless = require('serverless-http');
 const bodyParser = require('body-parser');
-const uuid = require('uuid');//will be used to create the jwt token boon
 const AWS = require('aws-sdk');
 const app = express();
 
@@ -11,6 +10,8 @@ var receiptCount = 0;
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
+
+//need to redo the authorisation and create a notification for create, update and deletion of receipt
 
 //endpoint function that returns all reciepts
 

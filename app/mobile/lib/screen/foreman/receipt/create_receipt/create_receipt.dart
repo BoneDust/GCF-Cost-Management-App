@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:cm_mobile/screen/foreman/receipt/image_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ForeManCreateReceiptScreen extends  StatelessWidget{
   @override
@@ -9,24 +13,54 @@ class ForeManCreateReceiptScreen extends  StatelessWidget{
   }
 }
 
-class _ForeManCreateReceiptScreen extends StatelessWidget {
+class _ForeManCreateReceiptScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _ForeManCreateReceiptState();
+  }
+}
+
+class _ForeManCreateReceiptState extends State<_ForeManCreateReceiptScreen> {
+
+  Widget previewImage = Center(child: Text("Take receipt picture"));
+  File _image;
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = image;
+      previewImage = GestureDetector(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptImageViewer(image: _image,)));
+        },
+        child: Image(
+          image: FileImage(_image),
+          fit: BoxFit.fill,
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return CustomScrollView(
       slivers: <Widget>[
         new SliverAppBar(
           floating: true,
           expandedHeight: 300.0,
           flexibleSpace: new FlexibleSpaceBar(
-              background: Image(
-                image: AssetImage("assets/images.jpeg"),
-                fit: BoxFit.fill,
-              ),
+            background: previewImage,
           ),
           bottom: PreferredSize(
-              child: Flexible(child:  IconButton(color: Colors.red,icon: Icon(Icons.add_a_photo) ,onPressed: (){
-                Navigator.pushNamed(context, "/camera_screen");
-              }),)
+              child: Flexible(child: IconButton(color: Colors.red,
+                  icon: Icon(Icons.add_a_photo),
+                  onPressed: () {
+                    getImage();
+                    setState(() {
+
+                    });
+                  }),)
               , preferredSize: Size(50, 50)),
         ),
         new SliverPadding(
@@ -40,6 +74,7 @@ class _ForeManCreateReceiptScreen extends StatelessWidget {
       ],
     );
   }
+
 }
 
 class _ReceiptFields extends StatelessWidget {

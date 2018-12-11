@@ -136,7 +136,6 @@ app.post('/users', (req, res) => {
     }).catch(error => { res.status(400).json({ error: error.message }) })
 })
 
-
 //endpoint function thats logs in a user and sends that user a unique token key/ or priviledge key
 app.post('/users/login', (req, res) => {
 

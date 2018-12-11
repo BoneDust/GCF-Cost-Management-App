@@ -7,4 +7,3 @@ export 'receipt/index.dart';
 export 'receipts/index.dart';
 export 'stage/index.dart';
 export 'menu/index.dart';
-export 'camera/camera.dart';

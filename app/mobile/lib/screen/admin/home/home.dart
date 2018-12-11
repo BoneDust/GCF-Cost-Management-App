@@ -9,7 +9,7 @@ class AdminHomeScreen extends StatelessWidget{
           title: Text("GCF"),
         ) ,
         body: SafeArea(
-          child: AdminHomeScreen(),
+          child: _AdminHomeScreen(),
         )
     );
   }

@@ -8,10 +8,11 @@ custom:
   userTableName: 'user-Table-${self:provider.stage}'
   clientTableName: 'client-Table-${self:provider.stage}'
   projectTableName: 'project-Table-${self:provider.stage}'
-  notificationTableName: 'notification-Table-${self:provider.stage}'
+  activityTableName: 'activity-Table-${self:provider.stage}'
   receiptTableName: 'receipt-Table-${self:provider.stage}'
   stageTableName: 'stage-Table-${self:provider.stage}'
   tokenTableName: 'token-Table-${self:provider.stage}'
+  trashTableName: 'trash-Table-${self:provider.stage}'
 
 provider:
   name: aws
@@ -35,19 +36,19 @@ provider:
         - { "Fn::GetAtt": ["ProjectsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["StagesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["ReceiptsDynamoDBTable", "Arn" ] }
-        - { "Fn::GetAtt": ["NotificationsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["ActivitiesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["TokensDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["TrashDynamoDBTable", "Arn" ] }
   
   environment:
     USERS_TABLE: ${self:custom.userTableName}
     CLIENTS_TABLE: ${self:custom.clientTableName}
     PROJECTS_TABLE: ${self:custom.projectTableName}
-    NOTIFICATIONS_TABLE: ${self:custom.notificationTableName}
+    ACTIVITIES_TABLE: ${self:custom.activityTableName}
     RECEIPTS_TABLE: ${self:custom.receiptTableName}
     STAGES_TABLE: ${self:custom.stageTableName}
     TOKENS_TABLE: ${self:custom.tokenTableName}
-
-
+    TRASH_TABLE: ${self:custom.trashTableName}
 
 functions:
   usersFunction:
@@ -222,7 +223,7 @@ resources:
           WriteCapacityUnits: 2
         TableName: ${self:custom.receiptTableName}
 
-    ProjetsDynamoDBTable:
+    ProjectsDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
@@ -238,21 +239,21 @@ resources:
           WriteCapacityUnits: 2
         TableName: ${self:custom.projectTableName}
 
-    NotificationsDynamoDBTable:
+    ActivitiesDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: notificationId
+            AttributeName: activityId
             AttributeType: N
         KeySchema:
           -
-            AttributeName: notificationId
+            AttributeName: activityId
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 2
           WriteCapacityUnits: 2
-        TableName: ${self:custom.notificationTableName}
+        TableName: ${self:custom.activityTableName}
 
     TokensDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
@@ -269,4 +270,20 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:custom.tokenTableName}
+
+    TrashDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: trashId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: trashId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
+        TableName: ${self:custom.trashTableName}
 
