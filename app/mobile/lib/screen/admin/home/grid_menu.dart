@@ -1,8 +1,7 @@
 import 'package:cm_mobile/widget/receipt/receipts_list.dart';
 import 'package:flutter/material.dart';
 
-class SliverGridMenu extends StatelessWidget{
-
+class AdminSliverGridMenu extends StatelessWidget {
   List<GridItemEntry> menuEntries;
 
   @override
@@ -11,16 +10,14 @@ class SliverGridMenu extends StatelessWidget{
     return SliverPadding(
       padding: EdgeInsets.all(10.0),
       sliver: SliverGrid(
-        gridDelegate:
-        new SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200.0,
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
           childAspectRatio: 2.0,
-
         ),
         delegate: new SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+          (BuildContext context, int index) {
             return new GridHomeMenuItem(menuEntries[index]);
           },
           childCount: menuEntries.length,
@@ -35,37 +32,33 @@ class SliverGridMenu extends StatelessWidget{
       GridItemEntry(
           icon: Icons.assignment,
           function: () => tabController.animateTo(1),
-          title: "Projects"
-      ),
+          title: "Projects"),
       GridItemEntry(
           icon: Icons.receipt,
-          function: () =>
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                ReceiptsList(receipts: [], appBarTitle: "Recent Receipts",)
-            ))
-          ,
-          title: "Recent Receipts"
-      ),
+          function: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ReceiptsList(
+                    receipts: [],
+                    appBarTitle: "Recent Receipts",
+                  ))),
+          title: "Recent Receipts"),
+      GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
+      GridItemEntry(icon: Icons.people, function: () {}, title: "Users"),
       GridItemEntry(
-          icon: Icons.note,
-          function: (){},
-          title: "Notes"
-      )
+          icon: Icons.trending_up, function: () {}, title: "Statistics"),
     ];
   }
-
 }
+
 class GridItemEntry {
   final IconData icon;
   final String title;
   final Function function;
 
-  GridItemEntry({@required this.icon, @required this.title,@required this.function});
-
-
+  GridItemEntry(
+      {@required this.icon, @required this.title, @required this.function});
 }
-class GridHomeMenuItem extends StatelessWidget{
 
+class GridHomeMenuItem extends StatelessWidget {
   final GridItemEntry menuItem;
 
   const GridHomeMenuItem(this.menuItem);
@@ -74,30 +67,28 @@ class GridHomeMenuItem extends StatelessWidget{
   Widget build(BuildContext context) {
     return InkWell(
         onTap: menuItem.function,
-        child:
-        Container(
+        child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.blue
-          ),
-
+              borderRadius: BorderRadius.circular(10), color: Colors.blue),
           height: 200,
           width: 200,
-          child:
-          Center(
+          child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Icon(menuItem.icon, size: 40, color: Colors.white,),
+                Icon(
+                  menuItem.icon,
+                  size: 40,
+                  color: Colors.white,
+                ),
                 Padding(padding: EdgeInsets.only(top: 10)),
-                Text(menuItem.title, style: TextStyle(color: Colors.white),)
+                Text(
+                  menuItem.title,
+                  style: TextStyle(color: Colors.white),
+                )
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 }
-
-
-

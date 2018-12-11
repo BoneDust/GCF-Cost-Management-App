@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:cm_mobile/model/stage.dart';
-import 'package:cm_mobile/screen/foreman/stage/stage.dart';
+import 'package:cm_mobile/widget/stage/stage.dart';
 import 'package:flutter/material.dart';
 
 class ForeManStagesScreen extends StatelessWidget {

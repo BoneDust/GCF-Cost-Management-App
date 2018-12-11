@@ -1,32 +1,30 @@
-import 'dart:collection';
 import 'dart:math';
 
-import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/stage.dart';
-import 'package:cm_mobile/screen/foreman/project/project.dart';
-import 'package:cm_mobile/screen/foreman/stage/stage.dart';
-import 'package:cm_mobile/screen/foreman/stage/stages.dart';
+import 'package:cm_mobile/widget/stage/stage.dart';
+import 'package:cm_mobile/widget/stage/stages.dart';
 import 'package:flutter/material.dart';
 
-class StagesCard  extends StatelessWidget{
+class StagesWidget extends StatelessWidget {
   final List<Stage> stages;
 
-  StagesCard(this.stages);
+  StagesWidget(this.stages);
 
   @override
   Widget build(BuildContext context) {
-    return stages == null || stages.isEmpty ? Column() : _StagesCardRoot(stages);
+    return stages == null || stages.isEmpty ? Column() : _StagesWidgetRoot(
+        stages);
   }
 }
 
-class _StagesCardRoot extends StatelessWidget {
+class _StagesWidgetRoot extends StatelessWidget {
   final List<Stage> stages;
 
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _StagesCardRoot(this.stages) {
+  _StagesWidgetRoot(this.stages) {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);

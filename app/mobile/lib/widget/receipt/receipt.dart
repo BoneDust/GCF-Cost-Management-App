@@ -1,10 +1,10 @@
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:flutter/material.dart';
 
-class ForeManReceiptScreen extends  StatelessWidget{
+class ReceiptWidget extends StatelessWidget {
   final Receipt receipt;
 
-  ForeManReceiptScreen(this.receipt);
+  ReceiptWidget(this.receipt);
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
 import 'package:cm_mobile/model/project.dart';
-import 'package:cm_mobile/screen/foreman/project/index.dart';
+import 'package:cm_mobile/widget/project/project.dart';
 import 'package:flutter/material.dart';
 
 class ProjectContainer extends StatelessWidget {
@@ -29,7 +29,8 @@ class ProjectContainer extends StatelessWidget {
   }
 
   showProjectScreen(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ForeManProjectScreen(project)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ProjectWidget(project)));
   }
 }
 

@@ -1,6 +1,6 @@
 import 'package:cm_mobile/screen/admin/menu/profiles_card.dart';
+import 'package:cm_mobile/screen/admin/menu/user_profile.dart';
 import 'package:flutter/material.dart';
-import 'index.dart';
 
 class AdminMenu extends StatelessWidget {
   @override
@@ -23,7 +23,7 @@ class _AdminMenu extends StatelessWidget {
           padding: EdgeInsets.only(top: 30.0),
         ),
         AdminProfileCard(),
-        ProfilesCard(),
+        AdminProfilesCard()
       ],
     );
   }

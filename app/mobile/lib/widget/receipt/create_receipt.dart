@@ -1,26 +1,26 @@
 import 'dart:io';
 
-import 'package:cm_mobile/screen/foreman/receipt/image_viewer.dart';
+import 'package:cm_mobile/widget/receipt/image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ForeManCreateReceiptScreen extends  StatelessWidget{
+class CreateReceiptWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _ForeManCreateReceiptScreen(),
+      body: _CreateReceiptWidget(),
     );
   }
 }
 
-class _ForeManCreateReceiptScreen extends StatefulWidget {
+class _CreateReceiptWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _ForeManCreateReceiptState();
   }
 }
 
-class _ForeManCreateReceiptState extends State<_ForeManCreateReceiptScreen> {
+class _ForeManCreateReceiptState extends State<_CreateReceiptWidget> {
 
   Widget previewImage = Center(
     child: Text("Take receipt picture",

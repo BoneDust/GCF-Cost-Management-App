@@ -1,23 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'base_profile_card.dart';
 
-class ProfilesCard extends BaseProfileCard {
-  ProfilesCard() : super('Uploaded Receipts');
-
-  @override
-  Widget setChildren() {
-    return _ProfilesCardRoot();
-  }
-}
-
-class _ProfilesCardRoot extends StatelessWidget {
+class AdminProfilesCard extends StatelessWidget {
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _ProfilesCardRoot() {
+  AdminProfilesCard() {
     baseTextStyle = const TextStyle();
     headerStyle = baseTextStyle.copyWith(fontSize: 18.0);
     subheadingStyle = baseTextStyle.copyWith(

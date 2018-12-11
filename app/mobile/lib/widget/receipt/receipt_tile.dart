@@ -1,5 +1,5 @@
 import 'package:cm_mobile/model/receipt.dart';
-import 'package:cm_mobile/screen/foreman/receipt/receipt.dart';
+import 'package:cm_mobile/widget/receipt/receipt.dart';
 import 'package:flutter/material.dart';
 
 class ReceiptTile extends StatelessWidget {
@@ -16,7 +16,7 @@ class ReceiptTile extends StatelessWidget {
       child: ListTile(
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context) =>
-              ForeManReceiptScreen(receipt)));
+              ReceiptWidget(receipt)));
         },
         trailing: Text("2d"),
         title: Text("Payment made to " + receipt.supplier),

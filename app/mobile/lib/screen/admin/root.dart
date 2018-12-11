@@ -15,17 +15,18 @@ class AdminRoot extends StatelessWidget {
             AdminStatistics()
           ]),
           bottomNavigationBar: Material(
-            color: Colors.grey,
+            type: MaterialType.card,
+            elevation: 20.0,
             child: TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.home)),
-                Tab(icon: Icon(Icons.assessment)),
+                Tab(icon: Icon(Icons.assignment)),
                 Tab(icon: Icon(Icons.trending_up))
               ],
               indicatorColor: Colors.red,
               indicatorSize: TabBarIndicatorSize.label,
-              unselectedLabelColor: Colors.black,
-              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              labelColor: Colors.blue,
             ),
           )),
     );

@@ -2,31 +2,32 @@ import 'dart:collection';
 
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
-import 'package:cm_mobile/screen/foreman/receipt/receipt_tile.dart';
-import 'package:cm_mobile/screen/foreman/project/project.dart';
-import 'package:cm_mobile/screen/foreman/receipt/receipt.dart';
-import 'package:cm_mobile/screen/foreman/receipt/receipts_list.dart';
+import 'package:cm_mobile/widget/receipt/receipt_tile.dart';
+import 'package:cm_mobile/widget/receipt/receipts_list.dart';
 import 'package:flutter/material.dart';
 
-class ReceiptsCard extends StatelessWidget{
+class ReceiptsWidget extends StatelessWidget {
   final List<Receipt> receipts;
 
-  ReceiptsCard(this.receipts);
+  ReceiptsWidget(this.receipts);
 
 
   @override
   Widget build(BuildContext context) {
-    return receipts == null || receipts.isEmpty ? Column() : _ReceiptsCardRoot(receipts);
+    return receipts == null || receipts.isEmpty
+        ? Column()
+        : _ReceiptsWidgetRoot(receipts);
   }
 }
-class _ReceiptsCardRoot extends StatelessWidget {
+
+class _ReceiptsWidgetRoot extends StatelessWidget {
   final List<Receipt> receipts;
 
   TextStyle baseTextStyle;
   TextStyle headerStyle;
   TextStyle subheadingStyle;
 
-  _ReceiptsCardRoot(this.receipts) {
+  _ReceiptsWidgetRoot(this.receipts) {
     baseTextStyle = const TextStyle();
     headerStyle =
         baseTextStyle.copyWith(fontSize: 18.0);
@@ -46,7 +47,7 @@ class _ReceiptsCardRoot extends StatelessWidget {
             GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                      ForemanReceiptsList(receipts: receipts, appBarTitle: "Receipts",)
+                      ReceiptsList(receipts: receipts, appBarTitle: "Receipts",)
                   ));
                 },
                 child: Container(

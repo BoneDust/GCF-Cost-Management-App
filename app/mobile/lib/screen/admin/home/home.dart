@@ -1,37 +1,66 @@
+import 'package:cm_mobile/screen/admin/home/grid_menu.dart';
 import 'package:cm_mobile/screen/admin/home/notifications_card.dart';
-import 'package:cm_mobile/screen/admin/home/recent_receipt_card.dart';
 import 'package:flutter/material.dart';
 
-class AdminHomeScreen extends StatelessWidget {
+class AdminHomeScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("GCF"),
-        ) ,
-        body: SafeArea(
-          child: _AdminHomeScreen(),
-        )
-    );
+  State<StatefulWidget> createState() {
+    return _AdminHomeState();
   }
 }
 
-class _AdminHomeScreen extends StatelessWidget {
+class _AdminHomeState extends State<AdminHomeScreen>
+    with AutomaticKeepAliveClientMixin<AdminHomeScreen> {
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 20.0),
+    super.build(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed("/admin/menu");
+              },
+              child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: AssetImage("assets/images.jpeg"),
+                          fit: BoxFit.cover
+                      )
+                  )
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(left: 10),),
+            Text("Home")
+          ],
         ),
-        HomeNotificationsCard(),
-        Padding(
-          padding: EdgeInsets.only(top: 20.0),
-        ),
-        RecentReceiptCard(),
-        Padding(
-          padding: EdgeInsets.only(top: 40.0),
-        ),
+      ),
+      body: _AdminHomeBody(),
+
+    );
+  }
+
+}
+
+class _AdminHomeBody extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+            delegate: SliverChildListDelegate([
+              AdminHomeNotifications(),
+              Padding(padding: EdgeInsets.only(top: 10),)
+            ])),
+        AdminSliverGridMenu()
       ],
     );
   }

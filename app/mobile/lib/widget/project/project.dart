@@ -2,26 +2,26 @@ import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/service/api_service.dart';
-import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 
-class ForeManProjectScreen extends StatefulWidget {
-  Project project;
+class ProjectWidget extends StatefulWidget {
+  final Project project;
 
-  ForeManProjectScreen(this.project);
+  ProjectWidget(this.project);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _ForeManProjectScreenState(project);
+    return _ProjectWidgetState(project);
   }
 
 }
-class _ForeManProjectScreenState extends State<ForeManProjectScreen>{
+
+class _ProjectWidgetState extends State<ProjectWidget> {
   Project project;
 
-  _ForeManProjectScreenState(this.project);
+  _ProjectWidgetState(this.project);
 
   ProjectBloc projectBloc;
 
@@ -39,7 +39,7 @@ class _ForeManProjectScreenState extends State<ForeManProjectScreen>{
       key: Key("bloc"),
       bloc: projectBloc,
       child: Scaffold(
-        body: _ForeManProject(),
+        body: _Project(),
         floatingActionButton: FloatingActionButton(onPressed: () {
           Navigator.pushNamed(context, "/foreman/create_receipt");
         },
@@ -49,7 +49,7 @@ class _ForeManProjectScreenState extends State<ForeManProjectScreen>{
   }
 }
 
-class _ForeManProject extends StatelessWidget {
+class _Project extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,6 @@ class _ForeManProject extends StatelessWidget {
 
     return StreamBuilder<Project>(
       stream: projectBloc.outProject,
-      initialData: Project(),
       builder: (BuildContext context, AsyncSnapshot<Project> snapshot) {
         return NestedScrollView(headerSliverBuilder: (BuildContext context,
             bool innerBoxIsScrolled) {
@@ -67,7 +66,9 @@ class _ForeManProject extends StatelessWidget {
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text(snapshot.data.name),
+                title: Text(
+                    snapshot != null && snapshot.data != null ? snapshot.data
+                        .name : ""),
                 background: Image(
                   image: AssetImage("assets/images.jpeg"),
                   fit: BoxFit.fill,
@@ -76,22 +77,36 @@ class _ForeManProject extends StatelessWidget {
             )
           ];
         },
-            body: Material(
-                color: Colors.black12,
-                child: ListView(
-                  padding: EdgeInsets.only(left: 3, right: 3),
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(bottom: 20),),
-                    StagesCard(snapshot.data.stages),
-                    Padding(padding: EdgeInsets.only(bottom: 20),),
-                    ReceiptsCard(snapshot.data.receipts),
-                    Padding(padding: EdgeInsets.only(bottom: 20),),
-                    DetailsCard(snapshot.data),
-                  ],
-                )
-            )
+            body: (snapshot != null && snapshot.data != null ? _ProjectScreen(
+                snapshot.data) : Column())
         );
       },
+    );
+  }
+}
+
+
+class _ProjectScreen extends StatelessWidget {
+  final Project project;
+
+  const _ProjectScreen(this.project);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Material(
+        color: Colors.black12,
+        child: ListView(
+          padding: EdgeInsets.only(left: 3, right: 3),
+          children: <Widget>[
+            Padding(padding: EdgeInsets.only(bottom: 20),),
+            StagesWidget(project.stages),
+            Padding(padding: EdgeInsets.only(bottom: 20),),
+            ReceiptsWidget(project.receipts),
+            Padding(padding: EdgeInsets.only(bottom: 20),),
+            DetailsCard(project),
+          ],
+        )
     );
   }
 }

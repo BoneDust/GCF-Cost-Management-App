@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/screen/foreman/home/home.dart';
-import 'package:cm_mobile/screen/foreman/projects/projects.dart';
+import 'package:cm_mobile/widget/projects/projects.dart';
 import 'package:flutter/material.dart';
 
 class ForeManRoot extends StatelessWidget{
@@ -15,7 +15,7 @@ class ForeManRoot extends StatelessWidget{
         Scaffold(body: TabBarView(
             children: [
               ForeManHome(),
-              ForeManProjects()
+              ProjectsWidget()
             ]),
             bottomNavigationBar: Material(
               type: MaterialType.card,

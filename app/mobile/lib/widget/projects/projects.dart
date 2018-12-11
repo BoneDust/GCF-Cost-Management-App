@@ -1,20 +1,19 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/model/project.dart';
-import 'package:cm_mobile/screen/foreman/projects/projects_list.dart';
 import 'package:cm_mobile/service/api_service.dart';
-import 'package:cm_mobile/widget/services_provider.dart';
+import 'package:cm_mobile/widget/projects/projects_list.dart';
 import 'package:flutter/material.dart';
 
-class ForeManProjects extends StatefulWidget {
+class ProjectsWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _ForeManProjectsState();
+    return _ProjectsWidgetState();
   }
 }
 
-class _ForeManProjectsState extends State<ForeManProjects>
-    with AutomaticKeepAliveClientMixin<ForeManProjects> {
+class _ProjectsWidgetState extends State<ProjectsWidget>
+    with AutomaticKeepAliveClientMixin<ProjectsWidget> {
 
   ProjectsBloc projectsBloc;
 
@@ -22,7 +21,6 @@ class _ForeManProjectsState extends State<ForeManProjects>
   void initState() {
     projectsBloc  = ProjectsBloc(ApiService());
     projectsBloc.getAllProjects();
-    print("it was ran");
     super.initState();
   }
 
@@ -62,10 +60,11 @@ class _ForeManProjectsState extends State<ForeManProjects>
           body: StreamBuilder<List<Project>>(
             key:  PageStorageKey("projects"),
             stream: projectsBloc.outProject,
-            initialData: List<Project>(),
             builder: (BuildContext context,
                 AsyncSnapshot<List<Project>> snapshot) {
-              return ProjectsList(snapshot.data);
+              return snapshot.data != null
+                  ? ProjectsList(snapshot.data)
+                  : Column();
             },
           )
       ),

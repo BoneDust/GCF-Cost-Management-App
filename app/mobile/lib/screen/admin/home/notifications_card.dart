@@ -1,74 +1,96 @@
 import 'package:flutter/material.dart';
-import 'base_home_card.dart';
 
 
-class HomeNotificationsCard  extends BaseHomeCard{
-  HomeNotificationsCard() : super("Uploaded Receipts");
-
+class AdminHomeNotifications extends StatefulWidget {
   @override
-  Widget setChildren() {
-    return _HomeNotificationsCard();
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _AdminHomeNotificationsState();
   }
 }
-class _HomeNotificationsCard extends StatelessWidget {
-  TextStyle baseTextStyle;
-  TextStyle headerStyle;
-  TextStyle subheadingStyle;
 
-  _HomeNotificationsCard() {
-    baseTextStyle = const TextStyle();
-    headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0);
-    subheadingStyle = baseTextStyle.copyWith(
-      color: Colors.white,
-      fontSize: 12.0,);
-  }
+class _AdminHomeNotificationsState extends State<AdminHomeNotifications> {
+
+  bool isDown = true;
+
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.only(top: 10.0, left: 10.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Notifications", style: headerStyle)
-                  ]),
+    return Card(
+      child: Column(
+        children: <Widget>[
+          ExpansionTile(
+            title: Row(
+              children: <Widget>[
+                Text("Notifications"),
+              ],
             ),
-        _NotificationCard(),
-      ],
+            children: <Widget>[
+              _TopThreeNotification(),
+              _NotificationActions()
+            ],
+          ),
+        ],
+      ),
+    );
+//    return Column(
+//      children: <Widget>[
+//        Container(
+//          color: Colors.white,
+//          padding: EdgeInsets.only(top: 10.0, left: 10.0),
+//              child: Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: [
+//                    Text("Notifications", style: headerStyle)
+//                  ]),
+//            ),
+//        _NotificationCard(),
+//      ],
+//    );
+  }
+}
+
+
+class NotificationTile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      decoration: BoxDecoration(
+        border: BorderDirectional(bottom: BorderSide(color: Colors.grey)),
+      ),
+      child: ListTile(
+        dense: true,
+        title: Text("You have been assigned to a project"),
+        subtitle: Text("Standard bank project created by Dale. "),
+        trailing: Text("8 Dec"),
+      ),
     );
   }
 }
 
-class _NotificationCard extends StatelessWidget {
+class _TopThreeNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
         children: <Widget>[
-          ListTile(
-            title: Text("Project 1"),
-            subtitle: Text("project"),
-          ),
-          Divider(color: Colors.black54,),
-          ListTile(
-            title: Text("Company 1"),
-            subtitle: Text("company"),
-          ),
-          Divider(color: Colors.black54,),
-          ListTile(
-            title: Text("11/11/11"),
-            subtitle: Text("Start Date"),
-
-          ),
-          Divider(color: Colors.black54,),
-          ListTile(
-            title: Text("11/11/11"),
-            subtitle: Text("End Date"),
-          )
-        ],
+          NotificationTile(),
+          NotificationTile(),
+          NotificationTile(),
+        ]
     );
   }
+}
+
+class _NotificationActions extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        FlatButton(child: Text("All Notifications"), onPressed: () {}),
+
+      ],
+    );
+  }
+
 }

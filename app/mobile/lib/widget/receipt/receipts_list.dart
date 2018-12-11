@@ -1,13 +1,12 @@
 import 'package:cm_mobile/model/receipt.dart';
-import 'package:cm_mobile/screen/foreman/receipt/receipt_tile.dart';
-import 'package:cm_mobile/screen/foreman/receipt/receipt.dart';
+import 'package:cm_mobile/widget/receipt/receipt_tile.dart';
 import 'package:flutter/material.dart';
 
-class ForemanReceiptsList extends StatelessWidget{
+class ReceiptsList extends StatelessWidget {
   final String appBarTitle;
   final List<Receipt> receipts;
 
-  const ForemanReceiptsList({
+  const ReceiptsList({
     Key key,
     @required this.appBarTitle,
     @required this.receipts
