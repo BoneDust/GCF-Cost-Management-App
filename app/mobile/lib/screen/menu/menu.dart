@@ -8,6 +8,7 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
         title: Text("Menu"),
       ),
@@ -21,11 +22,12 @@ class _MenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> menuScreenWidget = getMenuScreenWidget(context);
     return ListView(
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
       children: menuScreenWidget,
     );
   }
 
-  List<Widget>  getMenuScreenWidget(BuildContext context) {
+  List<Widget> getMenuScreenWidget(BuildContext context) {
     UserContainerState userContainerState = UserContainer.of(context);
     Privilege privilege = userContainerState.user.privileges;
 
@@ -35,7 +37,8 @@ class _MenuScreen extends StatelessWidget {
     ];
 
     if (privilege == Privilege.ADMIN)
-      menuScreenWidget.addAll([MenuProfilesCard()]);
+      menuScreenWidget.addAll(
+          [Padding(padding: EdgeInsets.only(top: 30.0)), MenuProfilesCard()]);
     return menuScreenWidget;
   }
 }

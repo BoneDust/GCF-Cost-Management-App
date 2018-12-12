@@ -44,17 +44,21 @@ class SliverGridMenu extends StatelessWidget {
           icon: Icons.receipt,
           function: () => Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ReceiptsList(
-                receipts: [],
-                appBarTitle: "Recent Receipts",
-              ))),
+                    receipts: [],
+                    appBarTitle: "Recent Receipts",
+                  ))),
           title: "Recent Receipts"),
       GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
-
     ];
 
     if (previlige == Privilege.ADMIN)
       entries.addAll([
-        GridItemEntry(icon: Icons.people, function: () {}, title: "Users"),
+        GridItemEntry(
+            icon: Icons.people,
+            function: () {
+              Navigator.pushNamed(context, '/users');
+            },
+            title: "Users"),
         GridItemEntry(
             icon: Icons.trending_up, function: () {}, title: "Statistics"),
       ]);

@@ -59,7 +59,7 @@ class _AdminProfilesScreen extends StatelessWidget {
     return InkWell(
       enableFeedback: true,
       onTap: () {
-        Navigator.pushNamed(context, "/foreman/project");
+        Navigator.pushNamed(context, "/project");
       },
       child: Container(
         height: 100.0,
@@ -76,7 +76,7 @@ class _AdminProfilesScreen extends StatelessWidget {
   }
 
   showProjectScreen(BuildContext context) {
-    Navigator.pushNamed(context, "/foreman/project");
+    Navigator.pushNamed(context, "/project");
   }
 }
 

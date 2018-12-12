@@ -18,34 +18,48 @@ class MenuProfilesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, "/AdminProfile");
-            },
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    new Text("Profiles", style: headerStyle),
-                    new Row(
-                      children: <Widget>[
-                        Text("4",
-                            style: headerStyle.copyWith(color: Colors.grey)),
-                        Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey,
-                          size: 25.0,
-                        ),
-                      ],
-                    )
-                  ]),
-            )),
-        _ProfilesCard(),
-      ],
+    return Card(
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, "/users");
+              },
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      new Text("Profiles", style: headerStyle),
+                      new Row(
+                        children: <Widget>[
+                          Text("4",
+                              style: headerStyle.copyWith(color: Colors.grey)),
+                          Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                            size: 25.0,
+                          ),
+                        ],
+                      )
+                    ]),
+              )),
+          _ProfilesCard(),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {},
+                  child: Text('Add profile'),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

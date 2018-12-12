@@ -2,6 +2,8 @@ import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/user_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/screen/users/create_user_screen.dart';
+import 'package:cm_mobile/screen/users/users.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:cm_mobile/widget/user_provider.dart';
@@ -20,6 +22,8 @@ class _App extends State<App> {
   final routes = <String, WidgetBuilder>{
     '/auth': (BuildContext context) => LoginScreen(),
     '/home': (BuildContext context) => HomeScreen(),
+    '/users': (BuildContext context) => ManageUsersScreen(),
+    '/create_users': (BuildContext context) => CreateUserScreen(),
     '/menu': (BuildContext context) => MenuScreen(),
     '/projects': (BuildContext context) => ProjectsScreen(),
     '/profile': (BuildContext context) => ProfileScreen(),
@@ -31,12 +35,11 @@ class _App extends State<App> {
   Widget build(BuildContext context) {
     return ServicesContainer(
       child: UserContainer(
-        child: MaterialApp(
-          title: Details.COMPANY_TITLE,
-          routes: routes,
-          home: _AppRoot(),
-        )
-      ),
+          child: MaterialApp(
+        title: Details.COMPANY_TITLE,
+        routes: routes,
+        home: _AppRoot(),
+      )),
     );
   }
 }
@@ -64,9 +67,7 @@ class _AppRootState extends State<_AppRoot> {
         builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
           UserContainerState userContainerState = UserContainer.of(context);
           userContainerState.user = snapshot.data;
-          return snapshot.data != null
-              ? _AppBottomNavigator()
-              : Column();
+          return snapshot.data != null ? _AppBottomNavigator() : Column();
         },
       ),
     );
