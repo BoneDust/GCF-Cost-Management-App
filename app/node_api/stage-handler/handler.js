@@ -115,7 +115,7 @@ app.post('/stages', (req, res) => {
                         stage_name: stage.stage_name,
                         description: stage.description,
                         status: stage.status,
-                        before_pict_url: stage.before_pict_url,
+                        before_pic_url: stage.before_pic_url,
                         after_pic_url: "",
                         start_date: stage.start_date,
                         end_date: "",
@@ -162,7 +162,7 @@ app.put('/stages/:stageId', (req, res) => {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
             const stage = req.body;
-            if (isNaN(req.params.stageId) === false && stage.project_id && stage.stage_name && stage.description && stage.status && stage.before_pict_url && stage.after_pic_url) {
+            if (isNaN(req.params.stageId) === false && stage.project_id && stage.stage_name && stage.description && stage.status && stage.before_pic_url && stage.after_pic_url) {
                 const params = {
                     TableName: STAGES_TABLE,
                     Key: {
@@ -173,13 +173,13 @@ app.put('/stages/:stageId', (req, res) => {
                         ":stage_name": stage.stage_name,
                         ":description": stage.description,
                         ":status": stage.status,
-                        ":before_pict_url": stage.before_pict_url,
+                        ":before_pic_url": stage.before_pic_url,
                         ":after_pic_url": stage.after_pic_url,
                         ":start_date": stage.start_date,
                         ":end_date": stage.end_date,
                         ":estimated_duration": stage.estimated_duration,
                     },
-                    UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, status = :status, before_pict_url = :before_pict_url, after_pic_url = after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration",
+                    UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, status = :status, before_pic_url = :before_pic_url, after_pic_url = after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration",
                 };
 
                 dynamoDb.update(params, (error, result) => {
