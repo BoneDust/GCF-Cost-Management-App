@@ -25,7 +25,7 @@ app.get('/stages/:project_id', (req, res) => {
                     TableName: STAGES_TABLE,
                     FilterExpression: "project_id = :project_id",
                     ExpressionAttributeValues: {
-                        ":project_id": req.params.search
+                        ":project_id": req.params.project_id
                     }
                 }
 
@@ -47,7 +47,7 @@ app.get('/stages/:project_id', (req, res) => {
                 });
             }
             else
-                res.status(404).json({ error: "Project ID " + req.params.userId + " not found" })
+                res.status(404).json({ error: "Project ID " + req.params.project_id + " not found" })
         }
         else
             res.status(401).json({ error: "User not authorised to make this request." })
@@ -201,7 +201,7 @@ app.put('/stages/:stageId', (req, res) => {
             }
             else {
                 const errorStatusCode = isNaN(req.params.stageId) ? 404 : 400;
-                const message = isNaN(req.params.stageId) ? "StageId " + req.params.userId + " not found" : "Incomplete stage supplied.";
+                const message = isNaN(req.params.stageId) ? "StageId " + req.params.stageId + " not found" : "Incomplete stage supplied.";
                 const response = {
                     error: message,
                 }
@@ -215,7 +215,7 @@ app.put('/stages/:stageId', (req, res) => {
     }).catch(error => { res.status(400).json({ error: error.message }) })
 });
 
-//endpoint function that deletes a users by id
+//endpoint function that deletes a stage by id
 app.delete('/stages/:stageId', (req, res) => {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
@@ -223,7 +223,7 @@ app.delete('/stages/:stageId', (req, res) => {
             if (!isNaN(req.params.stageId)) {
                 const stageId = parseInt(req.params.stageId);
                 const params = {
-                    TableName: USERS_TABLE,
+                    TableName: STAGES_TABLE,
                     Key: {
                         stageId: stageId,
                     },

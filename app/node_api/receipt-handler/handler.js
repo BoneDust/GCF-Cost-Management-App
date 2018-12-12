@@ -13,21 +13,21 @@ app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bo
 
 //need to redo the authorisation and create a notification for create, update and deletion of receipt
 
-//endpoint function that returns all reciepts
+//endpoint function that returns all receipts
 
 
 ///Done: get all by projectID
 ///TODO: make sure it works correctly.
 
-app.get('/reciepts/:project_id', (req, res) => {
+app.get('/receipts/:project_id', (req, res) => {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
             if (isNaN(req.params.project_id) === false) {
                 const params = {
-                    TableName: STAGES_TABLE,
+                    TableName: RECEIPTS_TABLE,
                     FilterExpression: "project_id = :project_id",
                     ExpressionAttributeValues: {
-                        ":project_id": req.params.search
+                        ":project_id": req.params.project_id
                     }
                 }
 
@@ -49,7 +49,7 @@ app.get('/reciepts/:project_id', (req, res) => {
                 });
             }
             else
-                res.status(404).json({ error: "Project ID " + req.params.userId + " not found" })
+                res.status(404).json({ error: "Project ID " + req.params.project_id + " not found" })
         }
         else
             res.status(401).json({ error: "User not authorised to make this request." })
@@ -60,11 +60,11 @@ app.get('/reciepts/:project_id', (req, res) => {
 app.get('/receipts/:receiptId', (req, res) => {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
-            if (isNaN(req.params.recieptId) === false) {
+            if (isNaN(req.params.receiptId) === false) {
                 const params = {
                     TableName: RECEIPTS_TABLE,
                     Key: {
-                        recieptId: parseInt(req.params.recieptId)
+                        receiptId: parseInt(req.params.receiptId)
                     },
                 };
 
@@ -91,7 +91,7 @@ app.get('/receipts/:receiptId', (req, res) => {
             }
             const errorStatusCode = 404;
             const response = {
-                error: "RecieptId " + req.params.receiptId + " not found",
+                error: "ReceiptId " + req.params.receiptId + " not found",
             };
             res.status(errorStatusCode).json(response);
         }
@@ -111,7 +111,7 @@ app.post('/receipts', (req, res) => {
                 const params = {
                     TableName: RECEIPTS_TABLE,
                     Item: {
-                        recieptId: recieptCount + 1,
+                        receiptId: receiptCount + 1,
                         project_id: receipt.project_id,
                         supplier: receipt.supplier,
                         description: receipt.description,
@@ -195,7 +195,7 @@ app.put('/receipt/:receiptId', (req, res) => {
             }
             else {
                 const errorStatusCode = isNaN(req.params.receiptId) ? 404 : 400;
-                const message = isNaN(req.params.recieptId) ? "recieptId " + req.params.receiptId + " not found" : "Incomplete reciept supplied.";
+                const message = isNaN(req.params.receiptId) ? "Receipt " + req.params.receiptId + " not found" : "Incomplete receipt supplied.";
                 const response = {
                     error: message,
                 }
@@ -243,7 +243,7 @@ app.delete('/receipts/:receiptId', (req, res) => {
             }
             else {
                 const errorStatusCode = 404;
-                const message = "RecieptId " + req.params.receiptId + " not found";
+                const message = "receiptId " + req.params.receiptId + " not found";
                 const response = {
                     error: message,
                 }

@@ -60,7 +60,7 @@ functions:
           cors: true
 
       - http:
-          path: users/{userid}
+          path: users/{userId}
           method: get
           cors: true
 
@@ -89,53 +89,61 @@ functions:
           method: delete
           cors: true
 
-  # stagesFunction:
-  #   handler: stage-handler/handler.handler
-  #   events:
-  #     - http:
-  #         path: stages
-  #         method: get
-  #         cors: true
+  stagesFunction:
+    handler: stage-handler/handler.handler
+    events:
+      - http:
+          path: stages
+          method: get
+          cors: true
 
-  #     - http:
-  #         path: stages/{stageid}
-  #         method: get
-  #         cors: true
+      - http:
+          path: stages/{stageid}
+          method: get
+          cors: true
           
-  #     - http:
-  #         path: stages
-  #         method: post
-  #         cors: true
+      - http:
+          path: stages
+          method: post
+          cors: true
       
-  #     - http:
-  #         path: stages/{stageid}
-  #         method: put
-  #         cors: true
+      - http:
+          path: stages/{stageid}
+          method: put
+          cors: true
       
-  #     - http:
-  #         path: stages/{stageid}
-  #         method: delete
-  #         cors: true
+      - http:
+          path: stages/{stageid}
+          method: delete
+          cors: true
 
-      # - http:
-      #     path: receipts/{receiptid}
-      #     method: get
-      #     cors: true
+  receiptsFunction:
+    handler: receipt-handler/handler.handler
+    events:
+      - http:
+          path: receipts/{project_id}
+          method: get
+          cors: true
+
+      - http:
+          path: receipts/{receiptid}
+          method: get
+          cors: true
           
-      # - http:
-      #     path: receipts
-      #     method: post
-      #     cors: true
+      - http:
+          path: receipts
+          method: post
+          cors: true
       
-      # - http:
-      #     path: stages/{stageid}
-      #     method: put
-      #     cors: true
+      - http:
+          path: receipts/{receiptid}
+          method: put
+          cors: true
       
-      # - http:
-      #     path: receipts/{receiptid}
-      #     method: delete
-      #     cors: true
+      - http:
+          path: receipts/{receiptid}
+          method: delete
+          cors: true
 
 resources:
   Resources:
