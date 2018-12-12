@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bo
 ///Done: get all by projectID
 ///TODO: make sure it works correctly.
 
-app.get('/stages/:project_id', (req, res) => {
+app.get('/stages/stagesByProject/:project_id', (req, res) => {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
             if (isNaN(req.params.project_id) === false) {

@@ -93,7 +93,7 @@ functions:
     handler: stage-handler/handler.handler
     events:
       - http:
-          path: stages
+          path: stages/stagesByProject/{project_id}
           method: get
           cors: true
 
@@ -121,7 +121,7 @@ functions:
     handler: receipt-handler/handler.handler
     events:
       - http:
-          path: receipts
+          path: stages/stagesByProject/{project_id}
           method: get
           cors: true
 
