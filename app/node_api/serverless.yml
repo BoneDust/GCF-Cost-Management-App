@@ -121,7 +121,7 @@ functions:
     handler: receipt-handler/handler.handler
     events:
       - http:
-          path: stages/stagesByProject/{project_id}
+          path: receipts/receiptsByProject/{project_id}
           method: get
           cors: true
 
