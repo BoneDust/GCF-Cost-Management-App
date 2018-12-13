@@ -69,16 +69,6 @@ class _ProjectCard extends StatelessWidget {
   }
 }
 
-class _ProfilePopMenuButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-        itemBuilder: (_) => <PopupMenuItem<String>>[
-          PopupMenuItem<String>(child: Text("Edit"), value: "Edit"),
-          PopupMenuItem<String>(child: Text("Remove"), value: "Remove"),
-        ]);
-  }
-}
 
 class _ProjectContentCard extends StatelessWidget {
   final Project project;
@@ -115,9 +105,6 @@ class _ProjectContentCard extends StatelessWidget {
                 ),
               ],
             ),
-            new Row(
-              children: <Widget>[_ProjectPopMenuButton()],
-            )
           ]),
         ],
       ),
@@ -125,13 +112,3 @@ class _ProjectContentCard extends StatelessWidget {
   }
 }
 
-class _ProjectPopMenuButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-        itemBuilder: (_) => <PopupMenuItem<String>>[
-          PopupMenuItem<String>(child: Text("Edit"), value: "Edit"),
-          PopupMenuItem<String>(child: Text("Remove"), value: "Remove"),
-        ]);
-  }
-}
