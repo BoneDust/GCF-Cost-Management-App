@@ -25,10 +25,7 @@ class _Content extends StatelessWidget {
               margin: EdgeInsets.only(top: 100.0),
               width: double.infinity,
               child: Column(
-                children: <Widget>[
-                  Text("Joe Doe"),
-                  Text("Foreman")
-                ],
+                children: <Widget>[Text("Joe Doe"), Text("Foreman")],
               ),
             ),
           ),
@@ -39,10 +36,7 @@ class _Content extends StatelessWidget {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                       image: AssetImage("assets/images.jpeg"),
-                      fit: BoxFit.cover
-                  )
-              )
-          ),
+                      fit: BoxFit.cover))),
         ],
       ),
     );

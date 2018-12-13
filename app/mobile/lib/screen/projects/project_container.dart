@@ -34,7 +34,6 @@ class ProjectContainer extends StatelessWidget {
   }
 }
 
-
 class _ProjectThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -68,7 +67,6 @@ class _ProjectCard extends StatelessWidget {
     );
   }
 }
-
 
 class _ProjectContentCard extends StatelessWidget {
   final Project project;
@@ -111,4 +109,3 @@ class _ProjectContentCard extends StatelessWidget {
     );
   }
 }
-

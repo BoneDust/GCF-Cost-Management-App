@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class HomeNotifications extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -18,15 +17,8 @@ class _HomeNotificationsState extends State<HomeNotifications> {
       child: Column(
         children: <Widget>[
           ExpansionTile(
-            title: Row(
-              children: <Widget>[
-                Text("Activity"),
-              ],
-            ),
-            children: <Widget>[
-              _LatestActivities(),
-              _ActivityActions()
-            ],
+            title: Text("Activity"),
+            children: <Widget>[_LatestActivities(), _ActivityActions()],
           ),
         ],
       ),
@@ -47,7 +39,6 @@ class _HomeNotificationsState extends State<HomeNotifications> {
 //    );
   }
 }
-
 
 class NotificationTile extends StatelessWidget {
   @override
@@ -70,13 +61,11 @@ class NotificationTile extends StatelessWidget {
 class _LatestActivities extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-        children: <Widget>[
-          NotificationTile(),
-          NotificationTile(),
-          NotificationTile(),
-        ]
-    );
+    return Column(children: <Widget>[
+      NotificationTile(),
+      NotificationTile(),
+      NotificationTile(),
+    ]);
   }
 }
 
@@ -85,9 +74,8 @@ class _ActivityActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        FlatButton(child: Text("All Notifications"), onPressed: () {}),
+        RaisedButton(child: Text("Show activities"), onPressed: () {}),
       ],
     );
   }
-
 }

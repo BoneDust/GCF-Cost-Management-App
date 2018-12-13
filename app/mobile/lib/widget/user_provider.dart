@@ -19,7 +19,7 @@ class UserContainer extends StatefulWidget {
 class UserContainerState extends State<UserContainer> {
   User user;
 
-  setUser(user){
+  setUser(user) {
     setState(() {
       this.user = user;
     });

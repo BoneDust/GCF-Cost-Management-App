@@ -10,16 +10,16 @@ class Stage {
   DateTime endDate;
   int estimatedDaysDuration;
 
-  Stage({
-    this.id = 0,
-    this.projectId = 0,
-    this.name = "",
-    this.description = "",
-    this.status = "",
-    this.beforePicture = "",
-    this.afterPicture = "",
-    this.endDate,
-    this.estimatedDaysDuration = 2});
+  Stage(
+      {this.id = 0,
+      this.projectId = 0,
+      this.name = "",
+      this.description = "",
+      this.status = "",
+      this.beforePicture = "",
+      this.afterPicture = "",
+      this.endDate,
+      this.estimatedDaysDuration = 2});
 
   @override
   bool operator ==(Object other) =>

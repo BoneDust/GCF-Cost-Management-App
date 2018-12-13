@@ -1,3 +1,3 @@
-class Details{
+class Details {
   static const String COMPANY_TITLE = "GCF";
 }

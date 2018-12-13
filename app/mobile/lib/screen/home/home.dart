@@ -11,7 +11,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin<HomeScreen> {
-
   @override
   bool get wantKeepAlive => true;
 
@@ -31,35 +30,34 @@ class _HomeState extends State<HomeScreen>
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           image: AssetImage("assets/images.jpeg"),
-                          fit: BoxFit.cover
-                      )
-                  )
-              ),
+                          fit: BoxFit.cover))),
             ),
-            Padding(padding: EdgeInsets.only(left: 10),),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+            ),
             Text("Home")
           ],
         ),
       ),
       body: _HomeBody(),
-
     );
   }
-
 }
 
 class _HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-      return CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-              delegate: SliverChildListDelegate([
-                HomeNotifications(),
-                Padding(padding: EdgeInsets.only(top: 10),)
-              ])),
-          SliverGridMenu()
-        ],
-      );
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+            delegate: SliverChildListDelegate([
+          HomeNotifications(),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+          )
+        ])),
+        SliverGridMenu()
+      ],
+    );
   }
 }

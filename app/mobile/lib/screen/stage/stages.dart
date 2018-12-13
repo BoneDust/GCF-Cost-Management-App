@@ -15,7 +15,15 @@ class ForeManStagesScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Stages"),
       ),
-      body: _StagesScreen(stages: stages,)
+      body: _StagesScreen(
+        stages: stages,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, "/add_receipt");
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }
@@ -29,21 +37,23 @@ class _StagesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        Padding(padding: EdgeInsets.only(top: 20.0),),
+        Padding(
+          padding: EdgeInsets.only(top: 20.0),
+        ),
         Center(
           heightFactor: 1,
           child: Wrap(
             children: stages.map((stage) {
               return _StageSampleCard(stage);
-            }).toList() ,
+            }).toList(),
           ),
         ),
-        Padding(padding: EdgeInsets.only(top: 20.0),),
-
+        Padding(
+          padding: EdgeInsets.only(top: 20.0),
+        ),
       ],
     );
   }
-
 }
 
 class _StageSampleCard extends StatelessWidget {
@@ -60,11 +70,10 @@ class _StageSampleCard extends StatelessWidget {
       margin: EdgeInsets.only(left: 7),
       child: InkWell(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-              ForeManStageScreen(stage)
-          ));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ForeManStageScreen(stage)));
         },
-        child:  Card(
+        child: Card(
           child: Center(child: Text(stage.name)),
           color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
               rng.nextInt(255), rng.nextInt(255)),

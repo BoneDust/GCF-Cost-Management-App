@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CreateProjectScreen extends StatelessWidget{
+class AddProjectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,21 +8,19 @@ class CreateProjectScreen extends StatelessWidget{
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _CreateProjectScreen()
-        ],
+        children: <Widget>[_AddProjectScreen()],
       ),
     );
   }
 }
 
-class _CreateProjectScreen extends StatelessWidget{
-
+class _AddProjectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Card(
-        child: Padding(padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+        child: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
           child: ListView(
             children: <Widget>[
               TextFormField(
@@ -32,14 +30,10 @@ class _CreateProjectScreen extends StatelessWidget{
                 ),
               ),
               TextFormField(
-                decoration: InputDecoration(
-                    labelText: "Foreman"
-                ),
+                decoration: InputDecoration(labelText: "Foreman"),
               ),
               TextFormField(
-                decoration: InputDecoration(
-                    labelText: "Description"
-                ),
+                decoration: InputDecoration(labelText: "Description"),
               ),
               TextFormField(
                 maxLines: null,
@@ -64,9 +58,12 @@ class _CreateProjectScreen extends StatelessWidget{
               ),
               ButtonBar(
                 children: <Widget>[
-                  RaisedButton(child : Text("Create"), onPressed: () {
-                    Navigator.of(context).pop();
-                  },)
+                  RaisedButton(
+                    child: Text("Create"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
                 ],
               )
             ],

@@ -4,32 +4,32 @@ import 'package:cm_mobile/screen/receipt/image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CreateReceiptWidget extends StatelessWidget {
+class AddReceiptScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _CreateReceiptWidget(),
+      body: _AddReceiptWidget(),
     );
   }
 }
 
-class _CreateReceiptWidget extends StatefulWidget {
+class _AddReceiptWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _ForeManCreateReceiptState();
+    return _AddReceiptState();
   }
 }
 
-class _ForeManCreateReceiptState extends State<_CreateReceiptWidget> {
-
+class _AddReceiptState extends State<_AddReceiptWidget> {
   Widget previewImage = Center(
-    child: Text("Take receipt picture",
+    child: Text(
+      "Take receipt picture",
       style: TextStyle(
-        fontFamily: String.fromCharCode(3),
-        fontStyle: FontStyle.italic,
-        color: Colors.grey,
-        fontSize: 20
-      ),),
+          fontFamily: String.fromCharCode(3),
+          fontStyle: FontStyle.italic,
+          color: Colors.grey,
+          fontSize: 20),
+    ),
   );
   File _image;
 
@@ -38,8 +38,13 @@ class _ForeManCreateReceiptState extends State<_CreateReceiptWidget> {
     setState(() {
       _image = image;
       previewImage = GestureDetector(
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptImageViewer(image: _image,)));
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ReceiptImageViewer(
+                        image: _image,
+                      )));
         },
         child: Image(
           image: FileImage(_image),
@@ -62,60 +67,57 @@ class _ForeManCreateReceiptState extends State<_CreateReceiptWidget> {
             expandedHeight: 300.0,
             flexibleSpace: new FlexibleSpaceBar(
               background: previewImage,
-              title: IconButton(color: Colors.blueAccent,
+              title: IconButton(
+                  color: Colors.blueAccent,
                   icon: Icon(Icons.add_a_photo),
                   onPressed: () {
                     getImage();
-                    setState(() {
-
-                    });
+                    setState(() {});
                   }),
             ),
           ),
-
           SliverPadding(
-            padding:  EdgeInsets.all(20),
-            sliver:  SliverList(
-              delegate:  SliverChildListDelegate([
-                _ReceiptFields()
-              ]),
+            padding: EdgeInsets.all(20),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([_ReceiptFields()]),
             ),
           ),
         ],
       ),
     );
   }
-
 }
 
 class _ReceiptFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      child: Padding(
+        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: Column(
           children: <Widget>[
             TextFormField(
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                  labelText: "Amount. Eg. 100",
+                labelText: "Amount. Eg. 100",
               ),
             ),
             TextFormField(
-              decoration: InputDecoration(
-                  labelText: "Supplier"
-              ),
+              decoration: InputDecoration(labelText: "Supplier"),
             ),
             TextFormField(
               maxLines: null,
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
-                  labelText: "Description",
+                labelText: "Description",
               ),
             ),
             ButtonBar(
               children: <Widget>[
-                RaisedButton(child : Text("Submit"), onPressed: () {},)
+                RaisedButton(
+                  child: Text("Submit"),
+                  onPressed: () {},
+                )
               ],
             )
           ],
@@ -124,4 +126,3 @@ class _ReceiptFields extends StatelessWidget {
     );
   }
 }
-

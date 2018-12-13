@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
-class ReceiptImageViewer extends  StatelessWidget{
+class ReceiptImageViewer extends StatelessWidget {
   final File image;
 
   const ReceiptImageViewer({Key key, this.image}) : super(key: key);
@@ -29,4 +29,3 @@ class _ReceiptImageViewer extends StatelessWidget {
     );
   }
 }
-

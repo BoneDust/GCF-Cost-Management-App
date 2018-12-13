@@ -11,7 +11,6 @@ class ReceiptsWidget extends StatelessWidget {
 
   ReceiptsWidget(this.receipts);
 
-
   @override
   Widget build(BuildContext context) {
     return receipts == null || receipts.isEmpty
@@ -29,26 +28,28 @@ class _ReceiptsWidgetRoot extends StatelessWidget {
 
   _ReceiptsWidgetRoot(this.receipts) {
     baseTextStyle = const TextStyle();
-    headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0);
+    headerStyle = baseTextStyle.copyWith(fontSize: 18.0);
     subheadingStyle = baseTextStyle.copyWith(
       color: Colors.white,
-      fontSize: 12.0,);
+      fontSize: 12.0,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-   var topThreeReceipts = receipts.take(3).toList();
+    var topThreeReceipts = receipts.take(3).toList();
 
     return Card(
         shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-        child:  Column(
+        child: Column(
           children: <Widget>[
             GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                      ReceiptsList(receipts: receipts, appBarTitle: "Receipts",)
-                  ));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ReceiptsList(
+                            receipts: receipts,
+                            appBarTitle: "Receipts",
+                          )));
                 },
                 child: Container(
                   color: Colors.white,
@@ -59,7 +60,9 @@ class _ReceiptsWidgetRoot extends StatelessWidget {
                         new Text("Uploaded Receipts", style: headerStyle),
                         new Row(
                           children: <Widget>[
-                            Text(receipts.length.toString(), style: headerStyle.copyWith(color: Colors.grey)),
+                            Text(receipts.length.toString(),
+                                style:
+                                    headerStyle.copyWith(color: Colors.grey)),
                             Icon(
                               Icons.chevron_right,
                               color: Colors.grey,
@@ -68,16 +71,13 @@ class _ReceiptsWidgetRoot extends StatelessWidget {
                           ],
                         )
                       ]),
-                )
-            ),
+                )),
             Column(
-              children: topThreeReceipts.map((receipt){
+              children: topThreeReceipts.map((receipt) {
                 return ReceiptTile(receipt);
               }).toList(),
             )
           ],
-        )
-    );
+        ));
   }
 }
-

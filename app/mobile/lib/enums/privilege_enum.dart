@@ -1,4 +1,1 @@
-enum Privilege {
-  ADMIN,
-  FOREMAN
-}
+enum Privilege { ADMIN, FOREMAN }

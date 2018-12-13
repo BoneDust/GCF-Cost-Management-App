@@ -47,7 +47,7 @@ class _ProjectWidgetState extends State<ProjectWidget> {
       body: buildBodyWithStreamer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, "/create_receipt");
+          Navigator.pushNamed(context, "/add_receipt");
         },
         child: ImageIcon(AssetImage("assets/icons/add_receipt.png")),
       ),

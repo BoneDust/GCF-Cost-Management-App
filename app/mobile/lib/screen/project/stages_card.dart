@@ -12,8 +12,9 @@ class StagesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return stages == null || stages.isEmpty ? Column() : _StagesWidgetRoot(
-        stages);
+    return stages == null || stages.isEmpty
+        ? Column()
+        : _StagesWidgetRoot(stages);
   }
 }
 
@@ -26,24 +27,25 @@ class _StagesWidgetRoot extends StatelessWidget {
 
   _StagesWidgetRoot(this.stages) {
     baseTextStyle = const TextStyle();
-    headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0);
+    headerStyle = baseTextStyle.copyWith(fontSize: 18.0);
     subheadingStyle = baseTextStyle.copyWith(
       color: Colors.white,
-      fontSize: 12.0,);
+      fontSize: 12.0,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return  Card(
+    return Card(
         shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
         child: Column(
           children: <Widget>[
             GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                      ForeManStagesScreen(stages: stages,)
-                  ));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ForeManStagesScreen(
+                            stages: stages,
+                          )));
                 },
                 child: Container(
                   color: Colors.white,
@@ -54,7 +56,9 @@ class _StagesWidgetRoot extends StatelessWidget {
                         new Text("Stages", style: headerStyle),
                         new Row(
                           children: <Widget>[
-                            Text(stages.length.toString(), style: headerStyle.copyWith(color: Colors.grey)),
+                            Text(stages.length.toString(),
+                                style:
+                                    headerStyle.copyWith(color: Colors.grey)),
                             Icon(
                               Icons.chevron_right,
                               color: Colors.grey,
@@ -63,15 +67,16 @@ class _StagesWidgetRoot extends StatelessWidget {
                           ],
                         )
                       ]),
-                )
-            ),
+                )),
             _StagesCard(stages),
+            RaisedButton(
+                child: Text("Add a Stage"),
+                onPressed: () => Navigator.of(context).pushNamed("/add_stage"))
           ],
-        )
-    );;
+        ));
+    ;
   }
 }
-
 
 class _StagesCard extends StatelessWidget {
   final List<Stage> stages;
@@ -83,8 +88,7 @@ class _StagesCard extends StatelessWidget {
     return Container(
       height: 110.0,
       padding: EdgeInsetsDirectional.only(bottom: 10.0),
-
-      child:ListView.builder(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: stages.length,
         itemBuilder: (BuildContext context, int index) {
@@ -107,7 +111,7 @@ class _StageSampleCard extends StatelessWidget {
       width: 100,
       margin: EdgeInsets.only(left: 7),
       child: GestureDetector(
-        onTap: () =>  _showStage(context, stage),
+        onTap: () => _showStage(context, stage),
         child: Card(
           child: Center(child: Text(stage.name)),
           color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
@@ -116,10 +120,9 @@ class _StageSampleCard extends StatelessWidget {
       ),
     );
   }
-  _showStage(BuildContext context, Stage stage) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-        ForeManStageScreen(stage)
-    ));
-  }
 
+  _showStage(BuildContext context, Stage stage) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => ForeManStageScreen(stage)));
+  }
 }

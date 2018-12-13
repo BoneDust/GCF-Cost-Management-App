@@ -10,9 +10,15 @@ class User {
   String contactNo;
   Privilege privileges;
 
-
-  User({this.id, this.name, this.surname, this.username, this.password,
-      this.pictureUrl, this.contactNo, this.privileges});
+  User(
+      {this.id,
+      this.name,
+      this.surname,
+      this.username,
+      this.password,
+      this.pictureUrl,
+      this.contactNo,
+      this.privileges});
 
   @override
   bool operator ==(Object other) =>

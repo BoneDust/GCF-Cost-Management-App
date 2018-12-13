@@ -10,13 +10,12 @@ class ReceiptTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey))
-      ),
+      decoration:
+          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
       child: ListTile(
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>
-              ReceiptWidget(receipt)));
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ReceiptWidget(receipt)));
         },
         trailing: Text("2d"),
         title: Text("Payment made to " + receipt.supplier),
@@ -24,16 +23,12 @@ class ReceiptTile extends StatelessWidget {
         leading: Container(
           height: 50,
           width: 50,
-          decoration:  BoxDecoration(
+          decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
-                  image: AssetImage("assets/images.jpeg"),
-                  fit: BoxFit.cover
-              )
-          ),
+                  image: AssetImage("assets/images.jpeg"), fit: BoxFit.cover)),
         ),
       ),
     );
   }
 }
-

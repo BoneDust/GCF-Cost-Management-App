@@ -19,22 +19,19 @@ class ReceiptWidget extends StatelessWidget {
               background: Image(
                 image: AssetImage("assets/images.jpeg"),
                 fit: BoxFit.cover,
-              ) ,
+              ),
             ),
           ),
           SliverPadding(
             padding: EdgeInsets.all(16.0),
             sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _ReceiptFields(receipt)
-              ]),
+              delegate: SliverChildListDelegate([_ReceiptFields(receipt)]),
             ),
           ),
         ],
       ),
     );
   }
-
 }
 
 class _ReceiptFields extends StatelessWidget {
@@ -73,9 +70,7 @@ class _ReceiptFields extends StatelessWidget {
             ),
           ),
         ),
-
       ],
     );
   }
 }
-

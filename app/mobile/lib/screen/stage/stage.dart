@@ -12,11 +12,10 @@ class ForeManStageScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(stage.name),
-        ) ,
+        ),
         body: SafeArea(
           child: _StageScreen(),
-        )
-    );
+        ));
   }
 }
 
@@ -24,18 +23,20 @@ class _StageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.grey ,
+      color: Colors.grey,
       child: ListView(
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(top: 20.0),),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0),
+          ),
           StageDetails(),
           SnapShotCard(),
           Duration(),
-          Padding(padding: EdgeInsets.only(top: 30.0),),
-
+          Padding(
+            padding: EdgeInsets.only(top: 30.0),
+          ),
         ],
       ),
     );
   }
 }
-

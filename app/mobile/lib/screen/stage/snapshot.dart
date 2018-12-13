@@ -7,11 +7,11 @@ class SnapShotCard extends StatelessWidget {
 
   SnapShotCard() {
     baseTextStyle = const TextStyle();
-    headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0);
+    headerStyle = baseTextStyle.copyWith(fontSize: 18.0);
     subheadingStyle = baseTextStyle.copyWith(
       color: Colors.white,
-      fontSize: 12.0,);
+      fontSize: 12.0,
+    );
   }
 
   @override
@@ -33,15 +33,15 @@ class SnapShotCard extends StatelessWidget {
             width: 160,
             height: 50,
             child: RaisedButton(
-
               color: Colors.lightGreenAccent,
               child: Text("Set Stage Finished"),
               onPressed: () {},
             ),
           ),
           Text("*Both picture have to present in order to finish the project"),
-          Padding(padding: EdgeInsets.only(top: 20.0),),
-
+          Padding(
+            padding: EdgeInsets.only(top: 20.0),
+          ),
         ],
       ),
     );
@@ -52,14 +52,10 @@ class SnapShotCardDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        spacing: 12,
-        children: <Widget>[
-          StageImage(),
-          StageImage()
-
-        ],
-      );
+      alignment: WrapAlignment.spaceBetween,
+      spacing: 12,
+      children: <Widget>[StageImage(), StageImage()],
+    );
   }
 }
 
@@ -72,9 +68,7 @@ class StageImage extends StatelessWidget {
         Container(
           height: 150,
           width: 150,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.amber)
-          ),
+          decoration: BoxDecoration(border: Border.all(color: Colors.amber)),
           child: Image(
             image: AssetImage("assets/images.jpeg"),
             fit: BoxFit.cover,
@@ -83,7 +77,4 @@ class StageImage extends StatelessWidget {
       ],
     );
   }
-
 }
-
-

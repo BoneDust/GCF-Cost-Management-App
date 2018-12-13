@@ -1,7 +1,7 @@
 import 'package:cm_mobile/model/project.dart';
 import 'package:flutter/material.dart';
 
-class DetailsCard extends StatelessWidget{
+class DetailsCard extends StatelessWidget {
   Project project;
 
   DetailsCard(this.project);
@@ -12,8 +12,7 @@ class DetailsCard extends StatelessWidget{
   }
 }
 
-class _DetailsCardRoot  extends StatelessWidget{
-
+class _DetailsCardRoot extends StatelessWidget {
   Project project;
 
   _DetailsCardRoot(this.project);
@@ -22,33 +21,28 @@ class _DetailsCardRoot  extends StatelessWidget{
   Widget build(BuildContext context) {
     return Card(
         shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-        child:  Column(
+        child: Column(
           children: <Widget>[
             Container(
               color: Colors.white,
               padding: EdgeInsets.only(top: 10.0, left: 10.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Details")
-                  ]),
+                  children: [Text("Details")]),
             ),
             _DetailsCard(project),
           ],
-        )
-    );
+        ));
   }
 }
 
 class _DetailsCard extends StatelessWidget {
-
-  final Project project ;
+  final Project project;
 
   _DetailsCard(this.project);
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: <Widget>[
         ListTile(
@@ -56,25 +50,29 @@ class _DetailsCard extends StatelessWidget {
           subtitle: Text("Name"),
           leading: Icon(Icons.assignment),
         ),
-        Divider(color: Colors.black54,),
+        Divider(
+          color: Colors.black54,
+        ),
         ListTile(
           title: Text(project.clientId.toString()),
           subtitle: Text("Company"),
           leading: Icon(Icons.business_center),
         ),
-        Divider(color: Colors.black54,),
+        Divider(
+          color: Colors.black54,
+        ),
         ListTile(
           title: Text(project.startDate.toString()),
           subtitle: Text("Start Date"),
           leading: Icon(Icons.date_range),
-
         ),
-        Divider(color: Colors.black54,),
+        Divider(
+          color: Colors.black54,
+        ),
         ListTile(
           title: Text(project.endDate.toIso8601String()),
           subtitle: Text("End Date"),
           leading: Icon(Icons.date_range),
-
         )
       ],
     );

@@ -41,13 +41,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     return BlocProvider<ProjectsBloc>(
       bloc: projectsBloc,
       child: Scaffold(
-          floatingActionButton: user.privileges == Privilege.ADMIN ?
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/create_project");
-            },
-            child: Icon(Icons.add),
-          ) : null,
+          floatingActionButton: user.privileges == Privilege.ADMIN
+              ? FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/add_project");
+                  },
+                  child: Icon(Icons.add),
+                )
+              : null,
           resizeToAvoidBottomPadding: false,
           appBar: buildAppBar(context),
           body: StreamBuilder<List<Project>>(
