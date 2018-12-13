@@ -1,8 +1,11 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/project_bloc.dart';
+import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/projects/project_container.dart';
 import 'package:cm_mobile/service/api_service.dart';
+import 'package:cm_mobile/widget/user_provider.dart';
 import 'package:flutter/material.dart';
 
 class ProjectsScreen extends StatefulWidget {
@@ -31,11 +34,21 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
   @override
   Widget build(BuildContext context) {
+    UserContainerState userContainerState = UserContainer.of(context);
+    User user = userContainerState.user;
+
     super.build(context);
     return BlocProvider<ProjectsBloc>(
       bloc: projectsBloc,
       child: Scaffold(
-          resizeToAvoidBottomPadding : false,
+          floatingActionButton: user.privileges == Privilege.ADMIN ?
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/create_project");
+            },
+            child: Icon(Icons.add),
+          ) : null,
+          resizeToAvoidBottomPadding: false,
           appBar: buildAppBar(context),
           body: StreamBuilder<List<Project>>(
             key: PageStorageKey("projects"),
@@ -43,8 +56,12 @@ class _ProjectsScreenState extends State<ProjectsScreen>
             builder:
                 (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
               return snapshot.data != null
-                  ? _isSearching ? ProjectsList(snapshot.data) : ProjectsList(snapshot.data)
-                  : Column(children: <Widget>[Text("loading...")],);
+                  ? _isSearching
+                      ? ProjectsList(snapshot.data)
+                      : ProjectsList(snapshot.data)
+                  : Column(
+                      children: <Widget>[Text("loading...")],
+                    );
             },
           )),
     );
@@ -61,9 +78,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
             icon: actionIcon,
             onPressed: () {
               setState(() {
-                actionIcon = actionIcon.icon == Icons.search ?
-                    Icon(Icons.close):
-                    Icon(Icons.search);
+                actionIcon = actionIcon.icon == Icons.search
+                    ? Icon(Icons.close)
+                    : Icon(Icons.search);
                 _isSearching = !_isSearching;
               });
             })
@@ -74,24 +91,19 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
   Widget buildAppBarSearch(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
-    TextStyle style = TextStyle(
-        color: Colors.white,
-        fontSize: 20
-    );
+    TextStyle style = TextStyle(color: Colors.white, fontSize: 20);
     return Center(
-      child:  TextField(
+      child: TextField(
         cursorColor: Colors.white,
         autofocus: true,
         autocorrect: true,
         style: style,
         //   controller: _searchQuery,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.arrow_back, color: Colors.white),
-          hintText: "Search for projects...",
-          hintStyle: style,
-          border: OutlineInputBorder(borderSide: BorderSide.none)
-
-        ),
+            prefixIcon: Icon(Icons.arrow_back, color: Colors.white),
+            hintText: "Search for projects...",
+            hintStyle: style,
+            border: OutlineInputBorder(borderSide: BorderSide.none)),
       ),
     );
   }
@@ -121,7 +133,6 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 }
 
-
 class ProjectsList extends StatelessWidget {
   final List<Project> projects;
 
@@ -129,7 +140,7 @@ class ProjectsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return         ListView.builder(
+    return ListView.builder(
       itemCount: projects.length,
       padding: EdgeInsets.only(bottom: 30, top: 30),
       itemBuilder: (BuildContext context, int index) {

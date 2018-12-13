@@ -26,7 +26,6 @@ class _ProjectWidgetState extends State<ProjectWidget> {
   _ProjectWidgetState(this.project);
   ProjectBloc projectBloc;
 
-
   @override
   void initState() {
     projectBloc = ProjectBloc(project.id.toString(), ApiService());
@@ -67,7 +66,7 @@ class _ProjectWidgetState extends State<ProjectWidget> {
                 (BuildContext context, bool innerBoxIsScrolled) {
               List<Widget> appBarActions = [];
               if (user.privileges == Privilege.ADMIN)
-                appBarActions.add( _ProjectPopMenuButton());
+                appBarActions.add(_ProjectPopMenuButton());
               return <Widget>[
                 SliverAppBar(
                   actions: appBarActions,
@@ -91,7 +90,6 @@ class _ProjectWidgetState extends State<ProjectWidget> {
                 : Column()));
       },
     );
-
   }
 }
 

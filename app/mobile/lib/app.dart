@@ -2,6 +2,7 @@ import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/user_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/screen/project/create_project.dart';
 import 'package:cm_mobile/screen/users/create_user_screen.dart';
 import 'package:cm_mobile/screen/users/users.dart';
 import 'package:cm_mobile/service/api_service.dart';
@@ -21,6 +22,7 @@ class App extends StatefulWidget {
 class _App extends State<App> {
   final routes = <String, WidgetBuilder>{
     '/auth': (BuildContext context) => LoginScreen(),
+    '/create_project': (BuildContext context) => CreateProjectScreen(),
     '/home': (BuildContext context) => HomeScreen(),
     '/users': (BuildContext context) => ManageUsersScreen(),
     '/create_users': (BuildContext context) => CreateUserScreen(),
@@ -43,6 +45,7 @@ class _App extends State<App> {
     );
   }
 }
+
 
 class _AppRoot extends StatefulWidget {
   @override
