@@ -36,12 +36,13 @@ module.exports = {
             return false
     },
 
-    saveAccessToken: async function (tokenKey, privilege) {
+    saveAccessToken: async function (tokenKey, privilege, username) {
 
         const params = {
             TableName: TOKEN_TABLE,
             Item: {
                 token: tokenKey,
+                username: username,
                 privilege: privilege
             }
         }

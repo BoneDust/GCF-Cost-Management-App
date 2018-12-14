@@ -49,6 +49,7 @@ provider:
     STAGES_TABLE: ${self:custom.stageTableName}
     TOKENS_TABLE: ${self:custom.tokenTableName}
     TRASH_TABLE: ${self:custom.trashTableName}
+    ACTIVITY_URL: "LOL.COM"
 
 functions:
   usersFunction:
