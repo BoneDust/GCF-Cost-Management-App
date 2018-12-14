@@ -31,7 +31,7 @@ class SliverGridMenu extends StatelessWidget {
 
   List<GridItemEntry> getMenuEntries(BuildContext context) {
     UserContainerState userContainerState = UserContainer.of(context);
-    Privilege previlige = userContainerState.user.privileges;
+    Privilege previlige = userContainerState.user.privilege;
 
     TabController tabController = DefaultTabController.of(context);
 

@@ -21,6 +21,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   Icon actionIcon = Icon(Icons.search, color: Colors.white);
   Widget appBarTitle;
   bool _isSearching = false;
+  TextEditingController searchTextController = TextEditingController();
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     return BlocProvider<ProjectsBloc>(
       bloc: projectsBloc,
       child: Scaffold(
-          floatingActionButton: user.privileges == Privilege.ADMIN
+          floatingActionButton: user.privilege == Privilege.ADMIN
               ? FloatingActionButton(
                   onPressed: () {
                     Navigator.pushNamed(context, "/add_project");
@@ -53,13 +54,12 @@ class _ProjectsScreenState extends State<ProjectsScreen>
           appBar: buildAppBar(context),
           body: StreamBuilder<List<Project>>(
             key: PageStorageKey("projects"),
-            stream: projectsBloc.outProject,
+            stream:
+                _isSearching ? projectsBloc.results : projectsBloc.outProject,
             builder:
                 (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
               return snapshot.data != null
-                  ? _isSearching
-                      ? ProjectsList(snapshot.data)
-                      : ProjectsList(snapshot.data)
+                  ? ProjectsList(snapshot.data)
                   : Column(
                       children: <Widget>[Text("loading...")],
                     );
@@ -83,6 +83,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                     ? Icon(Icons.close)
                     : Icon(Icons.search);
                 _isSearching = !_isSearching;
+
               });
             })
       ],
@@ -91,14 +92,15 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 
   Widget buildAppBarSearch(BuildContext context) {
-    MediaQueryData mediaQueryData = MediaQuery.of(context);
     TextStyle style = TextStyle(color: Colors.white, fontSize: 20);
     return Center(
       child: TextField(
+        controller: searchTextController,
         cursorColor: Colors.white,
         autofocus: true,
         autocorrect: true,
         style: style,
+        onChanged:  projectsBloc.query.add,
         //   controller: _searchQuery,
         decoration: InputDecoration(
             prefixIcon: Icon(Icons.arrow_back, color: Colors.white),
@@ -110,6 +112,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 
   Widget buildAppBarDefaultTitle(BuildContext context) {
+    searchTextController.clear();
     return Row(
       children: <Widget>[
         GestureDetector(
@@ -131,6 +134,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         Text("Projects")
       ],
     );
+  }
+
+  void onSearchTextChanged(String value) {
+    if (searchTextController.text.isNotEmpty)
+      projectsBloc.createQuery(searchTextController.text);
   }
 }
 

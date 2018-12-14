@@ -105,7 +105,7 @@ class _AppBottomNavigator extends StatelessWidget {
     UserContainerState userContainerState = UserContainer.of(context);
     User user = userContainerState.user;
 
-    if (user.privileges == Privilege.ADMIN) {
+    if (user.privilege == Privilege.ADMIN) {
       tabEntry.children.add(StatisticsScreen());
       tabEntry.tabs.add(Tab(icon: Icon(Icons.trending_up)));
     }

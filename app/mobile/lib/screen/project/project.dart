@@ -65,7 +65,7 @@ class _ProjectWidgetState extends State<ProjectWidget> {
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               List<Widget> appBarActions = [];
-              if (user.privileges == Privilege.ADMIN)
+              if (user.privilege == Privilege.ADMIN)
                 appBarActions.add(_ProjectPopMenuButton());
               return <Widget>[
                 SliverAppBar(

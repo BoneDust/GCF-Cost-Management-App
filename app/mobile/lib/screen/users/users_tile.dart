@@ -20,7 +20,7 @@ class UserTile extends StatelessWidget {
                   builder: (context) => ManagerUserScreen(user: user)));
         },
         title: Text(user.name + " " + user.surname),
-        subtitle: Text(user.privileges.toString()),
+        subtitle: Text(user.privilege.toString()),
         leading: Container(
           height: 50,
           width: 50,

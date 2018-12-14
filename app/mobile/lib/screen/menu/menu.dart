@@ -29,7 +29,7 @@ class _MenuScreen extends StatelessWidget {
 
   List<Widget> getMenuScreenWidget(BuildContext context) {
     UserContainerState userContainerState = UserContainer.of(context);
-    Privilege privilege = userContainerState.user.privileges;
+    Privilege privilege = userContainerState.user.privilege;
 
     List<Widget> menuScreenWidget = [
       Padding(padding: EdgeInsets.only(top: 30.0)),

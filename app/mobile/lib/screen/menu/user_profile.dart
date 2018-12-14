@@ -1,3 +1,5 @@
+import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/widget/user_provider.dart';
 import 'package:flutter/material.dart';
 
 class MenuProfileCard extends StatelessWidget {
@@ -12,8 +14,12 @@ class MenuProfileCard extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    UserContainerState userContainerState = UserContainer.of(context);
+    User user = userContainerState.user;
+
     return Container(
       width: double.infinity,
       child: Stack(
@@ -25,7 +31,7 @@ class _Content extends StatelessWidget {
               margin: EdgeInsets.only(top: 100.0),
               width: double.infinity,
               child: Column(
-                children: <Widget>[Text("Joe Doe"), Text("Foreman")],
+                children: <Widget>[Text(user.name +" "+ user.surname), Text(user.privilege.toString())],
               ),
             ),
           ),

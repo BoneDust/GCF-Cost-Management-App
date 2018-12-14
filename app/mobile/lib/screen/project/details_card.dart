@@ -1,4 +1,7 @@
+import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/widget/user_provider.dart';
 import 'package:flutter/material.dart';
 
 class DetailsCard extends StatelessWidget {
@@ -43,27 +46,14 @@ class _DetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
+    UserContainerState userContainerState = UserContainer.of(context);
+    User user = userContainerState.user;
+    List<Widget> detailsList = [];
+    if (user.privilege == Privilege.ADMIN)
+      detailsList.addAll([
         ListTile(
-          title: Text(project.name),
-          subtitle: Text("Name"),
-          leading: Icon(Icons.assignment),
-        ),
-        Divider(
-          color: Colors.black54,
-        ),
-        ListTile(
-          title: Text(project.clientId.toString()),
-          subtitle: Text("Company"),
-          leading: Icon(Icons.business_center),
-        ),
-        Divider(
-          color: Colors.black54,
-        ),
-        ListTile(
-          title: Text(project.startDate.toString()),
-          subtitle: Text("Start Date"),
+          title: Text(project.foreman.name + " " + project.foreman.surname),
+          subtitle: Text("Foreman"),
           leading: Icon(Icons.date_range),
         ),
         Divider(
@@ -71,10 +61,64 @@ class _DetailsCard extends StatelessWidget {
         ),
         ListTile(
           title: Text(project.endDate.toIso8601String()),
-          subtitle: Text("End Date"),
+          subtitle: Text("Estimated Cost"),
           leading: Icon(Icons.date_range),
-        )
-      ],
+        ),
+        Divider(
+          color: Colors.black54,
+        ),
+        ListTile(
+          title: Text(project.endDate.toIso8601String()),
+          subtitle: Text("Expenditure"),
+          leading: Icon(Icons.date_range),
+        ),
+        Divider(
+          color: Colors.black54,
+        ),
+      ]);
+
+    detailsList.addAll([
+      ListTile(
+        title: Text(project.name),
+        subtitle: Text("Name"),
+        leading: Icon(Icons.assignment),
+      ),
+      Divider(
+        color: Colors.black54,
+      ),
+      ListTile(
+        title: Text(project.clientId.toString()),
+        subtitle: Text("Company"),
+        leading: Icon(Icons.business_center),
+      ),
+      Divider(
+        color: Colors.black54,
+      ),
+      ListTile(
+        title: Text(project.startDate.toString()),
+        subtitle: Text("Start Date"),
+        leading: Icon(Icons.date_range),
+      ),
+      Divider(
+        color: Colors.black54,
+      ),
+      ListTile(
+        title: Text(project.endDate.toIso8601String()),
+        subtitle: Text("End Date"),
+        leading: Icon(Icons.date_range),
+      ),
+      Divider(
+        color: Colors.black54,
+      ),
+      ListTile(
+        title: Text(project.name),
+        subtitle: Text("Team Size"),
+        leading: Icon(Icons.assignment),
+      ),
+    ]);
+
+    return Column(
+      children: detailsList,
     );
   }
 }

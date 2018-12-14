@@ -8,7 +8,7 @@ class User {
   String password;
   String pictureUrl;
   String contactNo;
-  Privilege privileges;
+  Privilege privilege;
 
   User(
       {this.id,
@@ -18,7 +18,7 @@ class User {
       this.password,
       this.pictureUrl,
       this.contactNo,
-      this.privileges});
+      this.privilege});
 
   @override
   bool operator ==(Object other) =>

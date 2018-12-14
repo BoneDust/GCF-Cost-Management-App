@@ -13,9 +13,9 @@ class ApiService {
   String _url = "";
 
   Future<List<Project>> getAll() async {
-    List<Project> resultList = List.generate(10, (index) => DummyData.projectList);
+    List<Project> resultList = DummyData.projectList;
 
-    await Future.delayed(Duration(seconds: 2));
+  //  await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
 //         .then((response) => response.body)
@@ -27,7 +27,7 @@ class ApiService {
   }
 
   Future<Project> get(String id) async {
-    Project result = DummyData.projectList;
+    Project result = DummyData.getProject();
     await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
@@ -40,7 +40,7 @@ class ApiService {
   }
 
   Future<User> getUser(String id) async {
-    User result = User(privileges: Privilege.ADMIN);
+    User result = DummyData.adminUser;
     await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
@@ -50,5 +50,10 @@ class ApiService {
 //         .then((list) => list.forEach((item) => resultList.add(Project.fromJson(item))));
 
     return result;
+  }
+
+  Future<List<Project>>  queryData(String value) async {
+    List<Project> resultList = DummyData.projectList;
+    return resultList;
   }
 }

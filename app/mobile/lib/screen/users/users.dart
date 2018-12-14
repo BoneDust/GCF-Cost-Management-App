@@ -5,17 +5,17 @@ import 'package:flutter/material.dart';
 
 class ManageUsersScreen extends StatelessWidget {
   final List<User> users = [
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
-    User(name: "Lonwabo", privileges: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
+    User(name: "Lonwabo", privilege: Privilege.FOREMAN, surname: "Rarane"),
   ];
 
   @override
