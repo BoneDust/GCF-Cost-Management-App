@@ -13,6 +13,7 @@ custom:
   stageTableName: 'stage-Table-${self:provider.stage}'
   tokenTableName: 'token-Table-${self:provider.stage}'
   trashTableName: 'trash-Table-${self:provider.stage}'
+  activityUrl: 'facebook.com'
 
 provider:
   name: aws
@@ -49,7 +50,7 @@ provider:
     STAGES_TABLE: ${self:custom.stageTableName}
     TOKENS_TABLE: ${self:custom.tokenTableName}
     TRASH_TABLE: ${self:custom.trashTableName}
-    ACTIVITY_URL: "LOL.COM"
+    ACTIVITY_URL: ${self:custom.activityUrl}
 
 functions:
   usersFunction:
@@ -90,61 +91,61 @@ functions:
           method: delete
           cors: true
 
-  stagesFunction:
-    handler: stage-handler/handler.handler
-    events:
-      - http:
-          path: stages/stagesByProject/{project_id}
-          method: get
-          cors: true
+  # stagesFunction:
+  #   handler: stage-handler/handler.handler
+  #   events:
+  #     - http:
+  #         path: stages/stagesByProject/{project_id}
+  #         method: get
+  #         cors: true
 
-      - http:
-          path: stages/{stageid}
-          method: get
-          cors: true
+  #     - http:
+  #         path: stages/{stageid}
+  #         method: get
+  #         cors: true
           
-      - http:
-          path: stages
-          method: post
-          cors: true
+  #     - http:
+  #         path: stages
+  #         method: post
+  #         cors: true
       
-      - http:
-          path: stages/{stageid}
-          method: put
-          cors: true
+  #     - http:
+  #         path: stages/{stageid}
+  #         method: put
+  #         cors: true
       
-      - http:
-          path: stages/{stageid}
-          method: delete
-          cors: true
+  #     - http:
+  #         path: stages/{stageid}
+  #         method: delete
+  #         cors: true
 
-  receiptsFunction:
-    handler: receipt-handler/handler.handler
-    events:
-      - http:
-          path: receipts/receiptsByProject/{project_id}
-          method: get
-          cors: true
+  # receiptsFunction:
+  #   handler: receipt-handler/handler.handler
+  #   events:
+  #     - http:
+  #         path: receipts/receiptsByProject/{project_id}
+  #         method: get
+  #         cors: true
 
-      - http:
-          path: receipts/{receiptid}
-          method: get
-          cors: true
+  #     - http:
+  #         path: receipts/{receiptid}
+  #         method: get
+  #         cors: true
           
-      - http:
-          path: receipts
-          method: post
-          cors: true
+  #     - http:
+  #         path: receipts
+  #         method: post
+  #         cors: true
       
-      - http:
-          path: receipts/{receiptid}
-          method: put
-          cors: true
+  #     - http:
+  #         path: receipts/{receiptid}
+  #         method: put
+  #         cors: true
       
-      - http:
-          path: receipts/{receiptid}
-          method: delete
-          cors: true
+  #     - http:
+  #         path: receipts/{receiptid}
+  #         method: delete
+  #         cors: true
 
 resources:
   Resources:

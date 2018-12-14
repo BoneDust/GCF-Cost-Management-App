@@ -1,4 +1,4 @@
-const express = require('express')
+/*const express = require('express')
 const serverless = require('serverless-http')
 const bodyParser = require('body-parser')
 const AWS = require('aws-sdk')
@@ -142,4 +142,4 @@ app.all('*', function (req, res) {
 });
 
 // wrap express app instance with serverless http function
-module.exports.handler = serverless(app);
+module.exports.handler = serverless(app);*/

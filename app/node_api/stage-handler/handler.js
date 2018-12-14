@@ -114,7 +114,7 @@ app.post('/stages', (req, res) => {
                     })
                 }
                 else
-                    res.status(400).json({ rror: "Incomplete stage supplied. Supply project_id, stage_name, descriptiom, status,  before_pic_url, start_date and estimated_duration" })
+                    res.status(400).json({ error: "Incomplete stage supplied. Supply project_id, stage_name, descriptiom, status,  before_pic_url, start_date and estimated_duration" })
             }
             else
                 res.status(401).json({ error: "User not authorised to make this request." })

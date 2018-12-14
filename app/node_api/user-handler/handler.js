@@ -20,7 +20,6 @@ app.get('/users', (req, res) => {
     verification.isValidAdmin(req.headers.token)
         .then(isValid => {
             if (isValid) {
-
                 //searching user by name or surname
                 if (req.query.search) {
 
@@ -63,7 +62,7 @@ app.get('/users', (req, res) => {
         })
         .catch(error => { res.status(400).json({ error: error.message }) })
 })
-
+/*
 // //endpoint function that returns a user by userID
 app.get('/users/:userId', (req, res) => {
 
@@ -291,4 +290,4 @@ app.all('*', function (req, res) {
 });
 
 // wrap express app instance with serverless http function
-module.exports.handler = serverless(app);
+*/module.exports.handler = serverless(app);
