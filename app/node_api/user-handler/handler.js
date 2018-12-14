@@ -241,9 +241,8 @@ app.put('/users/:userId', (req, res) => {
                     })
                 }
                 else {
-                    const errorStatusCode = isNaN(req.params.userId) ? 404 : 400;
-                    const message = isNaN(req.params.userId) ? "UserId " + req.params.userId + " not found" : "Incomplete user supplied.";
-                    res.status(errorStatusCode).json({ error: message })
+                    const message = isNaN(req.params.userId) ? "UserId " + req.params.userId + " is not a number" : "Incomplete user supplied.";
+                    res.status(400).json({ error: message })
                 }
             }
             else
