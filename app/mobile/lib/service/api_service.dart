@@ -15,7 +15,7 @@ class ApiService {
   Future<List<Project>> getAll() async {
     List<Project> resultList = DummyData.projectList;
 
-  //  await Future.delayed(Duration(seconds: 2));
+    //  await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
 //         .then((response) => response.body)
@@ -40,7 +40,7 @@ class ApiService {
   }
 
   Future<User> getUser(String id) async {
-    User result = DummyData.adminUser;
+    User result = DummyData.foremanUser;
     await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
@@ -52,8 +52,13 @@ class ApiService {
     return result;
   }
 
-  Future<List<Project>>  queryData(String value) async {
-    List<Project> resultList = DummyData.projectList;
-    return resultList;
+  Future<List<Project>> queryData(String value) async {
+    var resultList = DummyData.projectList;
+    var filteredList = resultList
+        .where((project) =>
+            project.description.toLowerCase().contains(value) ||
+            project.name.toLowerCase().contains(value))
+        .toList();
+    return filteredList;
   }
 }

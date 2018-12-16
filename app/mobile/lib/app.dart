@@ -3,6 +3,7 @@ import 'package:cm_mobile/bloc/user_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/project/add_project.dart';
+import 'package:cm_mobile/screen/project/edit_project.dart';
 import 'package:cm_mobile/screen/stage/add_stage.dart';
 import 'package:cm_mobile/screen/users/create_user_screen.dart';
 import 'package:cm_mobile/screen/users/users.dart';
@@ -26,6 +27,7 @@ class _App extends State<App> {
     '/add_stage': (BuildContext context) => AddStageScreen(),
     '/add_project': (BuildContext context) => AddProjectScreen(),
     '/add_receipt': (BuildContext context) => AddReceiptScreen(),
+    '/edit_project': (BuildContext context) => EditProjectScreen(),
     '/home': (BuildContext context) => HomeScreen(),
     '/users': (BuildContext context) => ManageUsersScreen(),
     '/create_users': (BuildContext context) => CreateUserScreen(),

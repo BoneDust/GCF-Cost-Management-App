@@ -21,12 +21,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   Icon actionIcon = Icon(Icons.search, color: Colors.white);
   Widget appBarTitle;
   bool _isSearching = false;
+  Color _appBarBackgroundColor = Colors.blue;
+
   TextEditingController searchTextController = TextEditingController();
 
   @override
   void initState() {
     projectsBloc = ProjectsBloc(ApiService());
-    projectsBloc.getAllProjects();
+    projectsBloc.query.add("");
     super.initState();
   }
 
@@ -54,8 +56,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
           appBar: buildAppBar(context),
           body: StreamBuilder<List<Project>>(
             key: PageStorageKey("projects"),
-            stream:
-                _isSearching ? projectsBloc.results : projectsBloc.outProject,
+            stream: projectsBloc.results,
             builder:
                 (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
               return snapshot.data != null
@@ -74,36 +75,29 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         : buildAppBarSearch(context);
 
     return AppBar(
-      actions: <Widget>[
-        IconButton(
-            icon: actionIcon,
-            onPressed: () {
-              setState(() {
-                actionIcon = actionIcon.icon == Icons.search
-                    ? Icon(Icons.close)
-                    : Icon(Icons.search);
-                _isSearching = !_isSearching;
-
-              });
-            })
-      ],
+      backgroundColor: _appBarBackgroundColor,
+      actions: <Widget>[IconButton(icon: actionIcon, onPressed: _toggleSearch)],
       title: appBarTitle,
     );
   }
 
   Widget buildAppBarSearch(BuildContext context) {
-    TextStyle style = TextStyle(color: Colors.white, fontSize: 20);
+    TextStyle style = TextStyle(fontSize: 20, color: Colors.black);
     return Center(
       child: TextField(
         controller: searchTextController,
-        cursorColor: Colors.white,
         autofocus: true,
         autocorrect: true,
         style: style,
-        onChanged:  projectsBloc.query.add,
+        onChanged: projectsBloc.query.add,
         //   controller: _searchQuery,
         decoration: InputDecoration(
-            prefixIcon: Icon(Icons.arrow_back, color: Colors.white),
+            prefixIcon: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                onPressed: _toggleSearch),
             hintText: "Search for projects...",
             hintStyle: style,
             border: OutlineInputBorder(borderSide: BorderSide.none)),
@@ -136,9 +130,24 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     );
   }
 
-  void onSearchTextChanged(String value) {
-    if (searchTextController.text.isNotEmpty)
-      projectsBloc.createQuery(searchTextController.text);
+  void _toggleSearch() {
+    setState(() {
+      projectsBloc.query.add("");
+    if (!_isSearching) {
+        _appBarBackgroundColor = Colors.white;
+      } else
+        _appBarBackgroundColor = Colors.blue;
+
+      actionIcon = actionIcon.icon == Icons.search
+          ? Icon(
+              Icons.close,
+              color: Colors.black,
+            )
+          : Icon(
+              Icons.search,
+            );
+      _isSearching = !_isSearching;
+    });
   }
 }
 
@@ -151,6 +160,7 @@ class ProjectsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: projects.length,
+      shrinkWrap: true,
       padding: EdgeInsets.only(bottom: 30, top: 30),
       itemBuilder: (BuildContext context, int index) {
         Project project = projects.elementAt(index);

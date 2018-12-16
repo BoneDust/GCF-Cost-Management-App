@@ -15,7 +15,6 @@ class ProjectContainer extends StatelessWidget {
         showProjectScreen(context);
       },
       child: Container(
-        height: 100.0,
         margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         child: Stack(
           children: <Widget>[
@@ -51,19 +50,20 @@ class _ProjectThumbnail extends StatelessWidget {
 class _ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 120.0,
-      margin: EdgeInsets.only(left: 20.0),
-      decoration: BoxDecoration(
-          color: Colors.blue,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(8.0),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.black12,
-                blurRadius: 5.0,
-                offset: new Offset(0.0, 0.0))
-          ]),
+    return     Positioned.fill(
+      child: Container(
+        margin: EdgeInsets.only(left: 20.0),
+        decoration: BoxDecoration(
+            color: Colors.blue,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5.0,
+                  offset: new Offset(0.0, 0.0))
+            ]),
+      ),
     );
   }
 }
@@ -88,22 +88,13 @@ class _ProjectContentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(75.0, 30.0, 16.0, 16.0),
-      child: new Column(
+      margin : EdgeInsets.fromLTRB(75.0, 30.0, 16.0, 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(project.name, style: headerStyle),
-                Text(project.description, style: subheadingStyle),
-                Text(
-                  "Status: " + project.status,
-                  style: subheadingStyle,
-                ),
-              ],
-            ),
-          ]),
+          Text(project.name, style: headerStyle, overflow: TextOverflow.ellipsis, maxLines: 1,),
+          Text(project.description, style: subheadingStyle, overflow: TextOverflow.ellipsis, maxLines:  1,),
+          Text(project.status, style: subheadingStyle, overflow: TextOverflow.ellipsis, maxLines:  1,)
         ],
       ),
     );

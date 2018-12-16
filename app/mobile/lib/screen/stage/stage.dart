@@ -51,14 +51,13 @@ class _StageScreen extends StatelessWidget {
   }
 }
 
-
 class _ProjectPopMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
         itemBuilder: (_) => <PopupMenuItem<String>>[
-          PopupMenuItem<String>(child: Text("Edit"), value: "Edit"),
-          PopupMenuItem<String>(child: Text("Remove"), value: "Remove"),
-        ]);
+              PopupMenuItem<String>(child: Text("Edit"), value: "Edit"),
+              PopupMenuItem<String>(child: Text("Remove"), value: "Remove"),
+            ]);
   }
 }

@@ -6,11 +6,10 @@ import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
 
-
-class DummyData{
+class DummyData {
   static Random random = Random();
 
-  static Project getProject(){
+  static Project getProject() {
     return Project(
         id: 1,
         stages: [
@@ -106,7 +105,8 @@ class DummyData{
               totalCost: 3000.00),
         ],
         endDate: DateTime.now(),
-        description: projectDescriptions[random.nextInt(projectDescriptions.length)],
+        description:
+            projectDescriptions[random.nextInt(projectDescriptions.length)],
         name: projectNames[random.nextInt(projectNames.length)],
         status: projectStatus[random.nextInt(projectStatus.length)],
         clientId: projectClient.length,
@@ -117,12 +117,9 @@ class DummyData{
         teamSize: random.nextInt(10));
   }
 
-  static User adminUser = User(
-      name: "Dale",
-      surname: "McLead",
-      privilege: Privilege.ADMIN
-  );
-
+  static User adminUser =
+      User(name: "Dale", surname: "McLead", privilege: Privilege.ADMIN);
+  static User foremanUser = foremanUsers[random.nextInt(foremanUsers.length)];
   static List<Project> projectList = List.generate(10, (index) => getProject());
 
   static List<String> projectNames = [
@@ -132,7 +129,7 @@ class DummyData{
     "WeThinkCode Capetown"
   ];
 
-  static List<String>  projectDescriptions = [
+  static List<String> projectDescriptions = [
     "Lorem ipsum dolors neque. Donec cursus ut ligula nec consectetur. Maecenas placerat id lacus et tristique. Donec justo mi, imperdiet a elit ac, eleifend tempor risus",
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc.",
     "Nulla et lectus ligula. Duis tristique sapien auctor orci varius luctus. Vestibulum quis eros laoreet, molestie risus et, dapibus diam. Vivamus id justo sit amet nulla commodo scipit.",
@@ -141,15 +138,9 @@ class DummyData{
     "Suspendisse tempus felis ut tortor convallis, vitae ultricies nibh tincidunt. In interdum, ligula tincidunt viverra consectetur, dolor lectus ultricies metus, eget feugiat neque libero id sem."
   ];
 
-  static List<String> projectStatus = [
-    "in progress",
-    "finished"
-  ];
+  static List<String> projectStatus = ["in progress", "finished"];
 
-  static var projectClient = [
-    "Standard Bank",
-    "FNB"
-  ];
+  static var projectClient = ["Standard Bank", "FNB"];
 
   static var foremanUsers = [
     User(name: "Khumo", surname: "Letlape", privilege: Privilege.FOREMAN),

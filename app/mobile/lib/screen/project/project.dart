@@ -4,7 +4,6 @@ import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/service/api_service.dart';
-import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:cm_mobile/widget/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
@@ -127,9 +126,22 @@ class _ProjectPopMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
+        onSelected: (value) {
+          onItemClicked(value, context);
+        },
         itemBuilder: (_) => <PopupMenuItem<String>>[
-              PopupMenuItem<String>(child: Text("Edit"), value: "Edit"),
+              PopupMenuItem<String>(
+                child: Text("Edit"),
+                value: "Edit",
+              ),
               PopupMenuItem<String>(child: Text("Remove"), value: "Remove"),
             ]);
+  }
+
+  void onItemClicked(String value, BuildContext context) {
+    switch (value) {
+      case "Edit":
+        Navigator.of(context).pushNamed("/edit_project");
+    }
   }
 }

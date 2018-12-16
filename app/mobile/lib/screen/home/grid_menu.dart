@@ -48,7 +48,7 @@ class SliverGridMenu extends StatelessWidget {
                     appBarTitle: "Recent Receipts",
                   ))),
           title: "Recent Receipts"),
-      GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
+      // GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
     ];
 
     if (previlige == Privilege.ADMIN)

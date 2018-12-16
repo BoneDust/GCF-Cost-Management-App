@@ -14,7 +14,6 @@ class MenuProfileCard extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     UserContainerState userContainerState = UserContainer.of(context);
@@ -31,7 +30,10 @@ class _Content extends StatelessWidget {
               margin: EdgeInsets.only(top: 100.0),
               width: double.infinity,
               child: Column(
-                children: <Widget>[Text(user.name +" "+ user.surname), Text(user.privilege.toString())],
+                children: <Widget>[
+                  Text(user.name + " " + user.surname),
+                  Text(user.privilege.toString())
+                ],
               ),
             ),
           ),
