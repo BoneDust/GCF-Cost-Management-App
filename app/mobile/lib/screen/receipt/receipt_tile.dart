@@ -15,11 +15,11 @@ class ReceiptTile extends StatelessWidget {
       child: ListTile(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ReceiptWidget(receipt)));
+              MaterialPageRoute(builder: (context) => ReceiptScreen(receipt)));
         },
         trailing: Text("2d"),
         title: Text("Payment made to " + receipt.supplier),
-        subtitle: Text("Description: " + receipt.description),
+        subtitle: Text("Description: " + receipt.description, overflow: TextOverflow.ellipsis, maxLines: 1,),
         leading: Container(
           height: 50,
           width: 50,

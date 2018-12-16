@@ -50,7 +50,7 @@ class _ProjectThumbnail extends StatelessWidget {
 class _ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return     Positioned.fill(
+    return Positioned.fill(
       child: Container(
         margin: EdgeInsets.only(left: 20.0),
         decoration: BoxDecoration(
@@ -88,13 +88,28 @@ class _ProjectContentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin : EdgeInsets.fromLTRB(75.0, 30.0, 16.0, 16.0),
+      margin: EdgeInsets.fromLTRB(75.0, 30.0, 16.0, 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(project.name, style: headerStyle, overflow: TextOverflow.ellipsis, maxLines: 1,),
-          Text(project.description, style: subheadingStyle, overflow: TextOverflow.ellipsis, maxLines:  1,),
-          Text(project.status, style: subheadingStyle, overflow: TextOverflow.ellipsis, maxLines:  1,)
+          Text(
+            project.name,
+            style: headerStyle,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          Text(
+            project.description,
+            style: subheadingStyle,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          Text(
+            project.status,
+            style: subheadingStyle,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          )
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
@@ -16,6 +17,7 @@ class Project {
   DateTime startDate;
   DateTime endDate;
   List<Receipt> receipts;
+  List<Activity> activities;
 
   List<Stage> stages;
   int teamSize;

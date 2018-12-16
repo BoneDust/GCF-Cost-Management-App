@@ -1,7 +1,7 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
-import 'package:cm_mobile/widget/user_provider.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class DetailsCard extends StatelessWidget {
@@ -46,7 +46,7 @@ class _DetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserContainerState userContainerState = UserContainer.of(context);
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
     List<Widget> detailsList = [];
     if (user.privilege == Privilege.ADMIN)

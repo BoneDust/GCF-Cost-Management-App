@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
@@ -8,6 +9,13 @@ import 'package:cm_mobile/model/user.dart';
 
 class DummyData {
   static Random random = Random();
+
+  static List<Activity> activities =
+      List.generate(10, (index) => getActivity());
+
+  static User currentUser = adminUser;
+
+  static var receipts =  List.generate(10, (index) => getReceipt());
 
   static Project getProject() {
     return Project(
@@ -54,59 +62,10 @@ class DummyData {
               name: "Stage 4",
               status: "In progress"),
         ],
-        receipts: [
-          Receipt(
-              supplier: "Builder's warehouse",
-              description: "Bought pliers and cement",
-              id: 1,
-              picture: "/receipts/12345.jpg",
-              projectId: 2,
-              purchaseDate: DateTime.now(),
-              totalCost: 2000.00),
-          Receipt(
-              supplier: "Timber",
-              description: "Bought pliers and cement",
-              id: 1,
-              picture: "/receipts/12346.jpg",
-              projectId: 2,
-              purchaseDate: DateTime.now(),
-              totalCost: 3000.00),
-          Receipt(
-              supplier: "Builder's warehouse",
-              description: "Bought pliers and cement",
-              id: 1,
-              picture: "/receipts/12345.jpg",
-              projectId: 2,
-              purchaseDate: DateTime.now(),
-              totalCost: 2000.00),
-          Receipt(
-              supplier: "Timber",
-              description: "Bought pliers and cement",
-              id: 1,
-              picture: "/receipts/12346.jpg",
-              projectId: 2,
-              purchaseDate: DateTime.now(),
-              totalCost: 3000.00),
-          Receipt(
-              supplier: "Builder's warehouse",
-              description: "Bought pliers and cement",
-              id: 1,
-              picture: "/receipts/12345.jpg",
-              projectId: 2,
-              purchaseDate: DateTime.now(),
-              totalCost: 2000.00),
-          Receipt(
-              supplier: "Timber",
-              description: "Bought pliers and cement",
-              id: 1,
-              picture: "/receipts/12346.jpg",
-              projectId: 2,
-              purchaseDate: DateTime.now(),
-              totalCost: 3000.00),
-        ],
+        receipts: List.generate(10, (index) =>  getReceipt()),
         endDate: DateTime.now(),
         description:
-            projectDescriptions[random.nextInt(projectDescriptions.length)],
+            descriptions[random.nextInt(descriptions.length)],
         name: projectNames[random.nextInt(projectNames.length)],
         status: projectStatus[random.nextInt(projectStatus.length)],
         clientId: projectClient.length,
@@ -129,7 +88,7 @@ class DummyData {
     "WeThinkCode Capetown"
   ];
 
-  static List<String> projectDescriptions = [
+  static List<String> descriptions = [
     "Lorem ipsum dolors neque. Donec cursus ut ligula nec consectetur. Maecenas placerat id lacus et tristique. Donec justo mi, imperdiet a elit ac, eleifend tempor risus",
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc.",
     "Nulla et lectus ligula. Duis tristique sapien auctor orci varius luctus. Vestibulum quis eros laoreet, molestie risus et, dapibus diam. Vivamus id justo sit amet nulla commodo scipit.",
@@ -148,4 +107,33 @@ class DummyData {
     User(name: "Lonwabo", surname: "Rarane", privilege: Privilege.FOREMAN),
     User(name: "Goodwill", surname: "Tshekele", privilege: Privilege.FOREMAN),
   ];
+
+  static List<String> suppliers = [
+    "Builder's warehouse",
+    "CTM",
+    "Pefi Cash & Carry"
+  ];
+
+  static List<String> activityTitles = [
+    "Receipt from supplier " + suppliers[random.nextInt(suppliers.length)] + "was added" ,
+    "Stage "+ random.nextInt(10).toString()+", " + projectNames[random.nextInt(projectNames.length)] +", is done",
+    "Project has , " + projectNames[random.nextInt(projectNames.length)] +", created",
+
+  ];
+
+  static Activity getActivity() {
+    return Activity(
+        title: activityTitles[random.nextInt(activityTitles.length)],
+        description:  descriptions[random.nextInt(descriptions.length)],
+    );
+  }
+
+  static Receipt getReceipt() {
+    return Receipt(
+      supplier: suppliers[random.nextInt(suppliers.length)] ,
+      description: descriptions[random.nextInt(descriptions.length)],
+      totalCost: random.nextDouble(),
+      purchaseDate: DateTime.now()
+    );
+  }
 }

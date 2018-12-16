@@ -1,7 +1,7 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/screen/menu/profiles_card.dart';
 import 'package:cm_mobile/screen/menu/user_profile.dart';
-import 'package:cm_mobile/widget/user_provider.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -28,7 +28,7 @@ class _MenuScreen extends StatelessWidget {
   }
 
   List<Widget> getMenuScreenWidget(BuildContext context) {
-    UserContainerState userContainerState = UserContainer.of(context);
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
     Privilege privilege = userContainerState.user.privilege;
 
     List<Widget> menuScreenWidget = [

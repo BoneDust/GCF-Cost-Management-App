@@ -4,7 +4,7 @@ import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/service/api_service.dart';
-import 'package:cm_mobile/widget/user_provider.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 
@@ -54,7 +54,7 @@ class _ProjectWidgetState extends State<ProjectWidget> {
   }
 
   Widget buildBodyWithStreamer() {
-    UserContainerState userContainerState = UserContainer.of(context);
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
 
     return StreamBuilder<Project>(

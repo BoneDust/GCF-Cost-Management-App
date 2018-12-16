@@ -1,5 +1,6 @@
 import 'package:cm_mobile/model/user.dart';
-import 'package:cm_mobile/widget/user_provider.dart';
+import 'package:cm_mobile/util/image_utils.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class MenuProfileCard extends StatelessWidget {
@@ -16,7 +17,7 @@ class MenuProfileCard extends StatelessWidget {
 class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    UserContainerState userContainerState = UserContainer.of(context);
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
 
     return Container(
@@ -40,13 +41,16 @@ class _Content extends StatelessWidget {
           Container(
               height: 120.0,
               width: 120.0,
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
+                color: Colors.white,
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                      image: AssetImage("assets/images.jpeg"),
+                      image: AssetImage(ImageUtils.getAvatarPicture(context)),
                       fit: BoxFit.cover))),
         ],
       ),
     );
   }
+
+
 }

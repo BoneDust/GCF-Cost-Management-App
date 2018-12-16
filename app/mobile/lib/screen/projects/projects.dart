@@ -5,7 +5,8 @@ import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/projects/project_container.dart';
 import 'package:cm_mobile/service/api_service.dart';
-import 'package:cm_mobile/widget/user_provider.dart';
+import 'package:cm_mobile/util/image_utils.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class ProjectsScreen extends StatefulWidget {
@@ -37,7 +38,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
   @override
   Widget build(BuildContext context) {
-    UserContainerState userContainerState = UserContainer.of(context);
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
 
     super.build(context);
@@ -114,12 +115,13 @@ class _ProjectsScreenState extends State<ProjectsScreen>
             Navigator.of(context).pushNamed("/menu");
           },
           child: Container(
-              height: 40.0,
-              width: 40.0,
+              height: 30.0,
+              width: 30.0,
               decoration: new BoxDecoration(
                   shape: BoxShape.circle,
+                  color: Colors.white,
                   image: DecorationImage(
-                      image: AssetImage("assets/images.jpeg"),
+                      image: AssetImage(ImageUtils.getAvatarPicture(context)),
                       fit: BoxFit.cover))),
         ),
         Padding(
@@ -133,7 +135,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   void _toggleSearch() {
     setState(() {
       projectsBloc.query.add("");
-    if (!_isSearching) {
+      if (!_isSearching) {
         _appBarBackgroundColor = Colors.white;
       } else
         _appBarBackgroundColor = Colors.blue;
@@ -142,9 +144,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
           ? Icon(
               Icons.close,
               color: Colors.black,
+              size: 25,
             )
           : Icon(
               Icons.search,
+              size: 25,
             );
       _isSearching = !_isSearching;
     });

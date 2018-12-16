@@ -1,21 +1,20 @@
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:flutter/material.dart';
 
-class ReceiptWidget extends StatelessWidget {
+class ReceiptScreen extends StatelessWidget {
   final Receipt receipt;
 
-  ReceiptWidget(this.receipt);
+  ReceiptScreen(this.receipt);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Material(
       child: CustomScrollView(
         slivers: <Widget>[
-          new SliverAppBar(
+          SliverAppBar(
             floating: true,
             expandedHeight: 300.0,
-            flexibleSpace: new FlexibleSpaceBar(
+            flexibleSpace:   FlexibleSpaceBar(
               background: Image(
                 image: AssetImage("assets/images.jpeg"),
                 fit: BoxFit.cover,

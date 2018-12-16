@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cm_mobile/data/dummy_data.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
@@ -40,7 +41,7 @@ class ApiService {
   }
 
   Future<User> getUser(String id) async {
-    User result = DummyData.foremanUser;
+    User result = DummyData.currentUser;
     await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
@@ -59,6 +60,20 @@ class ApiService {
             project.description.toLowerCase().contains(value) ||
             project.name.toLowerCase().contains(value))
         .toList();
+    return filteredList;
+  }
+
+  Future<List<Activity>> queryActivities(String value) async {
+    var resultList = DummyData.activities;
+    var filteredList = resultList;
+
+    return filteredList;
+  }
+
+  Future<List<Receipt>> queryReceipts(String value) async {
+    List<Receipt> resultList = DummyData.receipts;
+    List<Receipt> filteredList = resultList;
+
     return filteredList;
   }
 }

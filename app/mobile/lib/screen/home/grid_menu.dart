@@ -1,15 +1,12 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/screen/receipt/receipts_list.dart';
-import 'package:cm_mobile/widget/user_provider.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class SliverGridMenu extends StatelessWidget {
-  List<GridItemEntry> menuEntries;
-
   @override
   Widget build(BuildContext context) {
-    menuEntries = getMenuEntries(context);
+    List<GridItemEntry> menuEntries = getMenuEntries(context);
     return SliverPadding(
       padding: EdgeInsets.all(10.0),
       sliver: SliverGrid(
@@ -30,8 +27,8 @@ class SliverGridMenu extends StatelessWidget {
   }
 
   List<GridItemEntry> getMenuEntries(BuildContext context) {
-    UserContainerState userContainerState = UserContainer.of(context);
-    Privilege previlige = userContainerState.user.privilege;
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
+    Privilege privilege = userContainerState.user.privilege;
 
     TabController tabController = DefaultTabController.of(context);
 
@@ -42,16 +39,12 @@ class SliverGridMenu extends StatelessWidget {
           title: "Projects"),
       GridItemEntry(
           icon: Icons.receipt,
-          function: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ReceiptsList(
-                    receipts: [],
-                    appBarTitle: "Recent Receipts",
-                  ))),
-          title: "Recent Receipts"),
+          function: () => Navigator.of(context).pushNamed("/all_receipts"),
+          title: "All Receipts"),
       // GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
     ];
 
-    if (previlige == Privilege.ADMIN)
+    if (privilege == Privilege.ADMIN)
       entries.addAll([
         GridItemEntry(
             icon: Icons.people,
