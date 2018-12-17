@@ -60,10 +60,10 @@ app.get('/users', (req, res) => {
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
         })
-        .catch(error => { res.status(400).json({ error: error.message }) })
+        .catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
 })
-/*
-// //endpoint function that returns a user by userID
+
+//endpoint function that returns a user by userID
 app.get('/users/:userId', (req, res) => {
 
     verification.isValidAdmin(req.headers.token)
@@ -94,8 +94,9 @@ app.get('/users/:userId', (req, res) => {
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
         })
-        .catch(error => { res.status(400).json({ error: error.message }) })
+        .catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
 })
+
 
 //endpoint function that create a new user
 app.post('/users', (req, res) => {
@@ -106,7 +107,7 @@ app.post('/users', (req, res) => {
             if (isValid) {
 
                 const user = req.body
-                if (user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege) {
+                if (user.name && user.surname && user.password && user.image && user.email && user.privilege) {
                     const params = {
                         TableName: USERS_TABLE,
                         Item: {
@@ -115,7 +116,7 @@ app.post('/users', (req, res) => {
                             surname: user.surname,
                             password: user.password,
                             email: user.email,
-                            img_url: user.img_url,
+                            image: user.image,
                             privilege: user.privilege
                         }
                     }
@@ -124,26 +125,23 @@ app.post('/users', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else {
-                            if (activityLogger.logActivity(0, "New user created!", "Dale created added a new user", req.headers.token)) {
-                                userCount = userCount + 1
-                                res.status(201).json({ user: "User successfully creatsed" })
-                            }
-                            else
-
+                            //if (
+                            activityLogger.logActivity(0, "New user created!", "Dale created added a new user", req.headers.token)//) {
+                            userCount = userCount + 1
+                            res.status(201).json({ message: "User successfully created" })
+                            // }
+                            // else
+                            //     res.status(403).json({ message: "User successfully created" })
                         }
                     })
                 }
-                else {
-                    const response = {
-                        error: "Incomplete user supplied. Supply email, name, surname, imgUrl,  privilege and password",
-                    }
-                    res.status(400).json(response);
-                }
+                else
+                    res.status(400).json({ error: "Incomplete user supplied. Supply email, name, surname, image,  privilege and password" });
             }
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
         })
-        .catch(error => { res.status(400).json({ error: error.message }) })
+        .catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
 })
 
 //endpoint function thats logs in a user and sends that user a unique token key/ or priviledge key
@@ -202,7 +200,7 @@ app.post('/users/logout', (req, res) => {
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
         })
-        .catch(error => { res.status(400).json({ error: error.message }) })
+        .catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
 })
 
 //endpoint function that updates  a user by userId
@@ -212,7 +210,7 @@ app.put('/users/:userId', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const user = req.body;
-                if (isNaN(req.params.userId) === false && user.name && user.surname && user.password && user.imgUrl && user.email && user.privilege) {
+                if (isNaN(req.params.userId) === false && user.name && user.surname && user.password && user.image && user.email && user.privilege) {
                     const params = {
                         TableName: USERS_TABLE,
                         Key: {
@@ -226,10 +224,10 @@ app.put('/users/:userId', (req, res) => {
                             ":surname": user.surname,
                             ":email": user.email,
                             ":password": user.password,
-                            ":imgUrl": user.imgUrl,
+                            ":image": user.image,
                             ":privilege": user.privilege
                         },
-                        UpdateExpression: "SET #name = :name, surname = :surname, email = :email, password = :password, imgUrl =:imgUrl, privilege = :privilege"
+                        UpdateExpression: "SET #name = :name, surname = :surname, email = :email, password = :password, image = :image, privilege = :privilege"
                     }
 
                     dynamoDb.update(params, (error, result) => {
@@ -248,7 +246,7 @@ app.put('/users/:userId', (req, res) => {
                 res.status(401).json({ error: "User not authorised to make this request." })
 
         })
-        .catch(error => { res.status(400).json({ error: error.message }) })
+        .catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
 })
 
 // //endpoint function that deletes a users by id
@@ -279,7 +277,7 @@ app.delete('/users/:userId', (req, res) => {
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
         })
-        .catch(error => { res.status(400).json({ error: error.message }) })
+        .catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
 });
 
 
@@ -290,4 +288,4 @@ app.all('*', function (req, res) {
 });
 
 // wrap express app instance with serverless http function
-*/module.exports.handler = serverless(app);
+module.exports.handler = serverless(app);

@@ -1,4 +1,5 @@
 const requester = require('request-promise')
+const axios = require('axios')
 const activity_url = process.env.ACTIVITY_URL
 
 module.exports = {
@@ -8,8 +9,6 @@ module.exports = {
         if (project_id !== null && title !== null && description !== null) {
 
             const options = {
-                method: 'POST',
-                uri: activity_url,
                 headers: {
                     token: tokenKey
                 },
@@ -17,18 +16,51 @@ module.exports = {
                     project_id: project_id,
                     title: title,
                     description: description
-                },
-                json: true // Automatically stringifies the body to JSON
+                }//,
+                //json: true // Automatically stringifies the body to JSON
             }
 
-            requester(options)
-                .then(function (result) {
-                    // POST succeeded...
+
+            /*const response = await axios({
+                method: 'post',
+                url: 'https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activities',
+                data: {
+                    project_id: project_id,
+                    title: title,
+                    description: description
+                },
+                headers: {
+                    'token': tokenKey,
+                }
+            })*/
+
+
+
+
+            const options = {
+                method: 'post',
+                url: 'https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activities',
+                data: {
+                    project_id: project_id,
+                    title: title,
+                    description: description
+                },
+                // headers: {
+                //     'Content-Type': 'application/json',
+                //     'token': tokenKey
+                // }
+            }
+            axios(options)
+                .then(function (response) {
+                    //handle success
                     return (true)
                 })
-                .catch(function (error) {
+                .catch(function (response) {
+                    //handle error
                     return (false)
-                })
+                });
+
+
         }
         else
             return (false)

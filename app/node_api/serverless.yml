@@ -13,7 +13,7 @@ custom:
   stageTableName: 'stage-Table-${self:provider.stage}'
   tokenTableName: 'token-Table-${self:provider.stage}'
   trashTableName: 'trash-Table-${self:provider.stage}'
-  activityUrl: 'facebook.com'
+  activityUrl: 'https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activities'
 
 provider:
   name: aws
@@ -100,7 +100,7 @@ functions:
   #         cors: true
 
   #     - http:
-  #         path: stages/{stageid}
+  #         path: stages/{stageId}
   #         method: get
   #         cors: true
           
@@ -110,12 +110,12 @@ functions:
   #         cors: true
       
   #     - http:
-  #         path: stages/{stageid}
+  #         path: stages/{stageId}
   #         method: put
   #         cors: true
       
   #     - http:
-  #         path: stages/{stageid}
+  #         path: stages/{stageId}
   #         method: delete
   #         cors: true
 
@@ -128,7 +128,7 @@ functions:
   #         cors: true
 
   #     - http:
-  #         path: receipts/{receiptid}
+  #         path: receipts/{receiptId}
   #         method: get
   #         cors: true
           
@@ -138,14 +138,38 @@ functions:
   #         cors: true
       
   #     - http:
-  #         path: receipts/{receiptid}
+  #         path: receipts/{receiptId}
   #         method: put
   #         cors: true
       
   #     - http:
-  #         path: receipts/{receiptid}
+  #         path: receipts/{receiptId}
   #         method: delete
   #         cors: true
+
+
+  activitiesFunction:
+    handler: activity-handler/handler.handler
+    events:
+      - http:
+          path: activities/activitiesByProject/{project_id}
+          method: get
+          cors: true
+
+      - http:
+          path: activities/{activityId}
+          method: get
+          cors: true
+          
+      - http:
+          path: activities
+          method: get
+          cors: true
+
+      - http:
+          path: activities
+          method: post
+          cors: true
 
 resources:
   Resources:
