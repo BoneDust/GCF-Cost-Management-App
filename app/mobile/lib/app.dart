@@ -29,7 +29,7 @@ class App extends StatefulWidget {
 
 class _App extends State<App> {
   final routes = <String, WidgetBuilder>{
-    '/auth': (BuildContext context) => LoginScreen(),
+    '/auth': (BuildContext context) => AuthScreen(),
     '/activities': (BuildContext context) => ActivitiesScreen(),
     '/add_stage': (BuildContext context) => AddStageScreen(),
     '/add_project': (BuildContext context) => AddProjectScreen(),
@@ -81,7 +81,7 @@ class _App extends State<App> {
 class _AppRoot extends StatefulWidget {
   @override
   State<StatefulWidget> createState() =>
-      _DataBlocImplementationState(child: _AppBottomNavigator());
+      _DataBlocImplementationState();
 }
 
 class _DataBlocImplementationState extends State<_AppRoot> {
@@ -90,9 +90,6 @@ class _DataBlocImplementationState extends State<_AppRoot> {
   final ReceiptBloc receiptBloc = ReceiptBloc(ApiService());
   final AuthBloc authBloc = AuthBloc(ApiService());
 
-  final Widget child;
-
-  _DataBlocImplementationState({@required this.child});
 
   @override
   void initState() {
@@ -112,21 +109,32 @@ class _DataBlocImplementationState extends State<_AppRoot> {
     receiptBloc.results
         .listen((receipts) => dataContainerState.setReceipts(receipts));
 
-
     return BlocProvider(
       bloc: authBloc,
       child: StreamBuilder<AuthenticationState>(
-        stream: authBloc.outAuthState,
+        stream: authBloc.results,
+        initialData: dataContainerState.authState,
         builder: (BuildContext context, AsyncSnapshot<AuthenticationState> snapshot) {
-          return snapshot.data != null
-              ? BlocProvider(
-                  bloc: activityBloc,
-                  child: BlocProvider(
-                    bloc: receiptBloc,
-                    child: child,
-                  ),
-                )
-              : Column();
+          if (snapshot.data.isAuthenticated)
+            return BlocProvider(
+              bloc: userBloc,
+              child: StreamBuilder<User>(
+                stream: userBloc.outUser,
+                builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+                  dataContainerState.user = snapshot.data;
+                  return snapshot.data != null
+                      ? BlocProvider(
+                    bloc: activityBloc,
+                    child: BlocProvider(
+                      bloc: receiptBloc,
+                      child: _AppBottomNavigator(),
+                    ),
+                  )
+                      : Column();
+                },
+              ),
+            );
+          return AuthScreen();
         },
       ),
     );
@@ -177,21 +185,3 @@ class _TabEntry {
   ];
 }
 
-BlocProvider(
-bloc: userBloc,
-child: StreamBuilder<User>(
-stream: userBloc.outUser,
-builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-dataContainerState.user = snapshot.data;
-return snapshot.data != null
-? BlocProvider(
-bloc: activityBloc,
-child: BlocProvider(
-bloc: receiptBloc,
-child: child,
-),
-)
-    : Column();
-},
-),
-)

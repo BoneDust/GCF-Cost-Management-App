@@ -13,7 +13,7 @@ class AuthBloc extends BlocBase {
 
   Sink<AuthenticationState> get _inAuthState => _loginController.sink;
 
-  Stream<AuthenticationState> get outAuthState => _loginController.stream;
+  Stream<AuthenticationState> get results => _loginController.stream;
 
   AuthBloc(this._apiService);
 
@@ -26,5 +26,9 @@ class AuthBloc extends BlocBase {
     _apiService.authenticateUser(userLogin).then((authState) {
       _inAuthState.add(authState);
     });
+  }
+
+  void logout() {
+    _inAuthState.add(AuthenticationState(isInitializing: false, isLoading: false, isAuthenticated: false));
   }
 }

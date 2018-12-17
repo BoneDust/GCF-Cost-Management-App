@@ -1,8 +1,6 @@
-import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/home/grid_menu.dart';
 import 'package:cm_mobile/screen/home/activities_card.dart';
 import 'package:cm_mobile/util/image_utils.dart';
-import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,7 +24,7 @@ class _HomeState extends State<HomeScreen>
         title: Row(
           children: <Widget>[
             GestureDetector(
-              onTap: () => Navigator.pushNamed(context, "/menu"),
+              onTap: () => Navigator.of(context).pushNamed("/menu"),
               child: Container(
                   height: 30.0,
                   width: 30.0,

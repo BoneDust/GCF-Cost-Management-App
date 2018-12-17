@@ -1,13 +1,17 @@
 import 'package:cm_mobile/bloc/auth_bloc.dart';
+import 'package:cm_mobile/bloc/bloc_provider.dart';
+import 'package:cm_mobile/model/auth_state.dart';
+import 'package:cm_mobile/model/user_login.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class AuthScreen extends StatelessWidget {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final AuthBloc loginBloc = AuthBloc();
+    AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
 
     return Scaffold(
         body: SafeArea(
@@ -57,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
               ),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, "/Home");
+                authBloc.authenticateUser(UserLogin());
               },
             ),
           ],

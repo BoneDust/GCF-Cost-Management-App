@@ -21,7 +21,7 @@ class AppDataContainer extends StatefulWidget {
 
 class AppDataContainerState extends State<AppDataContainer> {
   User user;
-  AuthenticationState authState;
+  AuthenticationState authState = AuthenticationState(isInitializing: true, isLoading: false, isAuthenticated: false);
   List<Activity> activities = [];
   List<Receipt> receipts = [];
 
@@ -52,7 +52,11 @@ class AppDataContainerState extends State<AppDataContainer> {
     });
   }
 
-
+  setAuthState(AuthenticationState authState) {
+    setState(() {
+      this.authState = authState;
+    });
+  }
 }
 
 class _InheritedStateContainer extends InheritedWidget {

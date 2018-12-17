@@ -1,4 +1,4 @@
-export 'login/index.dart';
+export 'auth/index.dart';
 export 'project/index.dart';
 export 'stage/index.dart';
 export 'projects/index.dart';

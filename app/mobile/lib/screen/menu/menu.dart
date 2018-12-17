@@ -1,4 +1,7 @@
+import 'package:cm_mobile/bloc/auth_bloc.dart';
+import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/screen/menu/profiles_card.dart';
 import 'package:cm_mobile/screen/menu/user_profile.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
@@ -7,6 +10,7 @@ import 'package:flutter/material.dart';
 class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
@@ -28,8 +32,8 @@ class _MenuScreen extends StatelessWidget {
   }
 
   List<Widget> getMenuScreenWidget(BuildContext context) {
-    AppDataContainerState userContainerState = AppDataContainer.of(context);
-    Privilege privilege = userContainerState.user.privilege;
+    AppDataContainerState appDataContainerState = AppDataContainer.of(context);
+    Privilege privilege = appDataContainerState.user.privilege;
 
     List<Widget> menuScreenWidget = [
       Padding(padding: EdgeInsets.only(top: 30.0)),
@@ -39,6 +43,10 @@ class _MenuScreen extends StatelessWidget {
     if (privilege == Privilege.ADMIN)
       menuScreenWidget.addAll(
           [Padding(padding: EdgeInsets.only(top: 30.0)), MenuProfilesCard()]);
+
+    menuScreenWidget.add(RaisedButton(child : Text("Sign out"),onPressed: (){
+      //authBloc.logout();
+    }));
     return menuScreenWidget;
   }
 }
