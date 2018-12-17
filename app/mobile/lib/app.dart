@@ -1,9 +1,10 @@
 import 'package:cm_mobile/bloc/activity_bloc.dart';
+import 'package:cm_mobile/bloc/auth_bloc.dart';
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/receipt_bloc.dart';
 import 'package:cm_mobile/bloc/user_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
-import 'package:cm_mobile/model/activity.dart';
+import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/activity/activities.dart';
 import 'package:cm_mobile/screen/project/add_project.dart';
@@ -51,6 +52,26 @@ class _App extends State<App> {
           child: MaterialApp(
         title: Details.COMPANY_TITLE,
         routes: routes,
+        theme: ThemeData(
+//          // Define the default Brightness and Colors
+//          brightness: Brightness.light,
+//          primaryColor: AppColors.primaryColor,
+//
+//          accentColor: AppColors.accentColor,
+//          primaryColorDark: AppColors.darkPrimaryColor,
+//          primaryIconTheme: IconThemeData(color: AppColors.textIconsColor),
+//          dividerColor: AppColors.divider,
+//          // Define the default Font Family
+//          fontFamily: 'Montserrat',
+//
+//          // Define the default TextTheme. Use this to specify the default
+//          // text styling for headlines, titles, bodies of text, and more.
+//          textTheme: TextTheme(
+//            headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+//            title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+//            body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+//          ),
+            ),
         home: _AppRoot(),
       )),
     );
@@ -67,6 +88,7 @@ class _DataBlocImplementationState extends State<_AppRoot> {
   final UserBloc userBloc = UserBloc("1", ApiService());
   final ActivityBloc activityBloc = ActivityBloc(ApiService());
   final ReceiptBloc receiptBloc = ReceiptBloc(ApiService());
+  final AuthBloc authBloc = AuthBloc(ApiService());
 
   final Widget child;
 
@@ -82,19 +104,20 @@ class _DataBlocImplementationState extends State<_AppRoot> {
 
   @override
   Widget build(BuildContext context) {
-
     AppDataContainerState dataContainerState = AppDataContainer.of(context);
+
     activityBloc.results
         .listen((activities) => dataContainerState.setActivities(activities));
+
     receiptBloc.results
         .listen((receipts) => dataContainerState.setReceipts(receipts));
 
+
     return BlocProvider(
-      bloc: userBloc,
-      child: StreamBuilder<User>(
-        stream: userBloc.outUser,
-        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-          dataContainerState.user = snapshot.data;
+      bloc: authBloc,
+      child: StreamBuilder<AuthenticationState>(
+        stream: authBloc.outAuthState,
+        builder: (BuildContext context, AsyncSnapshot<AuthenticationState> snapshot) {
           return snapshot.data != null
               ? BlocProvider(
                   bloc: activityBloc,
@@ -153,3 +176,22 @@ class _TabEntry {
     Tab(icon: Icon(Icons.assignment)),
   ];
 }
+
+BlocProvider(
+bloc: userBloc,
+child: StreamBuilder<User>(
+stream: userBloc.outUser,
+builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+dataContainerState.user = snapshot.data;
+return snapshot.data != null
+? BlocProvider(
+bloc: activityBloc,
+child: BlocProvider(
+bloc: receiptBloc,
+child: child,
+),
+)
+    : Column();
+},
+),
+)

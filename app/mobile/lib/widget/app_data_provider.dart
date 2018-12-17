@@ -1,4 +1,5 @@
 import 'package:cm_mobile/model/activity.dart';
+import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/service/api_service.dart';
@@ -20,8 +21,8 @@ class AppDataContainer extends StatefulWidget {
 
 class AppDataContainerState extends State<AppDataContainer> {
   User user;
+  AuthenticationState authState;
   List<Activity> activities = [];
-
   List<Receipt> receipts = [];
 
   @override

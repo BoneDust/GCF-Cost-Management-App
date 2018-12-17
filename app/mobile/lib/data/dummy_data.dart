@@ -13,7 +13,7 @@ class DummyData {
   static List<Activity> activities =
       List.generate(10, (index) => getActivity());
 
-  static User currentUser = adminUser;
+  static User currentUser = foremanUser ;
 
   static var receipts =  List.generate(10, (index) => getReceipt());
 

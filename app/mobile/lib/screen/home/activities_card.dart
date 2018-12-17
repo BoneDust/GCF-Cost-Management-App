@@ -19,6 +19,7 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
 
     return Card(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           ExpansionTile(
             title: Text("Activity"),
@@ -27,22 +28,14 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
                 activities: activities,
                 isScrollable: false,
               ),
-              _ActivityActions()
+              RaisedButton(
+                  child: Text("Show activities"),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed("/activities")),
             ],
           ),
         ],
       ),
-    );
-  }
-}
-
-class _ActivityActions extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        RaisedButton(child: Text("Show activities"), onPressed: () => Navigator.of(context).pushNamed("/activities")),
-      ],
     );
   }
 }

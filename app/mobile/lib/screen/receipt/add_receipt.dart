@@ -62,6 +62,7 @@ class _AddReceiptState extends State<_AddReceiptWidget> {
       child: CustomScrollView(
         slivers: <Widget>[
           new SliverAppBar(
+
             backgroundColor: Colors.blueGrey,
             floating: true,
             expandedHeight: 300.0,

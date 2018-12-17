@@ -31,8 +31,19 @@ class SliverGridMenu extends StatelessWidget {
     Privilege privilege = userContainerState.user.privilege;
 
     TabController tabController = DefaultTabController.of(context);
+    List<GridItemEntry> entries = [];
 
-    List<GridItemEntry> entries = [
+                                                                                                             if (privilege == Privilege.FOREMAN)
+      entries.addAll([
+        GridItemEntry(
+            icon: Icons.add,
+            function: () {
+              Navigator.pushNamed(context, '/add_receipt');
+            },
+            title: "Add Receipt"),
+      ]);
+
+    entries.addAll([
       GridItemEntry(
           icon: Icons.assignment,
           function: () => tabController.animateTo(1),
@@ -42,7 +53,7 @@ class SliverGridMenu extends StatelessWidget {
           function: () => Navigator.of(context).pushNamed("/all_receipts"),
           title: "All Receipts"),
       // GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
-    ];
+    ]);
 
     if (privilege == Privilege.ADMIN)
       entries.addAll([

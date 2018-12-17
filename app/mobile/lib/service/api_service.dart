@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:cm_mobile/data/dummy_data.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/activity.dart';
+import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/model/user_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:cm_mobile/model/project.dart';
 import 'dart:convert';
@@ -75,5 +77,11 @@ class ApiService {
     List<Receipt> filteredList = resultList;
 
     return filteredList;
+  }
+
+  Future<AuthenticationState>  authenticateUser(UserLogin userLogin) async {
+    AuthenticationState authenticationState = AuthenticationState(
+        isInitializing: false, isAuthenticated: true, isLoading: false);
+    return authenticationState;
   }
 }

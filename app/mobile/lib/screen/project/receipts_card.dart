@@ -57,7 +57,7 @@ class _ReceiptsWidgetRoot extends StatelessWidget {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        new Text("Uploaded Receipts", style: headerStyle),
+                        new Text("Receipts", style: headerStyle),
                         new Row(
                           children: <Widget>[
                             Text(receipts.length.toString(),

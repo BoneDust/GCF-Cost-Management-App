@@ -3,6 +3,7 @@ import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/screen/project/financial_overview.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -99,26 +100,54 @@ class _ProjectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    List<Widget> _projectWidgets = _buildProjectWidgets(context);
+
     return Material(
         color: Colors.black12,
         child: ListView(
           padding: EdgeInsets.only(left: 3, right: 3),
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: 20),
-            ),
-            StagesWidget(project.stages),
-            Padding(
-              padding: EdgeInsets.only(bottom: 20),
-            ),
-            ReceiptsWidget(project.receipts),
-            Padding(
-              padding: EdgeInsets.only(bottom: 20),
-            ),
-            DetailsCard(project),
-          ],
+          children: _projectWidgets,
         ));
+  }
+
+  List<Widget> _buildProjectWidgets(BuildContext context) {
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
+    Privilege privilege = userContainerState.user.privilege;
+
+    List<Widget> stage = [
+      StagesWidget(project.stages),
+      Padding(
+        padding: EdgeInsets.only(bottom: 20),
+      ),
+    ];
+
+    List<Widget> receipt = [
+      ReceiptsWidget(project.receipts),
+      Padding(
+        padding: EdgeInsets.only(bottom: 20),
+      ),
+    ];
+
+    List<Widget> _projectWidgets = [];
+
+    if (privilege == Privilege.ADMIN) {
+      _projectWidgets.addAll([
+        FinancialOverviewCard(project),
+        Padding(
+          padding: EdgeInsets.only(bottom: 20),
+        ),
+      ]);
+      _projectWidgets.addAll(receipt);
+      _projectWidgets.addAll(stage);
+    }
+    else {
+      _projectWidgets.addAll(stage);
+      _projectWidgets.addAll(receipt);
+    }
+    _projectWidgets.add(DetailsCard(project),
+    );
+
+    return _projectWidgets;
   }
 }
 
