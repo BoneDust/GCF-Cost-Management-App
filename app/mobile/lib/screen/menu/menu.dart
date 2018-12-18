@@ -45,7 +45,8 @@ class _MenuScreen extends StatelessWidget {
           [Padding(padding: EdgeInsets.only(top: 30.0)), MenuProfilesCard()]);
 
     menuScreenWidget.add(RaisedButton(child : Text("Sign out"),onPressed: (){
-      //authBloc.logout();
+      Navigator.of(context).pop();
+      appDataContainerState.setAuthState(AuthenticationState(isInitializing: false, isLoading: false, isAuthenticated: false));
     }));
     return menuScreenWidget;
   }

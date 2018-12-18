@@ -1,4 +1,3 @@
-import 'package:cm_mobile/model/project.dart';
 import 'package:flutter/material.dart';
 
 class EditProjectScreen extends StatelessWidget {

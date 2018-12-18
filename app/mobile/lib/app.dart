@@ -80,8 +80,7 @@ class _App extends State<App> {
 
 class _AppRoot extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() =>
-      _DataBlocImplementationState();
+  State<StatefulWidget> createState() => _DataBlocImplementationState();
 }
 
 class _DataBlocImplementationState extends State<_AppRoot> {
@@ -89,7 +88,6 @@ class _DataBlocImplementationState extends State<_AppRoot> {
   final ActivityBloc activityBloc = ActivityBloc(ApiService());
   final ReceiptBloc receiptBloc = ReceiptBloc(ApiService());
   final AuthBloc authBloc = AuthBloc(ApiService());
-
 
   @override
   void initState() {
@@ -114,7 +112,8 @@ class _DataBlocImplementationState extends State<_AppRoot> {
       child: StreamBuilder<AuthenticationState>(
         stream: authBloc.results,
         initialData: dataContainerState.authState,
-        builder: (BuildContext context, AsyncSnapshot<AuthenticationState> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<AuthenticationState> snapshot) {
           if (snapshot.data.isAuthenticated)
             return BlocProvider(
               bloc: userBloc,
@@ -124,12 +123,12 @@ class _DataBlocImplementationState extends State<_AppRoot> {
                   dataContainerState.user = snapshot.data;
                   return snapshot.data != null
                       ? BlocProvider(
-                    bloc: activityBloc,
-                    child: BlocProvider(
-                      bloc: receiptBloc,
-                      child: _AppBottomNavigator(),
-                    ),
-                  )
+                          bloc: activityBloc,
+                          child: BlocProvider(
+                            bloc: receiptBloc,
+                            child: _AppBottomNavigator(),
+                          ),
+                        )
                       : Column();
                 },
               ),
@@ -184,4 +183,3 @@ class _TabEntry {
     Tab(icon: Icon(Icons.assignment)),
   ];
 }
-

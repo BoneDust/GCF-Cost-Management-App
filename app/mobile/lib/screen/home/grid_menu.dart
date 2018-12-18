@@ -1,5 +1,4 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
-import 'package:cm_mobile/screen/receipt/receipts_list.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +32,7 @@ class SliverGridMenu extends StatelessWidget {
     TabController tabController = DefaultTabController.of(context);
     List<GridItemEntry> entries = [];
 
-                                                                                                             if (privilege == Privilege.FOREMAN)
+    if (privilege == Privilege.FOREMAN)
       entries.addAll([
         GridItemEntry(
             icon: Icons.add,
