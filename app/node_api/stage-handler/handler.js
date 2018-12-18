@@ -97,9 +97,7 @@ app.post('/stages', (req, res) => {
                             description: stage.description,
                             status: stage.status,
                             before_pic_url: stage.before_pic_url,
-                            after_pic_url: "",
                             start_date: stage.start_date,
-                            end_date: "",
                             estimated_duration: stage.estimated_duration
                         }
                     }
