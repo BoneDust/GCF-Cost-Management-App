@@ -91,61 +91,61 @@ functions:
           method: delete
           cors: true
 
-  # stagesFunction:
-  #   handler: stage-handler/handler.handler
-  #   events:
-  #     - http:
-  #         path: stages/stagesByProject/{project_id}
-  #         method: get
-  #         cors: true
+  stagesFunction:
+    handler: stage-handler/handler.handler
+    events:
+      - http:
+          path: stages/stagesByProject/{project_id}
+          method: get
+          cors: true
 
-  #     - http:
-  #         path: stages/{stageId}
-  #         method: get
-  #         cors: true
+      - http:
+          path: stages/{stageId}
+          method: get
+          cors: true
           
-  #     - http:
-  #         path: stages
-  #         method: post
-  #         cors: true
+      - http:
+          path: stages
+          method: post
+          cors: true
       
-  #     - http:
-  #         path: stages/{stageId}
-  #         method: put
-  #         cors: true
+      - http:
+          path: stages/{stageId}
+          method: put
+          cors: true
       
-  #     - http:
-  #         path: stages/{stageId}
-  #         method: delete
-  #         cors: true
+      - http:
+          path: stages/{stageId}
+          method: delete
+          cors: true
 
-  # receiptsFunction:
-  #   handler: receipt-handler/handler.handler
-  #   events:
-  #     - http:
-  #         path: receipts/receiptsByProject/{project_id}
-  #         method: get
-  #         cors: true
+  receiptsFunction:
+    handler: receipt-handler/handler.handler
+    events:
+      - http:
+          path: receipts/receiptsByProject/{project_id}
+          method: get
+          cors: true
 
-  #     - http:
-  #         path: receipts/{receiptId}
-  #         method: get
-  #         cors: true
+      - http:
+          path: receipts/{receiptId}
+          method: get
+          cors: true
           
-  #     - http:
-  #         path: receipts
-  #         method: post
-  #         cors: true
+      - http:
+          path: receipts
+          method: post
+          cors: true
       
-  #     - http:
-  #         path: receipts/{receiptId}
-  #         method: put
-  #         cors: true
+      - http:
+          path: receipts/{receiptId}
+          method: put
+          cors: true
       
-  #     - http:
-  #         path: receipts/{receiptId}
-  #         method: delete
-  #         cors: true
+      - http:
+          path: receipts/{receiptId}
+          method: delete
+          cors: true
 
 
   activitiesFunction:

@@ -9,48 +9,14 @@ module.exports = {
         if (project_id !== null && title !== null && description !== null) {
 
             const options = {
-                headers: {
-                    token: tokenKey
-                },
-                body: {
-                    project_id: project_id,
-                    title: title,
-                    description: description
-                }//,
-                //json: true // Automatically stringifies the body to JSON
-            }
-
-
-            /*const response = await axios({
-                method: 'post',
-                url: 'https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activities',
                 data: {
                     project_id: project_id,
                     title: title,
                     description: description
-                },
-                headers: {
-                    'token': tokenKey,
                 }
-            })*/
-
-
-
-
-            const options = {
-                method: 'post',
-                url: 'https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activities',
-                data: {
-                    project_id: project_id,
-                    title: title,
-                    description: description
-                },
-                // headers: {
-                //     'Content-Type': 'application/json',
-                //     'token': tokenKey
-                // }
             }
-            axios(options)
+
+            axios.post('https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activities', options)
                 .then(function (response) {
                     //handle success
                     return (true)
@@ -59,8 +25,7 @@ module.exports = {
                     //handle error
                     return (false)
                 });
-
-
+            return (true)
         }
         else
             return (false)
