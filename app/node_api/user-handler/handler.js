@@ -125,13 +125,9 @@ app.post('/users', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else {
-                            //if (
-                            activityLogger.logActivity(0, "New user created!", "Dale created added a new user", req.headers.token)//) {
+                            activityLogger.logActivity(0, "New user created!", "Dale created added a new user", req.headers.token)
                             userCount = userCount + 1
                             res.status(201).json({ message: "User successfully created" })
-                            // }
-                            // else
-                            //     res.status(403).json({ message: "User successfully created" })
                         }
                     })
                 }
