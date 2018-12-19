@@ -2,33 +2,35 @@ import 'dart:async';
 
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/service/api_service.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'base_bloc.dart';
 
 class UserBloc extends BlocBase {
-  User _user;
-  final String _id;
+  Stream<User> _results = Stream.empty();
+
+
+  Stream<User> get results => _results;
 
   final ApiService _apiService;
 
-  StreamController<User> _userController = StreamController<User>();
+  ReplaySubject<String> _query = ReplaySubject<String>();
 
-  Sink<User> get _inUser => _userController.sink;
+  Sink<String> get query => _query;
 
-  Stream<User> get outUser => _userController.stream;
-
-  UserBloc(this._id, this._apiService);
+  UserBloc(this._apiService) {
+    _results = _query
+        .distinct()
+        .asyncMap(_apiService.getUser)
+        .asBroadcastStream();
+  }
 
   @override
   void dispose() {
-    _inUser.close();
-    _userController.close();
+    _query.close();
   }
 
-  void getUser() {
-    _apiService.getUser(_id).then((user) {
-      _user = user;
-      _inUser.add(_user);
-    });
+  void getUser(String userName) {
+    query.add(userName);
   }
 }

@@ -79,11 +79,11 @@ class ApiService {
     headers.putIfAbsent("token", () => "c4997600-fe15-11e8-8362-9ff8808b2a50");
 
     AuthenticationState authenticationState = AuthenticationState(
-        isInitializing: false, isAuthenticated: false, isLoading: false);
+        isInitializing: false, isAuthenticated: true, isLoading: false);
 
-    await client.get(Uri.parse(_url), headers: headers).then((response) =>
-        print(response.body)
-    );
+//    await client.get(Uri.parse(_url), headers: headers).then((response) =>
+//        print(response.body)
+//    );
 
 
     return authenticationState;

@@ -84,7 +84,7 @@ class _AppRoot extends StatefulWidget {
 }
 
 class _DataBlocImplementationState extends State<_AppRoot> {
-  final UserBloc userBloc = UserBloc("1", ApiService());
+  final UserBloc userBloc = UserBloc(ApiService());
   final ActivityBloc activityBloc = ActivityBloc(ApiService());
   final ReceiptBloc receiptBloc = ReceiptBloc(ApiService());
   final AuthBloc authBloc = AuthBloc(ApiService());
@@ -92,7 +92,7 @@ class _DataBlocImplementationState extends State<_AppRoot> {
   @override
   void initState() {
     super.initState();
-    userBloc.getUser();
+    userBloc.getUser(" ");
     activityBloc.query.add("");
     receiptBloc.query.add("");
   }
@@ -107,36 +107,25 @@ class _DataBlocImplementationState extends State<_AppRoot> {
     receiptBloc.results
         .listen((receipts) => dataContainerState.setReceipts(receipts));
 
+    userBloc.results
+        .listen((user) => dataContainerState.setUser(user));
+
+    authBloc.results
+        .listen((authState) => dataContainerState.setAuthState(authState));
+
     return BlocProvider(
-      bloc: authBloc,
-      child: StreamBuilder<AuthenticationState>(
-        stream: authBloc.results,
-        initialData: dataContainerState.authState,
-        builder: (BuildContext context,
-            AsyncSnapshot<AuthenticationState> snapshot) {
-          if (snapshot.data.isAuthenticated)
-            return BlocProvider(
-              bloc: userBloc,
-              child: StreamBuilder<User>(
-                stream: userBloc.outUser,
-                builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-                  dataContainerState.user = snapshot.data;
-                  return snapshot.data != null
-                      ? BlocProvider(
-                          bloc: activityBloc,
-                          child: BlocProvider(
-                            bloc: receiptBloc,
-                            child: _AppBottomNavigator(),
-                          ),
-                        )
-                      : Column();
-                },
-              ),
-            );
-          return AuthScreen();
-        },
-      ),
-    );
+        bloc: authBloc,
+        child: dataContainerState.authState.isAuthenticated
+            ? BlocProvider(
+                bloc: userBloc,
+                child: BlocProvider(
+                    bloc: activityBloc,
+                    child: BlocProvider(
+                      bloc: receiptBloc,
+                      child: dataContainerState.user != null ? _AppBottomNavigator() : Column(),
+                    )),
+              )
+            : AuthScreen());
   }
 }
 
