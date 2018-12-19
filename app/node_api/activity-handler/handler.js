@@ -109,36 +109,36 @@ app.get('/activities/activitiesByProject/:project_id', function (req, res) {
 
 //creating an activity
 app.post('/activities', function (req, res) {
-    // verification.isValidUser(req.headers.token).then(isValid => {
-    //     if (isValid) {
-    const activity = req.body;
-    if (activity.project_id && activity.title && activity.description) {
-        const params = {
-            TableName: ACTIVITIES_TABLE,
-            Item: {
-                activityId: activityCount + 1,
-                project_id: activity.project_id,
-                title: activity.title,
-                description: activity.description,
-                creation_date: new Date(Date.now() + 7200000).toISOString().replace('T', ' ').substr(0, 19)
-            }
-        }
+    verification.isValidUser(req.headers.token).then(isValid => {
+        if (isValid) {
+            const activity = req.body;
+            if (activity.project_id && activity.title && activity.description) {
+                const params = {
+                    TableName: ACTIVITIES_TABLE,
+                    Item: {
+                        activityId: activityCount + 1,
+                        project_id: activity.project_id,
+                        title: activity.title,
+                        description: activity.description,
+                        creation_date: new Date(Date.now() + 7200000).toISOString().replace('T', ' ').substr(0, 19)
+                    }
+                }
 
-        dynamoDb.put(params, (error) => {
-            if (error)
-                res.status(error.statusCode || 503).json({ error: error.message });
-            else {
-                activityCount = activityCount + 1
-                res.status(201).json({ message: "activity successfully created" })
+                dynamoDb.put(params, (error) => {
+                    if (error)
+                        res.status(error.statusCode || 503).json({ error: error.message });
+                    else {
+                        activityCount = activityCount + 1
+                        res.status(201).json({ message: "activity successfully created" })
+                    }
+                });
             }
-        });
-    }
-    else
-        res.status(400).json({ error: "Incomplete activity supplied. Supply project_id, title, and description", });
-    //     }
-    //     else
-    //         res.status(401).json({ error: "User not authorised to make this request." })
-    // }).catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
+            else
+                res.status(400).json({ error: "Incomplete activity supplied. Supply project_id, title, and description", });
+        }
+        else
+            res.status(401).json({ error: "User not authorised to make this request." })
+    }).catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
 })
 
 
