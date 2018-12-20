@@ -12,9 +12,6 @@ var activityCount = 0
 app.use(bodyParser.json()) // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 
-//filtering activities by date
-
-
 //retrieve all activities
 app.get('/activities', function (req, res) {
     verification.isValidAdmin(req.headers.token)
@@ -27,8 +24,14 @@ app.get('/activities', function (req, res) {
                 dynamoDb.scan(params, (error, result) => {
                     if (error)
                         res.status(error.statusCode || 503).json({ error: error.message })
-                    else
-                        res.status(200).json({ activities: result.Items })
+                    else {
+                        if (req.query.start_date && !isNaN(req.query.start_date) && req.query.end_date && !isNaN(req.query.start_date)) {
+                            var filtered = result.Items.filter((item) => { return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date)) })
+                            res.status(200).json({ activities: filtered })
+                        }
+                        else
+                            res.status(200).json({ activities: result.Items })
+                    }
                 })
 
             }
@@ -90,8 +93,14 @@ app.get('/activities/activitiesByProject/:project_id', function (req, res) {
                     dynamoDb.scan(params, (error, result) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
-                        else if (result.Items)
-                            res.status(200).json({ activities: result.Items })
+                        else if (result.Items) {
+                            if (req.query.start_date && !isNaN(req.query.start_date) && req.query.end_date && !isNaN(req.query.start_date)) {
+                                var filtered = result.Items.filter((item) => { return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date)) })
+                                res.status(200).json({ activities: filtered })
+                            }
+                            else
+                                res.status(200).json({ activities: result.Items })
+                        }
                         else
                             res.status(200).json({ activities: [] })
                     })
@@ -111,16 +120,18 @@ app.get('/activities/activitiesByProject/:project_id', function (req, res) {
 app.post('/activities', function (req, res) {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
-            const activity = req.body;
+            const activity = req.body
+            const date_in_ms = Date.now() + 7200000
             if (activity.project_id && activity.title && activity.description) {
                 const params = {
                     TableName: ACTIVITIES_TABLE,
                     Item: {
                         activityId: activityCount + 1,
-                        project_id: activity.project_id,
+                        project_id: parseInt(activity.project_id),
                         title: activity.title,
                         description: activity.description,
-                        creation_date: new Date(Date.now() + 7200000).toISOString().replace('T', ' ').substr(0, 19)
+                        creation_date: new Date(date_in_ms).toISOString().replace('T', ' ').substr(0, 19),
+                        creation_date_ms: date_in_ms
                     }
                 }
 

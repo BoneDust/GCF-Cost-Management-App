@@ -1,16 +1,14 @@
 const requester = require('request')
-const https = require('https')
-var querystring = require('querystring');
 const activity_url = process.env.ACTIVITY_URL
 
 module.exports = {
 
     logActivity: function (project_id, title, description, token) {
 
-        if (project_id !== null && title !== null && description !== null && token !== null) {
+        if (project_id !== null && !isNaN(project_id) && title !== null && description !== null && token !== null) {
 
             const options = {
-                uri: activity_url,// 'https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activities',
+                uri: activity_url,
                 method: 'POST',
                 headers: {
                     'token': token
@@ -25,6 +23,5 @@ module.exports = {
             // Start the requestS
             requester(options)
         }
-
     }
 }
