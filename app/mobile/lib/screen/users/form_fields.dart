@@ -38,7 +38,6 @@ class _FormFields extends State<FormFields> {
                   contentPadding: EdgeInsets.all(10.0), labelText: 'Username'),
             ),
             TextFormField(
-              autofocus: true,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10.0),
                 labelText: 'Password',

@@ -151,8 +151,7 @@ class _ProfileContentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text("Project 1", style: headerStyle),
-                Text("These are some details about the project",
-                    style: subheadingStyle),
+                Text("Some details about the project", style: subheadingStyle),
                 Text(
                   "Some more details",
                   style: subheadingStyle,
