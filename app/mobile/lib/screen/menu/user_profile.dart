@@ -26,6 +26,7 @@ class _Content extends StatelessWidget {
         alignment: AlignmentDirectional.topCenter,
         children: <Widget>[
           Card(
+            elevation: 4,
             margin: EdgeInsets.only(top: 50.0),
             child: Container(
               margin: EdgeInsets.only(top: 100.0),

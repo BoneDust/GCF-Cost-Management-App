@@ -11,7 +11,6 @@ class ActivityList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
-
       physics: isScrollable?  BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
       children: activities.map((activity) {
         return ActivityTile(activity);

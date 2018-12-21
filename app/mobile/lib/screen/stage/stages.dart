@@ -71,7 +71,7 @@ class _StageSampleCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ForeManStageScreen(stage)));
+              builder: (context) => ForeManStageScreen(stage: stage,)));
         },
         child: Card(
           child: Center(child: Text(stage.name)),

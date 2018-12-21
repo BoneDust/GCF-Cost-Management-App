@@ -20,7 +20,7 @@ class ProjectContainer extends StatelessWidget {
           children: <Widget>[
             _ProjectCard(),
             _ProjectThumbnail(),
-            _ProjectContentCard(project),
+            _ProjectContentCard(project: project),
           ],
         ),
       ),
@@ -52,16 +52,17 @@ class _ProjectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: Container(
+
         margin: EdgeInsets.only(left: 20.0),
         decoration: BoxDecoration(
-            color: Colors.blue,
+            color: Colors.white,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(10.0),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 5.0,
-                  offset: new Offset(0.0, 0.0))
+                  color: Colors.blueGrey,
+                  blurRadius: 10.0,
+                  offset: Offset(2.0, 2.0))
             ]),
       ),
     );
@@ -71,19 +72,8 @@ class _ProjectCard extends StatelessWidget {
 class _ProjectContentCard extends StatelessWidget {
   final Project project;
 
-  TextStyle baseTextStyle;
-  TextStyle headerStyle;
-  TextStyle subheadingStyle;
+  const _ProjectContentCard({Key key, @required this.project}) : super(key: key);
 
-  _ProjectContentCard(this.project) {
-    baseTextStyle = const TextStyle(fontFamily: 'Comfortaa');
-    headerStyle = baseTextStyle.copyWith(
-        color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold);
-    subheadingStyle = baseTextStyle.copyWith(
-      color: Colors.white,
-      fontSize: 12.0,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,19 +84,16 @@ class _ProjectContentCard extends StatelessWidget {
         children: <Widget>[
           Text(
             project.name,
-            style: headerStyle,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           ),
           Text(
             project.description,
-            style: subheadingStyle,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           ),
           Text(
             project.status,
-            style: subheadingStyle,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           )

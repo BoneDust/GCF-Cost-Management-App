@@ -5,7 +5,7 @@ import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class DetailsCard extends StatelessWidget {
-  Project project;
+  final Project project;
 
   DetailsCard(this.project);
 
@@ -16,22 +16,21 @@ class DetailsCard extends StatelessWidget {
 }
 
 class _DetailsCardRoot extends StatelessWidget {
-  Project project;
+  final Project project;
 
   _DetailsCardRoot(this.project);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-        shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+        elevation: 5,
         child: Column(
           children: <Widget>[
             Container(
-              color: Colors.white,
               padding: EdgeInsets.only(top: 10.0, left: 10.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("Details")]),
+                  children: [Text("details")]),
             ),
             _DetailsCard(project),
           ],

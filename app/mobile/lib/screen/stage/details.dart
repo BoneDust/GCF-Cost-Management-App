@@ -1,45 +1,26 @@
+import 'package:cm_mobile/model/stage.dart';
 import 'package:flutter/material.dart';
 
 class StageDetails extends StatelessWidget {
-  TextStyle baseTextStyle;
-  TextStyle headerStyle;
-  TextStyle subheadingStyle;
+  final Stage stage;
 
-  StageDetails() {
-    baseTextStyle = const TextStyle();
-    headerStyle = baseTextStyle.copyWith(fontSize: 18.0);
-    subheadingStyle = baseTextStyle.copyWith(
-      color: Colors.white,
-      fontSize: 12.0,
-    );
-  }
+  const StageDetails({Key key,@required this.stage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         children: <Widget>[
-          _Details(),
+          Padding(
+            padding: EdgeInsets.only(top: 10.0),
+          ),
+          Text(stage.description, maxLines: 1,overflow: TextOverflow.ellipsis),
+          Text("status: " + stage.status, maxLines: 1,overflow: TextOverflow.ellipsis),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0),
+          ),
         ],
       ),
-    );
-  }
-}
-
-class _Details extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 10.0),
-        ),
-        Text("This is the description of the stage"),
-        Text("Stage status: Currently in progress"),
-        Padding(
-          padding: EdgeInsets.only(top: 20.0),
-        ),
-      ],
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:cm_mobile/bloc/auth_bloc.dart';
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/receipt_bloc.dart';
 import 'package:cm_mobile/bloc/user_bloc.dart';
+import 'package:cm_mobile/data/app_colors.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
@@ -14,6 +15,7 @@ import 'package:cm_mobile/screen/stage/add_stage.dart';
 import 'package:cm_mobile/screen/users/create_user_screen.dart';
 import 'package:cm_mobile/screen/users/users.dart';
 import 'package:cm_mobile/service/api_service.dart';
+import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +55,18 @@ class _App extends State<App> {
         title: Details.COMPANY_TITLE,
         routes: routes,
         theme: ThemeData(
+          fontFamily: 'OpenSans',
+
 //          // Define the default Brightness and Colors
 //          brightness: Brightness.light,
-//          primaryColor: AppColors.primaryColor,
+          primaryColorLight: AppColors.primaryColor,
+          primaryColor: AppColors.primaryColor,
+          accentColor: AppColors.accentColor,
+          primaryTextTheme: TextTheme(
+              title: TextStyle(color: AppColors.primaryText),
+              subhead: TextStyle(color: AppColors.primaryText),
+              body1: TextStyle(color: AppColors.primaryText)),
+
 //
 //          accentColor: AppColors.accentColor,
 //          primaryColorDark: AppColors.darkPrimaryColor,
@@ -66,12 +77,12 @@ class _App extends State<App> {
 //
 //          // Define the default TextTheme. Use this to specify the default
 //          // text styling for headlines, titles, bodies of text, and more.
-//          textTheme: TextTheme(
+          textTheme: TextTheme(
 //            headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
 //            title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
 //            body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-//          ),
-            ),
+              ),
+        ),
         home: _AppRoot(),
       )),
     );
@@ -107,8 +118,7 @@ class _DataBlocImplementationState extends State<_AppRoot> {
     receiptBloc.results
         .listen((receipts) => dataContainerState.setReceipts(receipts));
 
-    userBloc.results
-        .listen((user) => dataContainerState.setUser(user));
+    userBloc.results.listen((user) => dataContainerState.setUser(user));
 
     authBloc.results
         .listen((authState) => dataContainerState.setAuthState(authState));
@@ -122,7 +132,9 @@ class _DataBlocImplementationState extends State<_AppRoot> {
                     bloc: activityBloc,
                     child: BlocProvider(
                       bloc: receiptBloc,
-                      child: dataContainerState.user != null ? _AppBottomNavigator() : Column(),
+                      child: dataContainerState.user != null
+                          ? _AppBottomNavigator()
+                          : Column(),
                     )),
               )
             : AuthScreen());
@@ -142,10 +154,10 @@ class _AppBottomNavigator extends StatelessWidget {
             elevation: 20.0,
             child: TabBar(
               tabs: tabEntry.tabs,
-              indicatorColor: Colors.red,
+              indicatorColor: Colors.grey,
               indicatorSize: TabBarIndicatorSize.label,
               unselectedLabelColor: Colors.grey,
-              labelColor: Colors.blue,
+              labelColor: Colors.green,
             ),
           )),
     );
@@ -158,7 +170,10 @@ class _AppBottomNavigator extends StatelessWidget {
 
     if (user.privilege == Privilege.ADMIN) {
       tabEntry.children.add(StatisticsScreen());
-      tabEntry.tabs.add(Tab(icon: Icon(Icons.trending_up)));
+      tabEntry.tabs.add(Tab(
+        icon: Icon(Typicons.chart_bar_outline),
+        text: "stats",
+      ));
     }
 
     return tabEntry;
@@ -166,9 +181,19 @@ class _AppBottomNavigator extends StatelessWidget {
 }
 
 class _TabEntry {
-  List<Widget> children = [HomeScreen(), ProjectsScreen()];
-  List<Tab> tabs = [
-    Tab(icon: Icon(Icons.home)),
-    Tab(icon: Icon(Icons.assignment)),
-  ];
+  List<Widget> children = [];
+  List<Tab> tabs = [];
+
+  _TabEntry() {
+    children = [HomeScreen(), ProjectsScreen()];
+    tabs = [
+      Tab(icon: Icon(Typicons.home_outline), text: "home"),
+      Tab(
+        icon: Icon(
+          Typicons.clipboard,
+        ),
+        text: "projects",
+      ),
+    ];
+  }
 }

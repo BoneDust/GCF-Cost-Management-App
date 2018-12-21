@@ -20,25 +20,13 @@ class _FinancialOverviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-        child: Column(
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(top: 10.0, left: 10.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("Financial Overview")]),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text("Money spent so far " + project.estimatedCost.toString())
-              ],
-            )
-          ],
+        elevation: 5,
+        child: Padding(
+          padding: EdgeInsets.all(5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[Text("finance overview")],
+          ),
         ));
   }
 }
-

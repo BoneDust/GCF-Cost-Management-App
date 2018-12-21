@@ -21,48 +21,44 @@ class _HomeState extends State<HomeScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed("/menu"),
-              child: Container(
-                  height: 30.0,
-                  width: 30.0,
-                  decoration:  BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      image: DecorationImage(
-                          image: AssetImage(ImageUtils.getAvatarPicture(context)),
-                          fit: BoxFit.cover))),
+        leading: IconButton(
+            icon: Icon(
+              Icons.person,
+              size: 30,
+              color: Colors.green,
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-            ),
-            Text("Home")
-          ],
+            onPressed: () => Navigator.of(context).pushNamed("/menu")),
+        title: Text(
+          "gfc",
+          style: TextStyle(color: Colors.green, fontSize: 40),
         ),
+        centerTitle: true,
       ),
       body: _HomeBody(),
     );
   }
-
 }
-
 
 class _HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverList(
-            delegate: SliverChildListDelegate([
-          ActivitiesCard(),
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-          )
-        ])),
-        SliverGridMenu()
-      ],
-    );
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverList(
+                delegate: SliverChildListDelegate([
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+              ),
+              ActivitiesCard(),
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+              )
+            ])),
+            SliverGridMenu(),
+            SliverPadding(padding: EdgeInsets.only(bottom: 50))
+          ],
+        ));
   }
 }

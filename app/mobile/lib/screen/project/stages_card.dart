@@ -21,26 +21,16 @@ class StagesWidget extends StatelessWidget {
 class _StagesWidgetRoot extends StatelessWidget {
   final List<Stage> stages;
 
-  TextStyle baseTextStyle;
-  TextStyle headerStyle;
-  TextStyle subheadingStyle;
-
-  _StagesWidgetRoot(this.stages) {
-    baseTextStyle = const TextStyle();
-    headerStyle = baseTextStyle.copyWith(fontSize: 18.0);
-    subheadingStyle = baseTextStyle.copyWith(
-      color: Colors.white,
-      fontSize: 12.0,
-    );
-  }
+  _StagesWidgetRoot(this.stages);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-        shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+      elevation: 5,
         child: Column(
           children: <Widget>[
             GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ForeManStagesScreen(
@@ -48,17 +38,14 @@ class _StagesWidgetRoot extends StatelessWidget {
                           )));
                 },
                 child: Container(
-                  color: Colors.white,
                   padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        new Text("Stages", style: headerStyle),
-                        new Row(
+                         Text("stages"),
+                         Row(
                           children: <Widget>[
-                            Text(stages.length.toString(),
-                                style:
-                                    headerStyle.copyWith(color: Colors.grey)),
+                            Text(stages.length.toString()),
                             Icon(
                               Icons.chevron_right,
                               color: Colors.grey,
@@ -111,6 +98,7 @@ class _StageSampleCard extends StatelessWidget {
       width: 100,
       margin: EdgeInsets.only(left: 7),
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () => _showStage(context, stage),
         child: Card(
           child: Center(child: Text(stage.name)),
@@ -123,6 +111,6 @@ class _StageSampleCard extends StatelessWidget {
 
   _showStage(BuildContext context, Stage stage) {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ForeManStageScreen(stage)));
+        MaterialPageRoute(builder: (context) => ForeManStageScreen(stage: stage,)));
   }
 }

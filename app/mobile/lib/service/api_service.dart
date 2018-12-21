@@ -15,6 +15,7 @@ class ApiService {
 
   Future<List<Project>> getAll() async {
     List<Project> resultList = DummyData.projectList;
+
     await http.get(Uri.parse(_url))
          .then((response) => response.body)
          .then(json.decode)
@@ -51,6 +52,8 @@ class ApiService {
   }
 
   Future<List<Project>> queryData(String value) async {
+    await Future.delayed(Duration(seconds: 2));
+
     var resultList = DummyData.projectList;
     var filteredList = resultList
         .where((project) =>

@@ -1,4 +1,5 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -6,21 +7,18 @@ class SliverGridMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<GridItemEntry> menuEntries = getMenuEntries(context);
-    return SliverPadding(
-      padding: EdgeInsets.all(10.0),
-      sliver: SliverGrid(
-        gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200.0,
-          mainAxisSpacing: 10.0,
-          crossAxisSpacing: 10.0,
-          childAspectRatio: 2.0,
-        ),
-        delegate: new SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return new GridHomeMenuItem(menuEntries[index]);
-          },
-          childCount: menuEntries.length,
-        ),
+    return SliverGrid(
+      gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200.0,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
+        childAspectRatio: 2.0,
+      ),
+      delegate: new SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+          return new GridHomeMenuItem(menuEntries[index]);
+        },
+        childCount: menuEntries.length,
       ),
     );
   }
@@ -35,35 +33,35 @@ class SliverGridMenu extends StatelessWidget {
     if (privilege == Privilege.FOREMAN)
       entries.addAll([
         GridItemEntry(
-            icon: Icons.add,
+            icon: Typicons.plus_outline,
             function: () {
               Navigator.pushNamed(context, '/add_receipt');
             },
-            title: "Add Receipt"),
+            title: "add receipt"),
       ]);
 
     entries.addAll([
       GridItemEntry(
-          icon: Icons.assignment,
+          icon: Typicons.clipboard,
           function: () => tabController.animateTo(1),
-          title: "Projects"),
+          title: "projects"),
       GridItemEntry(
-          icon: Icons.receipt,
+          icon: Typicons.doc_text,
           function: () => Navigator.of(context).pushNamed("/all_receipts"),
-          title: "All Receipts"),
+          title: "receipts"),
       // GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
     ]);
 
     if (privilege == Privilege.ADMIN)
       entries.addAll([
         GridItemEntry(
-            icon: Icons.people,
+            icon: Typicons.users_outline,
             function: () {
               Navigator.pushNamed(context, '/users');
             },
-            title: "Users"),
+            title: "users"),
         GridItemEntry(
-            icon: Icons.trending_up, function: () {}, title: "Statistics"),
+            icon: Typicons.chart_bar_outline, function: () {}, title: "statistics"),
       ]);
 
     return entries;
@@ -86,30 +84,26 @@ class GridHomeMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: menuItem.function,
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: Colors.blue),
-          height: 200,
-          width: 200,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  menuItem.icon,
-                  size: 40,
-                  color: Colors.white,
-                ),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                Text(
-                  menuItem.title,
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
-            ),
+    return
+      Card(
+        elevation: 10,
+        child: InkWell(
+          onTap: menuItem.function,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                menuItem.icon,
+                size: 30,
+                color: Colors.blueGrey,
+              ),
+              Padding(padding: EdgeInsets.only(top: 10)),
+              Text(
+                menuItem.title, style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blueGrey), )
+            ],
           ),
-        ));
+        ),
+      );
   }
 }

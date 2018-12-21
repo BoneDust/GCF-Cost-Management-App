@@ -16,22 +16,32 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
   Widget build(BuildContext context) {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     List<Activity> activities = userContainerState.activities.take(3).toList();
-
     return Card(
+      elevation: 5,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           ExpansionTile(
-            title: Text("Activity"),
+            title: Text(
+              "activities",
+              style: TextStyle(
+                  color: Colors.blueGrey, fontWeight: FontWeight.w600),
+            ),
             children: [
               ActivityList(
                 activities: activities,
                 isScrollable: false,
               ),
-              RaisedButton(
-                  child: Text("Show activities"),
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed("/activities")),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                child: RaisedButton(
+                    color: Colors.blueGrey,
+                    elevation: 5,
+                    child: Text("show activities", style: TextStyle(color: Colors.white),),
+                    onPressed: () =>
+                        Navigator.of(context).pushNamed("/activities")),
+              )
             ],
           ),
         ],

@@ -74,12 +74,40 @@ class _ProjectWidgetState extends State<ProjectWidget> {
                   floating: false,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: false,
                     title: Text(snapshot != null && snapshot.data != null
                         ? snapshot.data.name
-                        : ""),
-                    background: Image(
-                      image: AssetImage("assets/images.jpeg"),
-                      fit: BoxFit.fill,
+                        : "", overflow: TextOverflow.fade,),
+                    background: Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          child:   Image(
+                            image: AssetImage("assets/images.jpeg"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                // Where the linear gradient begins and ends
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomLeft,
+                                // Add one stop for each color. Stops should increase from 0 to 1
+                                stops: [0.1, 0.4, 0.5, 1],
+                                colors: [
+                                  // Colors are easy thanks to Flutter's Colors class.
+                                  Colors.white10,
+                                  Colors.white24,
+                                  Colors.white30,
+                                  Colors.white,
+                                ],
+                              )
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 )
@@ -87,11 +115,23 @@ class _ProjectWidgetState extends State<ProjectWidget> {
             },
             body: (snapshot != null && snapshot.data != null
                 ? _ProjectScreen(snapshot.data)
-                : Column()));
+                : _LoadingWidget()));
       },
     );
   }
 }
+
+class _LoadingWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+}
+
 
 class _ProjectScreen extends StatelessWidget {
   final Project project;
@@ -102,12 +142,9 @@ class _ProjectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> _projectWidgets = _buildProjectWidgets(context);
 
-    return Material(
-        color: Colors.black12,
-        child: ListView(
-          padding: EdgeInsets.only(left: 3, right: 3),
-          children: _projectWidgets,
-        ));
+    return ListView(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        children: _projectWidgets);
   }
 
   List<Widget> _buildProjectWidgets(BuildContext context) {
@@ -139,12 +176,12 @@ class _ProjectScreen extends StatelessWidget {
       ]);
       _projectWidgets.addAll(receipt);
       _projectWidgets.addAll(stage);
-    }
-    else {
+    } else {
       _projectWidgets.addAll(stage);
       _projectWidgets.addAll(receipt);
     }
-    _projectWidgets.add(DetailsCard(project),
+    _projectWidgets.add(
+      DetailsCard(project),
     );
 
     return _projectWidgets;

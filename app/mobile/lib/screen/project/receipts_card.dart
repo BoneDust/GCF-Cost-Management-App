@@ -22,47 +22,34 @@ class ReceiptsWidget extends StatelessWidget {
 class _ReceiptsWidgetRoot extends StatelessWidget {
   final List<Receipt> receipts;
 
-  TextStyle baseTextStyle;
-  TextStyle headerStyle;
-  TextStyle subheadingStyle;
-
-  _ReceiptsWidgetRoot(this.receipts) {
-    baseTextStyle = const TextStyle();
-    headerStyle = baseTextStyle.copyWith(fontSize: 18.0);
-    subheadingStyle = baseTextStyle.copyWith(
-      color: Colors.white,
-      fontSize: 12.0,
-    );
-  }
+  _ReceiptsWidgetRoot(this.receipts);
 
   @override
   Widget build(BuildContext context) {
     var topThreeReceipts = receipts.take(3).toList();
 
     return Card(
-        shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+        elevation: 5,
         child: Column(
           children: <Widget>[
             GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ReceiptsList(
                             receipts: receipts,
-                            appBarTitle: "Receipts",
+                            appBarTitle: "receipts",
                           )));
                 },
                 child: Container(
-                  color: Colors.white,
                   padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        new Text("Receipts", style: headerStyle),
-                        new Row(
+                        Text("receipts"),
+                        Row(
                           children: <Widget>[
-                            Text(receipts.length.toString(),
-                                style:
-                                    headerStyle.copyWith(color: Colors.grey)),
+                            Text(receipts.length.toString()),
                             Icon(
                               Icons.chevron_right,
                               color: Colors.grey,

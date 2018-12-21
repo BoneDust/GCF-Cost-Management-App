@@ -1,35 +1,32 @@
-import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/stage.dart';
-import 'package:cm_mobile/model/user.dart';
-import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 
 class ForeManStageScreen extends StatelessWidget {
-  Stage stage;
+  final Stage stage;
 
-  ForeManStageScreen(this.stage);
+  const ForeManStageScreen({Key key, @required this.stage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    AppDataContainerState userContainerState = AppDataContainer.of(context);
-    User user = userContainerState.user;
-    List<Widget> appBarActions = [];
-
-    if (user.privilege == Privilege.ADMIN)
-      appBarActions.add(_ProjectPopMenuButton());
     return Scaffold(
         appBar: AppBar(
-          actions: appBarActions,
+          actions: [_ProjectPopMenuButton()],
           title: Text(stage.name),
         ),
         body: SafeArea(
-          child: _StageScreen(),
+          child: _StageScreen(
+            stage: stage,
+          ),
         ));
   }
 }
 
 class _StageScreen extends StatelessWidget {
+  final Stage stage;
+
+  const _StageScreen({Key key, @required this.stage}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -39,8 +36,12 @@ class _StageScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 20.0),
           ),
-          StageDetails(),
-          SnapShotCard(),
+          StageDetails(
+            stage: stage,
+          ),
+          SnapShotCard(
+            stage: stage,
+          ),
           Duration(),
           Padding(
             padding: EdgeInsets.only(top: 30.0),
