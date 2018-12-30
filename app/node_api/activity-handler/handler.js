@@ -121,14 +121,17 @@ app.post('/activities', function (req, res) {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
             const activity = req.body
-            const date_in_ms = Date.now() + 7200000
-            if (activity.project_id && activity.title && activity.description) {
+            if (activity.project_id && activity.title && activity.performer && activity.type && activity.description) {
+
+                const date_in_ms = Date.now() + 7200000
                 const params = {
                     TableName: ACTIVITIES_TABLE,
                     Item: {
                         activityId: activityCount + 1,
                         project_id: parseInt(activity.project_id),
+                        performer: activity.performer,
                         title: activity.title,
+                        type: activity.type,
                         description: activity.description,
                         creation_date: new Date(date_in_ms).toISOString().replace('T', ' ').substr(0, 19),
                         creation_date_ms: date_in_ms
@@ -145,7 +148,7 @@ app.post('/activities', function (req, res) {
                 });
             }
             else
-                res.status(400).json({ error: "Incomplete activity supplied. Supply project_id, title, and description", });
+                res.status(400).json({ error: activity })//"Incomplete activity supplied. Supply project_id, title, and description", });
         }
         else
             res.status(401).json({ error: "User not authorised to make this request." })

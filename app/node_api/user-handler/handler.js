@@ -6,6 +6,7 @@ const AWS = require('aws-sdk')
 const verification = require('./../verification')
 const activityLogger = require('./../activity_logger')
 const app = express()
+const details = require('./../retrieveDetails')
 
 const USERS_TABLE = process.env.USERS_TABLE
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
@@ -125,9 +126,12 @@ app.post('/users', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else {
-                            activityLogger.logActivity(0, "New user created!", "Dale created added a new user", req.headers.token)
                             userCount = userCount + 1
-                            res.status(201).json({ message: "User successfully created" })
+                            activityLogger.logActivity(0, activityLogger.activityType.CREATE_USER, req.headers.token, userCount)
+                                .then(() =>
+                                    res.status(201).json({ message: "User successfully created" }
+                                    ))
+                                .catch(error => { res.status(201).json({ message: "User successfully created", activity_error: error.message }) })
                         }
                     })
                 }
