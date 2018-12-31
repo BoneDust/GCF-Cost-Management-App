@@ -24,7 +24,7 @@ app.get('/activities', function (req, res) {
                 dynamoDb.scan(params, (error, result) => {
                     if (error)
                         res.status(error.statusCode || 503).json({ error: error.message })
-                    else {
+                    else if (result.Items) {
                         if (req.query.start_date && !isNaN(req.query.start_date) && req.query.end_date && !isNaN(req.query.start_date)) {
                             var filtered = result.Items.filter((item) => { return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date)) })
                             res.status(200).json({ activities: filtered })
@@ -32,6 +32,8 @@ app.get('/activities', function (req, res) {
                         else
                             res.status(200).json({ activities: result.Items })
                     }
+                    else
+                        res.status(200).json({ activities: [] })
                 })
 
             }
@@ -62,7 +64,7 @@ app.get('/activities/:id', function (req, res) {
                         else if (result.Item)
                             res.status(200).json({ activity: result.Item })
                         else
-                            res.status(200).json({ activity: [] })
+                            res.status(404).json({ error: "Activity with id " + req.params.id + " not found" })
                     })
                 }
                 else
@@ -148,7 +150,7 @@ app.post('/activities', function (req, res) {
                 });
             }
             else
-                res.status(400).json({ error: activity })//"Incomplete activity supplied. Supply project_id, title, and description", });
+                res.status(400).json({ error: "Incomplete activity supplied. Supply project_id, title, and description", });
         }
         else
             res.status(401).json({ error: "User not authorised to make this request." })

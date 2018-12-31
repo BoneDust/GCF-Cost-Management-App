@@ -43,8 +43,6 @@ module.exports = {
 
     logActivity: async function (project_id, type_identifier, token, itemId) {
 
-        itemId = (typeof itemId === undefined) ? -1 : itemId;
-
         if (project_id !== null && !isNaN(project_id) && !isNaN(itemId) && type_identifier !== null && token !== null) {
 
             const type = activityType.details[type_identifier].type
@@ -86,7 +84,6 @@ module.exports = {
                 else {
                     const projectName = await details.getProjectName(project_id)
                     options.form.description = description = type + " " + itemId + " was " + action + " by " + options.form.performer + " in project " + projectName
-
                 }
             }
             catch (error) {

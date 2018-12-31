@@ -6,7 +6,6 @@ const AWS = require('aws-sdk')
 const verification = require('./../verification')
 const activityLogger = require('./../activity_logger')
 const app = express()
-const details = require('./../retrieveDetails')
 
 const USERS_TABLE = process.env.USERS_TABLE
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
@@ -128,9 +127,7 @@ app.post('/users', (req, res) => {
                         else {
                             userCount = userCount + 1
                             activityLogger.logActivity(0, activityLogger.activityType.CREATE_USER, req.headers.token, userCount)
-                                .then(() =>
-                                    res.status(201).json({ message: "User successfully created" }
-                                    ))
+                                .then(() => res.status(201).json({ message: "User successfully created" }))
                                 .catch(error => { res.status(201).json({ message: "User successfully created", activity_error: error.message }) })
                         }
                     })
@@ -210,7 +207,7 @@ app.put('/users/:userId', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const user = req.body;
-                if (isNaN(req.params.userId) === false && user.name && user.surname && user.password && user.image && user.email && user.privilege) {
+                if (!isNaN(req.params.userId) && user.name && user.surname && user.password && user.image && user.email && user.privilege) {
                     const params = {
                         TableName: USERS_TABLE,
                         Key: {
@@ -233,8 +230,11 @@ app.put('/users/:userId', (req, res) => {
                     dynamoDb.update(params, (error, result) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
-                        else
-                            res.status(200).json({ message: "User updated successfully." })
+                        else {
+                            activityLogger.logActivity(0, activityLogger.activityType.UPDATE_USER, req.headers.token, parseInt(req.params.userId))
+                                .then(() => res.status(200).json({ message: "User successfully updated" }))
+                                .catch(error => { res.status(200).json({ message: "User successfully updated", activity_error: error.message }) })
+                        }
                     })
                 }
                 else {
@@ -267,8 +267,11 @@ app.delete('/users/:userId', (req, res) => {
                     dynamoDb.delete(params, (error, result) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
-                        else
-                            res.status(200).json({ message: "User successfully deleted." });
+                        else {
+                            activityLogger.logActivity(0, activityLogger.activityType.DELETE_USER, req.headers.token, parseInt(req.params.userId))
+                                .then(() => res.status(200).json({ message: "User successfully deleted" }))
+                                .catch(error => { res.status(200).json({ message: "User successfully deleted", activity_error: error.message }) })
+                        }
                     });
                 }
                 else
