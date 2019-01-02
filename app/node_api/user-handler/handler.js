@@ -20,42 +20,24 @@ app.get('/users', (req, res) => {
     verification.isValidAdmin(req.headers.token)
         .then(isValid => {
             if (isValid) {
+
+                var params = {
+                    TableName: USERS_TABLE
+                }
                 //searching user by name or surname
                 if (req.query.search) {
 
-                    const filterParams = {
-                        TableName: USERS_TABLE,
-                        ExpressionAttributeNames: {
-                            "#name": "name"
-                        },
-                        FilterExpression: "contains(#name, :phrase) or contains(surname, :phrase)",
-                        ExpressionAttributeValues: {
-                            ":phrase": req.query.search
-                        }
-                    }
-
-                    dynamoDb.scan(filterParams, (error, result) => {
-                        if (error)
-                            res.status(error.statusCode || 503).json({ error: error.message })
-                        else if (result.Items)
-                            res.status(200).json({ users: result.Items })
-                    })
+                    params.ExpressionAttributeNames = { "#name": "name" }
+                    params.FilterExpression = "contains(#name, :phrase) or contains(surname, :phrase)",
+                        params.ExpressionAttributeValues = { ":phrase": req.query.search }
                 }
 
-                else {
-
-                    const params = {
-                        TableName: USERS_TABLE
-                    }
-
-
-                    dynamoDb.scan(params, (error, result) => {
-                        if (error)
-                            res.status(error.statusCode || 503).json({ error: error.message })
-                        else
-                            res.status(200).json({ users: result.Items })
-                    })
-                }
+                dynamoDb.scan(params, (error, result) => {
+                    if (error)
+                        res.status(error.statusCode || 503).json({ error: error.message })
+                    else
+                        res.status(200).json({ users: result.Items })
+                })
             }
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
@@ -68,15 +50,11 @@ app.get('/users/:userId', (req, res) => {
 
     verification.isValidAdmin(req.headers.token)
         .then(isValid => {
-
             if (isValid) {
-
-                if (isNaN(req.params.userId) === false) {
+                if (!isNaN(req.params.userId)) {
                     const params = {
                         TableName: USERS_TABLE,
-                        Key: {
-                            userId: parseInt(req.params.userId)
-                        }
+                        Key: { userId: parseInt(req.params.userId) }
                     }
 
                     dynamoDb.get(params, (error, result) => {

@@ -35,10 +35,8 @@ app.get('/stages/stagesByProject/:project_id', (req, res) => {
                     dynamoDb.scan(params, (error, result) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
-                        else if (result.Items)
-                            res.status(200).json({ stages: result.Items })
                         else
-                            res.status(200).json({ stages: [] })
+                            res.status(200).json({ stages: result.Items })
                     })
                 }
                 else
@@ -65,7 +63,7 @@ app.get('/stages/:stageId', (req, res) => {
 
                     dynamoDb.get(params, (error, result) => {
                         if (error)
-                            res.status(error.statusCode || 503).json({ error: error.message });
+                            res.status(error.statusCode || 503).json({ error: error.message })
                         else if (result.Item)
                             res.status(200).json({ stage: result.Item });
                         else
@@ -73,13 +71,13 @@ app.get('/stages/:stageId', (req, res) => {
                     });
                 }
                 else
-                    res.status(400).json({ error: "Stage id provided provided is not a number" })
+                    res.status(400).json({ error: "Stage id provided is not a number" })
             }
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
         })
         .catch(error => { res.status(400).json({ error: error.message }) })
-});
+})
 
 //endpoint function that create a new stage
 app.post('/stages', (req, res) => {
