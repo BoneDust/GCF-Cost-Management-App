@@ -31,7 +31,6 @@ module.exports = {
             }
             const data = await dynamoDb.get(params).promise()
             return (data.Item !== undefined)
-
         }
         else
             return false

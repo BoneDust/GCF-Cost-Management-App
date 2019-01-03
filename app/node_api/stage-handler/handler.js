@@ -130,7 +130,7 @@ app.put('/stages/:stageId', (req, res) => {
     verification.isValidUser(req.headers.token)
         .then(isValid => {
             if (isValid) {
-                const stage = req.body;
+                const stage = req.body
                 if (!isNaN(req.params.stageId) && stage.project_id && !isNaN(stage.project_id) && stage.stage_name && stage.description && stage.status && stage.before_pic_url && stage.after_pic_url && stage.start_date && stage.end_date && stage.estimated_duration) {
                     const params = {
                         TableName: STAGES_TABLE,

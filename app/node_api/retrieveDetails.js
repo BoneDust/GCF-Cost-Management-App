@@ -3,6 +3,7 @@ const PROJECT_TABLE = process.env.PROJECTS_TABLE
 const CLIENT_TABLE = process.env.CLIENTS_TABLE
 const USER_TABLE = process.env.USERS_TABLE
 const TOKEN_TABLE = process.env.TOKENS_TABLE
+const STAGE_TABLE = process.env.STAGES_TABLE
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 
 module.exports = {
@@ -56,7 +57,7 @@ module.exports = {
             }
             const data = await dynamoDb.get(params).promise()
             if (data.Item !== undefined)
-                return (data.Item.name)//not sure about project.name
+                return (data.Item.name)
             else
                 return ("Unknown")
         }
@@ -74,11 +75,27 @@ module.exports = {
             }
             const data = await dynamoDb.get(params).promise()
             if (data.Item !== undefined)
-                return (data.Item.name)//not sure about client.name
+                return (data.Item.name)
             else
                 return ("Unknown")
         }
         else
             return ("Unknown")
     },
+
+    getStageName: async function (stageId) {
+        if (stageId !== undefined && isNaN(stageId)) {
+            const params = {
+                TableName: STAGE_TABLE,
+                Key: { stageId: parseInt(stageId) }
+            }
+            const data = await dynamoDb.get(params).promise()
+            if (data.Item !== undefined)
+                return (data.Item.stage_name)
+            else
+                return ("Unknown")
+        }
+        else
+            return ("Unknown")
+    }
 }

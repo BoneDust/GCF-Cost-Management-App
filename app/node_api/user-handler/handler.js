@@ -54,7 +54,9 @@ app.get('/users/:userId', (req, res) => {
                 if (!isNaN(req.params.userId)) {
                     const params = {
                         TableName: USERS_TABLE,
-                        Key: { userId: parseInt(req.params.userId) }
+                        Key: {
+                            userId: parseInt(req.params.userId)
+                        }
                     }
 
                     dynamoDb.get(params, (error, result) => {
@@ -111,7 +113,7 @@ app.post('/users', (req, res) => {
                     })
                 }
                 else
-                    res.status(400).json({ error: "Incomplete user supplied. Supply email, name, surname, image,  privilege and password" });
+                    res.status(400).json({ error: "Incomplete user supplied. Supply email, name, surname, image,  privilege and password" })
             }
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
@@ -144,7 +146,15 @@ app.post('/users/login', (req, res) => {
                 const username = result.Items[0].name + " " + result.Items[0].surname
                 verification.saveAccessToken(token, privilege, username)
                     .then(() => {
-                        res.status(200).json({ access_token: token })
+
+                        const details = {
+                            name: result.Items[0].name,
+                            surname: result.Items[0].surname,
+                            email: result.Items[0].email,
+                            image: result.Items[0].image,
+                            privilege: result.Items[0].privilege
+                        }
+                        res.status(200).json({ access_token: token, user: details })
                     })
                     .catch(error => {
                         res.status(503).json({ error: error.message })
@@ -184,7 +194,7 @@ app.put('/users/:userId', (req, res) => {
     verification.isValidAdmin(req.headers.token)
         .then(isValid => {
             if (isValid) {
-                const user = req.body;
+                const user = req.body
                 if (!isNaN(req.params.userId) && user.name && user.surname && user.password && user.image && user.email && user.privilege) {
                     const params = {
                         TableName: USERS_TABLE,
@@ -216,7 +226,7 @@ app.put('/users/:userId', (req, res) => {
                     })
                 }
                 else {
-                    const message = isNaN(req.params.userId) ? "UserId " + req.params.userId + " is not a number" : "Incomplete user supplied.";
+                    const message = isNaN(req.params.userId) ? "UserId " + req.params.userId + " is not a number" : "Incomplete user supplied."
                     res.status(400).json({ error: message })
                 }
             }
@@ -234,7 +244,7 @@ app.delete('/users/:userId', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 if (!isNaN(req.params.userId)) {
-                    const userId = parseInt(req.params.userId);
+                    const userId = parseInt(req.params.userId)
                     const params = {
                         TableName: USERS_TABLE,
                         Key: {
@@ -250,23 +260,23 @@ app.delete('/users/:userId', (req, res) => {
                                 .then(() => res.status(200).json({ message: "User successfully deleted" }))
                                 .catch(error => { res.status(200).json({ message: "User successfully deleted", activity_error: error.message }) })
                         }
-                    });
+                    })
                 }
                 else
-                    res.status(400).json({ error: "User Id provided is not a number." });
+                    res.status(400).json({ error: "User Id provided is not a number." })
             }
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
         })
         .catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
-});
+})
 
 
 // Handle in-valid route
 app.all('*', function (req, res) {
     const response = { error: 'Route not found!!' }
     res.status(400).send(response)
-});
+})
 
 // wrap express app instance with serverless http function
-module.exports.handler = serverless(app);
+module.exports.handler = serverless(app)
