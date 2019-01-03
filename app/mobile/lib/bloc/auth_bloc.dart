@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/model/user_login.dart';
 import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/service/api_service.dart';
@@ -8,34 +9,28 @@ import 'package:rxdart/rxdart.dart';
 import 'base_bloc.dart';
 
 class AuthBloc extends BlocBase {
-  Stream<AuthenticationState> _results = Stream.empty();
+  final _authStatus = StreamController<AuthenticationState>.broadcast();
 
+  ApiService _apiService;
 
-  Stream<AuthenticationState> get results => _results;
+  AuthBloc(this._apiService);
 
-  final ApiService _apiService;
+  Sink<AuthenticationState> get inAuth => _authStatus.sink;
 
-  ReplaySubject<UserLogin> _query = ReplaySubject<UserLogin>();
+  Stream<AuthenticationState> get results => _authStatus.stream;
 
-  Sink<UserLogin> get query => _query;
-
-  AuthBloc(this._apiService) {
-    _results = _query
-        .distinct()
-        .asyncMap(_apiService.authenticateUser)
-        .asBroadcastStream();
-  }
 
   @override
   void dispose() {
-    _query.close();
+    _authStatus.close();
   }
 
   void authenticateUser(UserLogin userLogin) {
-    query.add(userLogin);
+    _apiService.authenticateUser(userLogin).then((authStatus) => inAuth.add(authStatus));
   }
 
-  void logout() {
-    query.add(UserLogin());
+  void logout(User user){
+    _apiService.logout(user).then((authStatus) => inAuth.add(authStatus));
+
   }
 }

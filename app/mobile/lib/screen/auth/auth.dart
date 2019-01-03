@@ -48,6 +48,7 @@ class _AuthScreen extends State<AuthScreen> {
                 child: Form(
                     key: _formKey,
                     child: Column(
+
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[

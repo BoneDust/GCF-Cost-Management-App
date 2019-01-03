@@ -21,6 +21,7 @@ class AppDataContainer extends StatefulWidget {
 
 class AppDataContainerState extends State<AppDataContainer> {
   User user;
+  String token;
   AuthenticationState authState = AuthenticationState(isInitializing: true, isLoading: false, isAuthenticated: false);
   List<Activity> activities = [];
   List<Receipt> receipts = [];

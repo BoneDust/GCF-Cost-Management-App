@@ -5,7 +5,6 @@ import 'package:cm_mobile/bloc/receipt_bloc.dart';
 import 'package:cm_mobile/bloc/user_bloc.dart';
 import 'package:cm_mobile/data/app_colors.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
-import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/activity/activities.dart';
 import 'package:cm_mobile/screen/project/add_project.dart';

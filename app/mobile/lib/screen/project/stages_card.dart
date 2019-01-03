@@ -57,7 +57,10 @@ class _StagesWidgetRoot extends StatelessWidget {
                 )),
             _StagesCard(stages),
             RaisedButton(
-                child: Text("Add a Stage"),
+                elevation: 10,
+                color: Colors.blueGrey,
+                child: Text("add stage", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 17),),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                 onPressed: () => Navigator.of(context).pushNamed("/add_stage"))
           ],
         ));
@@ -101,9 +104,8 @@ class _StageSampleCard extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: () => _showStage(context, stage),
         child: Card(
-          child: Center(child: Text(stage.name)),
-          color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
-              rng.nextInt(255), rng.nextInt(255)),
+          child: Center(child: Text(stage.name, style: TextStyle(color: Colors.white),)),
+          color: Colors.indigo,
         ),
       ),
     );
