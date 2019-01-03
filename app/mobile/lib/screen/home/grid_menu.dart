@@ -14,9 +14,9 @@ class SliverGridMenu extends StatelessWidget {
         crossAxisSpacing: 10.0,
         childAspectRatio: 2.0,
       ),
-      delegate: new SliverChildBuilderDelegate(
+      delegate:  SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return new GridHomeMenuItem(menuEntries[index]);
+          return  GridHomeMenuItem(menuEntries[index]);
         },
         childCount: menuEntries.length,
       ),

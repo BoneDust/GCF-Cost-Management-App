@@ -1,5 +1,7 @@
-import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/bloc/auth_bloc.dart';
+import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/model/auth_state.dart';
+import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/menu/user_profile.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -38,11 +40,18 @@ class _MenuScreen extends StatelessWidget {
 //          [Padding(padding: EdgeInsets.only(top: 30.0)), MenuProfilesCard()]);
 
     menuScreenWidget.add(RaisedButton(
-      elevation: 10,
+        elevation: 10,
         color: Colors.white,
-        child: Text("sign out", style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600, fontSize: 17),),
+        child: Text(
+          "sign out",
+          style: TextStyle(
+              color: Colors.red, fontWeight: FontWeight.w600, fontSize: 17),
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         onPressed: () {
+          AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
+          User user = AppDataContainer.of(context).user;
+          authBloc.logout(user);
           Navigator.of(context).pop();
           appDataContainerState.setAuthState(AuthenticationState(
               isInitializing: false, isLoading: false, isAuthenticated: false));

@@ -30,7 +30,7 @@ class _HomeState extends State<HomeScreen>
             ),
             onPressed: () => Navigator.of(context).pushNamed("/menu")),
         title: Text(
-          "gfc",
+          "gcf",
           style: TextStyle(color: Colors.green, fontSize: 40),
         ),
         centerTitle: true,

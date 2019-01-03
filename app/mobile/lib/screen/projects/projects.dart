@@ -137,7 +137,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   Widget buildAppBarDefaultTitle() {
     searchTextController.clear();
     return Text(
-      "gfc",
+      "gcf",
       style: TextStyle(color: Colors.green, fontSize: 40),
     );
   }

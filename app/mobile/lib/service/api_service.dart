@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cm_mobile/data/app_data.dart';
 import 'package:cm_mobile/data/dummy_data.dart';
 import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/auth_state.dart';
@@ -10,20 +11,19 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  String _url =
-      "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/users";
+
   var client = new http.Client();
 
   Future<List<Project>> getAll() async {
     List<Project> resultList = DummyData.projectList;
 
-    await http
-        .get(Uri.parse(_url))
-        .then((response) => response.body)
-        .then(json.decode)
-        .then((json) => json["results"])
-        .then((list) =>
-            list.forEach((item) => resultList.add(Project.fromJson(item))));
+//    await http
+//        .get(Uri.parse(_url))
+//        .then((response) => response.body)
+//        .then(json.decode)
+//        .then((json) => json["results"])
+//        .then((list) =>
+//            list.forEach((item) => resultList.add(Project.fromJson(item))));
 
     return resultList;
   }
@@ -81,16 +81,37 @@ class ApiService {
   }
 
   Future<AuthenticationState> authenticateUser(UserLogin userLogin) async {
-    Map<String, String> headers = Map();
-    headers.putIfAbsent("token", () => "c4997600-fe15-11e8-8362-9ff8808b2a50");
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/users/login";
 
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("email", () => "MainAdmin@gcfprojects.co.za");
+    headers.putIfAbsent("password", () => "Maintester");
     AuthenticationState authenticationState = AuthenticationState(
         isInitializing: false, isAuthenticated: true, isLoading: false);
 
-//    await client.get(Uri.parse(_url), headers: headers).then((response) =>
-//        print(response.body)
-//    );
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      AppData.authToken = jsonResponse["access_token"];
+    });
 
     return authenticationState;
+  }
+
+  Future<AuthenticationState>  logout(User user) async{
+
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/users/logout";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("access_token", () => AppData.authToken);
+
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      AppData.authToken = jsonResponse["access_token"];
+    });
+
+    return AuthenticationState(
+        isInitializing: false, isAuthenticated: false, isLoading: false);
   }
 }
