@@ -5,6 +5,7 @@ import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/project/financial_overview.dart';
 import 'package:cm_mobile/service/api_service.dart';
+import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
@@ -43,14 +44,17 @@ class _ProjectWidgetState extends State<ProjectWidget> {
   }
 
   Widget buildBody() {
+    ThemeData themeData = Theme.of(context);
     return Scaffold(
       body: buildBodyWithStreamer(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, "/add_receipt");
-        },
-        child: ImageIcon(AssetImage("assets/icons/add_receipt.png")),
-      ),
+      floatingActionButton: Theme(
+          data: themeData.copyWith(accentColor: Colors.white),
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/add_receipt");
+            },
+            child: ImageIcon(AssetImage("assets/icons/add_receipt.png"), color: Colors.green,),
+          )),
     );
   }
 

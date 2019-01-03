@@ -22,11 +22,72 @@ class _FinancialOverviewCard extends StatelessWidget {
     return Card(
         elevation: 5,
         child: Padding(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 5),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[Text("finance overview")],
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("finance overview"),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _buildBoxWithText("R5000", "has been spent", Colors.green),
+                  _buildBoxWithText("R100000", "estimated project cost", Colors.deepPurpleAccent)
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              ),
+              Container(
+                height: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red
+                    )
+                  ]
+                ),
+                child:    LinearProgressIndicator(
+                  semanticsLabel: "sdfsd",
+                  semanticsValue: "fsfsd",
+                  backgroundColor: Colors.blueGrey ,
+                  value: 0.9,
+                ),
+
+              ),
+              Center(child: Text("project is within budget"))
+
+            ],
           ),
         ));
+  }
+
+  Widget _buildBoxWithText(String title, String subtitle, Color color) {
+    return Container(
+      height: 100,
+      width: 150,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(color: Colors.blueGrey, spreadRadius: 2, offset: Offset(0.8, 0.5), blurRadius: 0.9),
+          BoxShadow(color: color)
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(title, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20), ),
+          Text(subtitle, textAlign: TextAlign.center, style: TextStyle(color: Colors.white),)
+        ],
+      ),
+    );
   }
 }

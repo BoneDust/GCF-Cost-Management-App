@@ -15,7 +15,7 @@ class SliverGridMenu extends StatelessWidget {
         childAspectRatio: 2.0,
       ),
       delegate: new SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
+        (BuildContext context, int index) {
           return new GridHomeMenuItem(menuEntries[index]);
         },
         childCount: menuEntries.length,
@@ -61,7 +61,9 @@ class SliverGridMenu extends StatelessWidget {
             },
             title: "users"),
         GridItemEntry(
-            icon: Typicons.chart_bar_outline, function: () {}, title: "statistics"),
+            icon: Typicons.chart_bar_outline,
+            function: () => tabController.animateTo(2),
+            title: "statistics"),
       ]);
 
     return entries;
@@ -84,26 +86,28 @@ class GridHomeMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Card(
-        elevation: 10,
-        child: InkWell(
-          onTap: menuItem.function,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                menuItem.icon,
-                size: 30,
-                color: Colors.blueGrey,
-              ),
-              Padding(padding: EdgeInsets.only(top: 10)),
-              Text(
-                menuItem.title, style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blueGrey), )
-            ],
-          ),
+    return Card(
+      elevation: 10,
+      child: InkWell(
+        onTap: menuItem.function,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              menuItem.icon,
+              size: 30,
+              color: Colors.blueGrey,
+            ),
+            Padding(padding: EdgeInsets.only(top: 10)),
+            Text(
+              menuItem.title,
+              style: TextStyle(
+                  fontWeight: FontWeight.w700, color: Colors.blueGrey),
+            )
+          ],
         ),
-      );
+      ),
+    );
   }
 }

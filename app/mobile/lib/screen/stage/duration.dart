@@ -17,6 +17,7 @@ class Duration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 5,
       child: Column(
         children: <Widget>[
           GestureDetector(

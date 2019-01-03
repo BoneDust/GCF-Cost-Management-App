@@ -26,40 +26,40 @@ class _EditProjectScreen extends StatelessWidget {
               TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  labelText: "Name",
+                  labelText: "name",
                 ),
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: "Foreman"),
+                decoration: InputDecoration(labelText: "foreman"),
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: "Description"),
+                decoration: InputDecoration(labelText: "description"),
               ),
               TextFormField(
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
-                  labelText: "Estimated Cost",
+                  labelText: "estimated Cost",
                 ),
               ),
               TextFormField(
                 maxLines: null,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: "Team size",
+                  labelText: "team size",
                 ),
               ),
               TextFormField(
                 maxLines: null,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: "End Date",
+                  labelText: "end Date",
                 ),
               ),
               ButtonBar(
                 children: <Widget>[
                   RaisedButton(
-                    child: Text("Create"),
+                    child: Text("create"),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },

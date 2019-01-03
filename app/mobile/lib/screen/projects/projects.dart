@@ -5,7 +5,6 @@ import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/projects/project_container.dart';
 import 'package:cm_mobile/service/api_service.dart';
-import 'package:cm_mobile/util/image_utils.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,11 @@ class ProjectsScreen extends StatefulWidget {
 class _ProjectsScreenState extends State<ProjectsScreen>
     with AutomaticKeepAliveClientMixin<ProjectsScreen> {
   ProjectsBloc projectsBloc;
-  Icon actionIcon = Icon(Icons.search);
+  Icon actionIcon = Icon(
+    Typicons.search_outline,
+    color: Colors.green,
+    size: 25,
+  );
   Widget appBarTitle;
   bool _isSearching = false;
   Color _appBarBackgroundColor = Colors.white;
@@ -48,14 +51,14 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       child: Scaffold(
           floatingActionButton: user.privilege == Privilege.ADMIN
               ? Container(
-            decoration:   BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.blueGrey,
-                      blurRadius: 5.0,
-                      offset: Offset(0.4, 0.0))
-                ]),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.blueGrey,
+                            blurRadius: 5.0,
+                            offset: Offset(0.4, 0.0))
+                      ]),
                   child: Theme(
                       data: themeData.copyWith(accentColor: Colors.white),
                       child: FloatingActionButton(
@@ -70,7 +73,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                 )
               : null,
           resizeToAvoidBottomPadding: false,
-          appBar: buildAppBar(context),
+          appBar: buildAppBar(),
           body: StreamBuilder<List<Project>>(
             key: PageStorageKey("projects"),
             stream: projectsBloc.results,
@@ -84,19 +87,20 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     );
   }
 
-  Widget buildAppBar(BuildContext context) {
-    appBarTitle = actionIcon.icon == Icons.search
-        ? buildAppBarDefaultTitle(context)
-        : buildAppBarSearch(context);
+  Widget buildAppBar() {
+    appBarTitle = actionIcon.icon == Typicons.search_outline
+        ? buildAppBarDefaultTitle()
+        : buildAppBarSearch();
 
     return AppBar(
+      elevation: 5,
       backgroundColor: _appBarBackgroundColor,
-      centerTitle: actionIcon.icon == Icons.search,
-      leading: actionIcon.icon != Icons.search
+      centerTitle: actionIcon.icon == Typicons.search_outline,
+      leading: actionIcon.icon != Typicons.search_outline
           ? null
           : IconButton(
               icon: Icon(
-                Icons.person,
+                Typicons.user_outline,
                 size: 30,
                 color: Colors.green,
               ),
@@ -106,8 +110,8 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     );
   }
 
-  Widget buildAppBarSearch(BuildContext context) {
-    TextStyle style = TextStyle(fontSize: 20, color: Colors.black);
+  Widget buildAppBarSearch() {
+    TextStyle style = TextStyle(fontSize: 20, color: Colors.white);
     return Center(
       child: TextField(
         controller: searchTextController,
@@ -120,7 +124,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
             prefixIcon: IconButton(
                 icon: Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 onPressed: _toggleSearch),
             hintText: "Search for projects...",
@@ -130,7 +134,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     );
   }
 
-  Widget buildAppBarDefaultTitle(BuildContext context) {
+  Widget buildAppBarDefaultTitle() {
     searchTextController.clear();
     return Text(
       "gfc",
@@ -146,14 +150,15 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       } else
         _appBarBackgroundColor = Colors.white;
 
-      actionIcon = actionIcon.icon == Icons.search
+      actionIcon = actionIcon.icon == Typicons.search_outline
           ? Icon(
-              Icons.close,
-              color: Colors.black,
+              Typicons.cancel,
+              color: Colors.white,
               size: 25,
             )
           : Icon(
-              Icons.search,
+              Typicons.search_outline,
+              color: Colors.green,
               size: 25,
             );
       _isSearching = !_isSearching;
@@ -179,7 +184,7 @@ class ProjectsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return RefreshIndicator(child: ListView.builder(
       itemCount: projects.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(bottom: 30, top: 30),
@@ -187,6 +192,11 @@ class ProjectsList extends StatelessWidget {
         Project project = projects.elementAt(index);
         return ProjectContainer(project: project);
       },
-    );
+    ), onRefresh: () => _loadProjects(context));
   }
+
+  Future<void> _loadProjects(BuildContext context) async {
+
+  }
+
 }

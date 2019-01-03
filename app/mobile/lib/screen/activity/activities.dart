@@ -11,7 +11,7 @@ class ActivitiesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text("Activities" + "(" + activities.length.toString() + ")")),
+          title: Text("a ctivities" + "(" + activities.length.toString() + ")")),
       body: ActivityList(activities: activities),
     );
   }

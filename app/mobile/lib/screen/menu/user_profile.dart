@@ -1,5 +1,6 @@
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/util/image_utils.dart';
+import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -20,36 +21,51 @@ class _Content extends StatelessWidget {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
 
-    return Container(
-      width: double.infinity,
-      child: Stack(
-        alignment: AlignmentDirectional.topCenter,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      child: Column(
         children: <Widget>[
-          Card(
-            elevation: 4,
-            margin: EdgeInsets.only(top: 50.0),
-            child: Container(
-              margin: EdgeInsets.only(top: 100.0),
-              width: double.infinity,
-              child: Column(
-                children: <Widget>[
-                  Text(user.name + " " + user.surname),
-                  Text(user.privilege.toString())
-                ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              _buildRoundButton(Typicons.cog_outline, "settings"),
+              CircleAvatar(
+                minRadius: 80,
+                backgroundImage: AssetImage(ImageUtils.getAvatarPicture(context)),
               ),
-            ),
+              _buildRoundButton(Typicons.pencil, "edit`"),
+
+            ],
           ),
-          Container(
-              height: 120.0,
-              width: 120.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: AssetImage(ImageUtils.getAvatarPicture(context)),
-                      fit: BoxFit.cover))),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child:           Column(
+              children: <Widget>[
+                Text(user.name + " " + user.surname),
+                Text(user.privilege.toString())
+              ],
+            ),
+          )
         ],
       ),
+    );
+  }
+
+  Widget _buildRoundButton(IconData icon, String title) {
+    return Container(
+      height: 80,
+      width: 80,
+      child: FlatButton(onPressed: (){}, child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(icon, color: Colors.blueGrey,),
+          Padding(padding: EdgeInsets.only(top: 7),),
+          Text(title)
+        ],
+      ), shape: CircleBorder()),
     );
   }
 

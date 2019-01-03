@@ -43,7 +43,9 @@ class _ProjectThumbnail extends StatelessWidget {
         decoration: new BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
-                image: AssetImage("assets/images.jpeg"), fit: BoxFit.cover)));
+                image: AssetImage("assets/images.jpeg"), fit: BoxFit.cover))
+
+    );
   }
 }
 

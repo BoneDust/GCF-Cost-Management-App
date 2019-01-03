@@ -29,13 +29,9 @@ class _StageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.grey,
-      child: ListView(
+    return  ListView(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 20.0),
-          ),
           StageDetails(
             stage: stage,
           ),
@@ -43,12 +39,8 @@ class _StageScreen extends StatelessWidget {
             stage: stage,
           ),
           Duration(),
-          Padding(
-            padding: EdgeInsets.only(top: 30.0),
-          ),
         ],
-      ),
-    );
+      );
   }
 }
 

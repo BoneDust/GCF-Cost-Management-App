@@ -55,10 +55,13 @@ class _App extends State<App> {
         title: Details.COMPANY_TITLE,
         routes: routes,
         theme: ThemeData(
+          primaryColorBrightness: Brightness.dark,
           fontFamily: 'OpenSans',
 
 //          // Define the default Brightness and Colors
 //          brightness: Brightness.light,
+
+          primaryColorDark: AppColors.darkPrimaryColor,
           primaryColorLight: AppColors.primaryColor,
           primaryColor: AppColors.primaryColor,
           accentColor: AppColors.accentColor,
@@ -67,20 +70,19 @@ class _App extends State<App> {
               subhead: TextStyle(color: AppColors.primaryText),
               body1: TextStyle(color: AppColors.primaryText)),
 
-//
-//          accentColor: AppColors.accentColor,
-//          primaryColorDark: AppColors.darkPrimaryColor,
-//          primaryIconTheme: IconThemeData(color: AppColors.textIconsColor),
-//          dividerColor: AppColors.divider,
-//          // Define the default Font Family
-//          fontFamily: 'Montserrat',
-//
-//          // Define the default TextTheme. Use this to specify the default
-//          // text styling for headlines, titles, bodies of text, and more.
+          iconTheme: IconThemeData(
+            color: AppColors.textIconsColor,
+          ),
+          buttonTheme: ButtonThemeData(
+            highlightColor: AppColors.accentColor,
+          ),
+
+
+          primaryIconTheme: IconThemeData(color: AppColors.textIconsColor),
           textTheme: TextTheme(
-//            headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-//            title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-//            body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+            headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+            title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            body1: TextStyle(fontSize: 14.0),
               ),
         ),
         home: _AppRoot(),

@@ -57,23 +57,7 @@ class _DetailsCard extends StatelessWidget {
         ),
         Divider(
           color: Colors.black54,
-        ),
-        ListTile(
-          title: Text(project.endDate.toIso8601String()),
-          subtitle: Text("Estimated Cost"),
-          leading: Icon(Icons.date_range),
-        ),
-        Divider(
-          color: Colors.black54,
-        ),
-        ListTile(
-          title: Text(project.endDate.toIso8601String()),
-          subtitle: Text("Expenditure"),
-          leading: Icon(Icons.date_range),
-        ),
-        Divider(
-          color: Colors.black54,
-        ),
+        )
       ]);
 
     detailsList.addAll([

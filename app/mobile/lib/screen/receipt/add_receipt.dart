@@ -21,14 +21,22 @@ class _AddReceiptWidget extends StatefulWidget {
 }
 
 class _AddReceiptState extends State<_AddReceiptWidget> {
-  Widget previewImage = Center(
-    child: Text(
-      "Take receipt picture",
-      style: TextStyle(
-          fontFamily: String.fromCharCode(3),
-          fontStyle: FontStyle.italic,
-          color: Colors.grey,
-          fontSize: 20),
+  Widget previewImage = Container(
+    decoration: BoxDecoration(
+        gradient: LinearGradient(
+          // Where the linear gradient begins and ends
+          begin: Alignment.topLeft,
+          end: Alignment.bottomLeft,
+          // Add one stop for each color. Stops should increase from 0 to 1
+          stops: [0.1, 0.4, 0.5, 1],
+          colors: [
+            // Colors are easy thanks to Flutter's Colors class.
+            Colors.white,
+            Colors.white24,
+            Colors.white30,
+            Colors.grey.withOpacity(0.5),
+          ],
+        )
     ),
   );
   File _image;
@@ -48,7 +56,7 @@ class _AddReceiptState extends State<_AddReceiptWidget> {
         },
         child: Image(
           image: FileImage(_image),
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
         ),
       );
     });
@@ -57,34 +65,43 @@ class _AddReceiptState extends State<_AddReceiptWidget> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Material(
-      color: Colors.black26,
-      child: CustomScrollView(
-        slivers: <Widget>[
-          new SliverAppBar(
+    return CustomScrollView(
+      slivers: <Widget>[
+        new SliverAppBar(
+          elevation: 5,
+          forceElevated: true,
+          pinned: true,
+          expandedHeight: 200.0,
+          flexibleSpace: new FlexibleSpaceBar(
+            centerTitle: true,
+            background: previewImage,
+            title: _buildRoundButton(Icons.add_a_photo, "take receipt picture"),
+          ),
+        ),
+        SliverPadding(
+          padding: EdgeInsets.all(20),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([_ReceiptFields()]),
+          ),
+        ),
+      ],
+    );
+  }
 
-            backgroundColor: Colors.blueGrey,
-            floating: true,
-            expandedHeight: 300.0,
-            flexibleSpace: new FlexibleSpaceBar(
-              background: previewImage,
-              title: IconButton(
-                  color: Colors.blueAccent,
-                  icon: Icon(Icons.add_a_photo),
-                  onPressed: () {
-                    getImage();
-                    setState(() {});
-                  }),
-            ),
-          ),
-          SliverPadding(
-            padding: EdgeInsets.all(20),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([_ReceiptFields()]),
-            ),
-          ),
-        ],
-      ),
+  Widget _buildRoundButton(IconData icon, String title) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        IconButton(
+            icon: Icon(Icons.add_a_photo),
+            onPressed: () {
+              getImage();
+              setState(() {});
+            }),
+        Text(title)
+      ],
     );
   }
 }
@@ -93,6 +110,7 @@ class _ReceiptFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 10,
       child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: Column(
@@ -100,25 +118,29 @@ class _ReceiptFields extends StatelessWidget {
             TextFormField(
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: "Amount. Eg. 100",
+                labelText: "amount",
+                prefix: Text("R")
               ),
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: "Supplier"),
+              decoration: InputDecoration(labelText: "supplier"),
             ),
             TextFormField(
               maxLines: null,
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
-                labelText: "Description",
+                labelText: "description",
               ),
             ),
             ButtonBar(
               children: <Widget>[
                 RaisedButton(
-                  child: Text("Submit"),
-                  onPressed: () {},
-                )
+                    elevation: 10,
+                    color: Colors.blueGrey,
+                    child: Text("submit", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.white),),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    onPressed: () {
+                    })
               ],
             )
           ],

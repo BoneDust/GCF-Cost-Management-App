@@ -1,6 +1,7 @@
 import 'package:cm_mobile/screen/home/grid_menu.dart';
 import 'package:cm_mobile/screen/home/activities_card.dart';
 import 'package:cm_mobile/util/image_utils.dart';
+import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _HomeState extends State<HomeScreen>
       appBar: AppBar(
         leading: IconButton(
             icon: Icon(
-              Icons.person,
+              Typicons.user_outline,
               size: 30,
               color: Colors.green,
             ),
