@@ -25,9 +25,12 @@ class _FormFields extends State<FormFields> {
         padding: EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(10.0), labelText: 'Name'),
+            new ListTile(
+              leading: Icon(Icons.add_a_photo),
+              title: TextFormField(
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(10.0), labelText: 'Name'),
+              ),
             ),
             TextFormField(
               decoration: InputDecoration(
