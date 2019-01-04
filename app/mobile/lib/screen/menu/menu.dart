@@ -44,17 +44,15 @@ class _MenuScreen extends StatelessWidget {
         color: Colors.white,
         child: Text(
           "sign out",
-          style: TextStyle(
+          style: TextStyle(y[u'j']
               color: Colors.red, fontWeight: FontWeight.w600, fontSize: 17),
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         onPressed: () {
+          Navigator.of(context).pop();
           AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
           User user = AppDataContainer.of(context).user;
           authBloc.logout(user);
-          Navigator.of(context).pop();
-          appDataContainerState.setAuthState(AuthenticationState(
-              isInitializing: false, isLoading: false, isAuthenticated: false));
         }));
     return menuScreenWidget;
   }

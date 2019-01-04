@@ -89,7 +89,7 @@ class _AuthScreen extends State<AuthScreen> {
                                 side: BorderSide(color: Colors.white)),
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
-
+                                Navigator.of(context).pop();
                                 authBloc.authenticateUser(UserLogin());
                               }else
                                 setState(() {
