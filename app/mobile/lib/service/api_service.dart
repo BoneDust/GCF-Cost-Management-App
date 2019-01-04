@@ -54,7 +54,7 @@ class ApiService {
     return result;
   }
 
-  Future<List<Project>> queryData(String value) async {
+  Future<List<Project>> queryProjects(String value) async {
     await Future.delayed(Duration(seconds: 2));
 
     var resultList = DummyData.projectList;
@@ -67,6 +67,18 @@ class ApiService {
   }
 
   Future<List<Activity>> queryActivities(String value) async {
+
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activites";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("access_token", () => AppData.authToken);
+
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+    });
+
     var resultList = DummyData.activities;
     var filteredList = resultList;
 
@@ -81,18 +93,20 @@ class ApiService {
   }
 
   Future<AuthenticationState> authenticateUser(UserLogin userLogin) async {
+
     String _url =
         "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/users/login";
 
     Map<String, String> headers = Map();
     headers.putIfAbsent("email", () => "MainAdmin@gcfprojects.co.za");
-    headers.putIfAbsent("password", () => "Maintester");
+    headers.putIfAbsent("password", () => "Maintestering");
     AuthenticationState authenticationState = AuthenticationState(
         isInitializing: false, isAuthenticated: true, isLoading: false);
 
     await client.post(Uri.parse(_url), headers: headers).then((response){
       var jsonResponse = json.decode(response.body);
       AppData.authToken = jsonResponse["access_token"];
+      print(jsonResponse);
     });
 
     return authenticationState;
@@ -104,11 +118,11 @@ class ApiService {
         "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/users/logout";
 
     Map<String, String> headers = Map();
-    headers.putIfAbsent("access_token", () => AppData.authToken);
+    headers.putIfAbsent("token", () => AppData.authToken);
 
     await client.post(Uri.parse(_url), headers: headers).then((response){
       var jsonResponse = json.decode(response.body);
-      AppData.authToken = jsonResponse["access_token"];
+      print(jsonResponse);
     });
 
     return AuthenticationState(

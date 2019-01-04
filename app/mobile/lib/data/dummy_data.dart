@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cm_mobile/enums/activity_type.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/project.dart';
@@ -122,7 +123,7 @@ class DummyData {
   ];
 
   static Activity getActivity() {
-    return Activity(
+    return Activity(getRandomActivity(),
         title: activityTitles[random.nextInt(activityTitles.length)],
         description:  descriptions[random.nextInt(descriptions.length)],
     );
@@ -135,5 +136,9 @@ class DummyData {
       totalCost: random.nextDouble(),
       purchaseDate: DateTime.now()
     );
+  }
+
+  static ActivityType getRandomActivity() {
+    return ActivityType.values[random.nextInt(ActivityType.values.length)];
   }
 }

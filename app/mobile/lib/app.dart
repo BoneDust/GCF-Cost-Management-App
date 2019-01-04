@@ -29,6 +29,17 @@ class App extends StatefulWidget {
 }
 
 class _App extends State<App> {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return ServicesContainer(
+      child: AppDataContainer(child: _Blocs()));
+  }
+}
+
+class _MaterialApp extends StatelessWidget{
+
   final routes = <String, WidgetBuilder>{
     '/auth': (BuildContext context) => AuthScreen(),
     '/activities': (BuildContext context) => ActivitiesScreen(),
@@ -46,56 +57,57 @@ class _App extends State<App> {
     '/statistics': (BuildContext context) => StatisticsScreen(),
   };
 
+  final Widget home;
+
+  _MaterialApp({Key key, this.home}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return ServicesContainer(
-      child: AppDataContainer(
-          child: MaterialApp(
-        title: Details.COMPANY_TITLE,
-        routes: routes,
-        theme: ThemeData(
-          primaryColorBrightness: Brightness.dark,
-          fontFamily: 'OpenSans',
+    return  MaterialApp(
+      title: Details.COMPANY_TITLE,
+      routes: routes,
+      theme: ThemeData(
+        primaryColorBrightness: Brightness.dark,
+        fontFamily: 'OpenSans',
 
 //          // Define the default Brightness and Colors
 //          brightness: Brightness.light,
 
-          primaryColorDark: AppColors.darkPrimaryColor,
-          primaryColorLight: AppColors.primaryColor,
-          primaryColor: AppColors.primaryColor,
-          accentColor: AppColors.accentColor,
-          primaryTextTheme: TextTheme(
-              title: TextStyle(color: AppColors.primaryText),
-              subhead: TextStyle(color: AppColors.primaryText),
-              body1: TextStyle(color: AppColors.primaryText)),
+        primaryColorDark: AppColors.darkPrimaryColor,
+        primaryColorLight: AppColors.primaryColor,
+        primaryColor: AppColors.primaryColor,
+        accentColor: AppColors.accentColor,
+        primaryTextTheme: TextTheme(
+            title: TextStyle(color: AppColors.primaryText),
+            subhead: TextStyle(color: AppColors.primaryText),
+            body1: TextStyle(color: AppColors.primaryText)),
 
-          iconTheme: IconThemeData(
-            color: AppColors.textIconsColor,
-          ),
-          buttonTheme: ButtonThemeData(
-            highlightColor: AppColors.accentColor,
-          ),
-
-
-          primaryIconTheme: IconThemeData(color: AppColors.textIconsColor),
-          textTheme: TextTheme(
-            headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-            body1: TextStyle(fontSize: 14.0),
-              ),
+        iconTheme: IconThemeData(
+          color: AppColors.textIconsColor,
         ),
-        home: _AppRoot(),
-      )),
+        buttonTheme: ButtonThemeData(
+          highlightColor: AppColors.accentColor,
+        ),
+
+        primaryIconTheme: IconThemeData(color: AppColors.textIconsColor),
+        textTheme: TextTheme(
+          headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          body1: TextStyle(fontSize: 14.0),
+        ),
+      ),
+      home: home,
     );
   }
+
 }
 
-class _AppRoot extends StatefulWidget {
+class _Blocs extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _DataBlocImplementationState();
 }
 
-class _DataBlocImplementationState extends State<_AppRoot> {
+class _DataBlocImplementationState extends State<_Blocs> {
   final UserBloc userBloc = UserBloc(ApiService());
   final ActivityBloc activityBloc = ActivityBloc(ApiService());
   final ReceiptBloc receiptBloc = ReceiptBloc(ApiService());
@@ -134,11 +146,11 @@ class _DataBlocImplementationState extends State<_AppRoot> {
                     child: BlocProvider(
                       bloc: receiptBloc,
                       child: dataContainerState.user != null
-                          ? _AppBottomNavigator()
+                          ? _MaterialApp(home: _AppBottomNavigator())
                           : Column(),
                     )),
               )
-            : AuthScreen());
+            : _MaterialApp(home: AuthScreen()));
   }
 }
 

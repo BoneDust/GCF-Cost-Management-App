@@ -19,6 +19,13 @@ class AuthenticationState {
     );
   }
 
+  factory AuthenticationState.loading() {
+    return AuthenticationState(
+      isInitializing: false,
+      isAuthenticated: false,
+      isLoading: true,
+    );
+  }
   factory AuthenticationState.authenticated() {
     return AuthenticationState(
       isInitializing: false,

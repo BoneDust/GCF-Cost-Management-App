@@ -1,3 +1,5 @@
+import 'package:cm_mobile/bloc/auth_bloc.dart';
+import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/screen/home/grid_menu.dart';
 import 'package:cm_mobile/screen/home/activities_card.dart';
 import 'package:cm_mobile/util/image_utils.dart';
@@ -43,6 +45,7 @@ class _HomeState extends State<HomeScreen>
 class _HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: CustomScrollView(
