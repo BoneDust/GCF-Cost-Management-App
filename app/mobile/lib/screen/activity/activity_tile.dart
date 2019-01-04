@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cm_mobile/enums/activity_type.dart';
 import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/screen/activity/activity.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,32 +13,29 @@ class ActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     var rng = new Random();
-
     return Container(
-      decoration:
-          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey),)),
+      decoration: BoxDecoration(
+          border: Border(
+        bottom: BorderSide(color: Colors.grey),
+      )),
       child: ListTile(
-
         onTap: () {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ActivityScreen(activity)));
         },
-
         leading: Container(
           width: 20,
           height: 20,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color.fromARGB(rng.nextInt(255), rng.nextInt(255),
-                rng.nextInt(255), rng.nextInt(255))
-          ),
+              shape: BoxShape.circle, color: getActivityColor(activity.type)),
         ),
         trailing: Text("2d"),
-        title: Text(activity.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-        subtitle: Text(activity.description, maxLines: 1, overflow: TextOverflow.ellipsis),
+        title:
+            Text(activity.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+        subtitle: Text(activity.description,
+            maxLines: 1, overflow: TextOverflow.ellipsis),
       ),
     );
   }

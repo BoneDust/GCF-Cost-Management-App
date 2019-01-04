@@ -19,7 +19,7 @@ class ProjectsBloc implements BlocBase {
 
   ProjectsBloc(this._apiService) {
     _queryResults =
-        _query.distinct().asyncMap(_apiService.queryData).asBroadcastStream();
+        _query.distinct().asyncMap(_apiService.queryProjects).asBroadcastStream();
   }
 
   @override
