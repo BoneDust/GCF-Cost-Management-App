@@ -128,4 +128,33 @@ class ApiService {
     return AuthenticationState(
         isInitializing: false, isAuthenticated: false, isLoading: false);
   }
-}
+
+  Future<Project> addProject(Project project) async{
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/project";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("token", () => AppData.authToken);
+
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+    });
+
+    return Project();
+  }
+
+  Future<Receipt> addReceipt(Receipt receipt) async{
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/project";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("token", () => AppData.authToken);
+
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+    });
+
+    return Receipt();
+  }}

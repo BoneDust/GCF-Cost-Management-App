@@ -37,8 +37,9 @@ class _FinancialOverviewCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  _buildBoxWithText("R5000", "has been spent", Colors.green),
-                  _buildBoxWithText("R100000", "estimated project cost", Colors.deepPurpleAccent)
+                  _buildBoxWithText("R5000", "has been spent", Colors.deepPurple),
+                  _buildBoxWithText("R100000", "estimated project cost",
+                      Colors.blueGrey)
                 ],
               ),
               Padding(
@@ -47,23 +48,17 @@ class _FinancialOverviewCard extends StatelessWidget {
               Container(
                 height: 30,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.red
-                    )
-                  ]
-                ),
-                child:    LinearProgressIndicator(
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: [BoxShadow(color: Colors.grey[400])]),
+                child: LinearProgressIndicator(
                   semanticsLabel: "sdfsd",
                   semanticsValue: "fsfsd",
-                  backgroundColor: Colors.blueGrey ,
+                  backgroundColor: Colors.blueGrey,
                   value: 0.9,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
                 ),
-
               ),
               Center(child: Text("project is within budget"))
-
             ],
           ),
         ));
@@ -76,16 +71,29 @@ class _FinancialOverviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
-          BoxShadow(color: Colors.blueGrey, spreadRadius: 2, offset: Offset(0.8, 0.5), blurRadius: 0.9),
-          BoxShadow(color: color)
+          BoxShadow(
+              color: Colors.grey[400],
+              spreadRadius: 1,
+              offset: Offset(0.8, 0.5),
+              blurRadius: 0.9),
+          BoxShadow(color: Colors.white)
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(title, textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20), ),
-          Text(subtitle, textAlign: TextAlign.center, style: TextStyle(color: Colors.white),)
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: color, fontWeight: FontWeight.w700, fontSize: 20),
+          ),
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: color, ),
+          )
         ],
       ),
     );

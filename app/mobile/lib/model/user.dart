@@ -19,12 +19,4 @@ class User {
       this.pictureUrl,
       this.contactNo,
       this.privilege});
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is User && runtimeType == other.runtimeType && id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
 }

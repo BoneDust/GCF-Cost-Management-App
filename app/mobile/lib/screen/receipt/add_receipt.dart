@@ -1,26 +1,30 @@
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:cm_mobile/bloc/bloc_provider.dart';
+import 'package:cm_mobile/bloc/receipt_bloc.dart';
+import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/screen/receipt/image_viewer.dart';
+import 'package:cm_mobile/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddReceiptScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _AddReceiptWidget(),
-    );
-  }
-}
+class AddReceiptScreen extends StatefulWidget {
+  Project project;
 
-class _AddReceiptWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _AddReceiptState();
   }
 }
 
-class _AddReceiptState extends State<_AddReceiptWidget> {
+class _AddReceiptState extends State<AddReceiptScreen> {
+
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController totalCostController = TextEditingController();
+  TextEditingController supplierController = TextEditingController();
+
   Widget previewImage = Container(
     decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -40,6 +44,30 @@ class _AddReceiptState extends State<_AddReceiptWidget> {
     ),
   );
   File _image;
+
+  bool _isLoading = false;
+
+  int projectId;
+
+  ReceiptBloc receiptBloc;
+
+  @override
+  void initState() {
+    receiptBloc = ReceiptBloc(ApiService());
+    receiptBloc.outAddedReceipt
+        .listen((receipt) => finishedAddingReceipt(receipt));
+
+    super.initState();
+  }
+
+  get getReceipt => Receipt(
+    description: descriptionController.text,
+    totalCost: 12,
+    supplier: supplierController.text,
+    projectId: projectId,
+    purchaseDate: DateTime.now(),
+
+  );
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -64,27 +92,34 @@ class _AddReceiptState extends State<_AddReceiptWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return CustomScrollView(
-      slivers: <Widget>[
-        new SliverAppBar(
-          elevation: 5,
-          forceElevated: true,
-          pinned: true,
-          expandedHeight: 200.0,
-          flexibleSpace: new FlexibleSpaceBar(
-            centerTitle: true,
-            background: previewImage,
-            title: _buildRoundButton(Icons.add_a_photo, "take receipt picture"),
+
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          CustomScrollView(
+            slivers: <Widget>[
+              new SliverAppBar(
+                elevation: 5,
+                forceElevated: true,
+                pinned: true,
+                expandedHeight: 200.0,
+                flexibleSpace: new FlexibleSpaceBar(
+                  centerTitle: true,
+                  background: previewImage,
+                  title: _buildRoundButton(Icons.add_a_photo, "take receipt picture"),
+                ),
+              ),
+              SliverPadding(
+                padding: EdgeInsets.all(20),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([_receiptFields()]),
+                ),
+              ),
+            ],
           ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.all(20),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([_ReceiptFields()]),
-          ),
-        ),
-      ],
+          _isLoading ? _loadingIndicator() : Column()
+        ],
+      ),
     );
   }
 
@@ -104,11 +139,26 @@ class _AddReceiptState extends State<_AddReceiptWidget> {
       ],
     );
   }
-}
 
-class _ReceiptFields extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _loadingIndicator() {
+    return Stack(
+      children: <Widget>[
+        Container(
+          child:  BackdropFilter(
+            filter:  ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+            child:  Container(
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+            ),
+          ),
+        ),
+        Center(
+          child: CircularProgressIndicator(backgroundColor: Colors.green,),
+        ),
+      ],
+    );
+  }
+
+  Widget _receiptFields() {
     return Card(
       elevation: 10,
       child: Padding(
@@ -118,8 +168,8 @@ class _ReceiptFields extends StatelessWidget {
             TextFormField(
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: "amount",
-                prefix: Text("R")
+                  labelText: "amount",
+                  prefix: Text("R")
               ),
             ),
             TextFormField(
@@ -140,6 +190,10 @@ class _ReceiptFields extends StatelessWidget {
                     child: Text("submit", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.white),),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                     onPressed: () {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      receiptBloc.addReceipt(Receipt());
                     })
               ],
             )
@@ -148,4 +202,13 @@ class _ReceiptFields extends StatelessWidget {
       ),
     );
   }
+
+  void finishedAddingReceipt(Receipt receipt) {
+    setState(() {
+      _isLoading = false;
+    });
+    if (receipt != null) Navigator.of(context).pop();
+  }
+
 }
+

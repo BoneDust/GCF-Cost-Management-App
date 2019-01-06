@@ -1,6 +1,7 @@
 import 'package:cm_mobile/bloc/activity_bloc.dart';
 import 'package:cm_mobile/bloc/auth_bloc.dart';
 import 'package:cm_mobile/bloc/bloc_provider.dart';
+import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/bloc/receipt_bloc.dart';
 import 'package:cm_mobile/bloc/user_bloc.dart';
 import 'package:cm_mobile/data/app_colors.dart';
@@ -67,7 +68,7 @@ class _MaterialApp extends StatelessWidget{
       title: Details.COMPANY_TITLE,
       routes: routes,
       theme: ThemeData(
-        primaryColorBrightness: Brightness.dark,
+        primaryColorBrightness: Brightness.light,
         fontFamily: 'OpenSans',
 
 //          // Define the default Brightness and Colors
@@ -112,10 +113,12 @@ class _DataBlocImplementationState extends State<_Blocs> {
   final ActivityBloc activityBloc = ActivityBloc(ApiService());
   final ReceiptBloc receiptBloc = ReceiptBloc(ApiService());
   final AuthBloc authBloc = AuthBloc(ApiService());
+  final ProjectsBloc projectsBloc = ProjectsBloc(ApiService());
 
   @override
   void initState() {
     super.initState();
+    projectsBloc.query.add("");
     userBloc.getUser(" ");
     activityBloc.query.add("");
     receiptBloc.query.add("");
@@ -161,7 +164,7 @@ class _AppBottomNavigator extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          body: TabBarView(children: tabEntry.children),
+          body: TabBarView(children: tabEntry.children,  physics: NeverScrollableScrollPhysics()),
           bottomNavigationBar: Material(
             type: MaterialType.card,
             elevation: 20.0,

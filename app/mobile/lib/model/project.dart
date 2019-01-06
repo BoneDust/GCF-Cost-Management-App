@@ -20,7 +20,7 @@ class Project {
   List<Activity> activities;
 
   List<Stage> stages;
-  int teamSize;
+  int   teamSize;
 
   Project(
       {this.id = 0,

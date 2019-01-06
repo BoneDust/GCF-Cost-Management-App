@@ -10,6 +10,10 @@ class ProjectsBloc implements BlocBase {
   Stream<List<Project>> _queryResults = Stream.empty();
 
   Stream<List<Project>> get results => _queryResults;
+  StreamController<Project> _addedProjectController = StreamController<Project>();
+
+  Stream<Project> get outAddedProject => _addedProjectController.stream;
+  Sink<Project> get inAddedProject => _addedProjectController.sink;
 
   final ApiService _apiService;
 
@@ -25,11 +29,20 @@ class ProjectsBloc implements BlocBase {
   @override
   void dispose() {
     _query.close();
+    _addedProjectController.close();
+
+  }
+
+  void addProject(Project project) {
+    _apiService.addProject(project).then((project) {
+      inAddedProject.add(project);
+    });
   }
 }
 
 class ProjectBloc implements BlocBase {
   Project _project;
+
   final String _id;
 
   final ApiService _apiService;
@@ -41,6 +54,8 @@ class ProjectBloc implements BlocBase {
   Stream<Project> get outProject => _projectController.stream;
 
   ProjectBloc(this._id, this._apiService);
+
+
 
   @override
   void dispose() {
@@ -55,4 +70,6 @@ class ProjectBloc implements BlocBase {
       _inProject.add(_project);
     });
   }
+
+
 }

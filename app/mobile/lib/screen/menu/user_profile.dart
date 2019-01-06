@@ -1,3 +1,4 @@
+import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/util/image_utils.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
@@ -42,8 +43,8 @@ class _Content extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 10),
             child:           Column(
               children: <Widget>[
-                Text(user.name + " " + user.surname),
-                Text(user.privilege.toString())
+                Text(user.name + " " + user.surname, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),),
+                Text(PrivilegeType[user.privilege])
               ],
             ),
           )

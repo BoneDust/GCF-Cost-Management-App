@@ -18,6 +18,8 @@ class DummyData {
 
   static var receipts =  List.generate(10, (index) => getReceipt());
 
+  static User get getForemanUser => foremanUsers[random.nextInt(foremanUsers.length)];
+
   static Project getProject() {
     return Project(
         id: 1,
@@ -79,7 +81,7 @@ class DummyData {
 
   static User adminUser =
       User(name: "Dale", surname: "McLead", privilege: Privilege.ADMIN);
-  static User foremanUser = foremanUsers[random.nextInt(foremanUsers.length)];
+  static User foremanUser = getForemanUser;
   static List<Project> projectList = List.generate(10, (index) => getProject());
 
   static List<String> projectNames = [
@@ -107,6 +109,8 @@ class DummyData {
     User(name: "Mushagi", surname: "Mayibo", privilege: Privilege.FOREMAN),
     User(name: "Lonwabo", surname: "Rarane", privilege: Privilege.FOREMAN),
     User(name: "Goodwill", surname: "Tshekele", privilege: Privilege.FOREMAN),
+    User(name: "Goodwill", surname: "Tshekele", privilege: Privilege.FOREMAN),
+
   ];
 
   static List<String> suppliers = [

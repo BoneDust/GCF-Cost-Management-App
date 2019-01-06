@@ -7,6 +7,8 @@ class AppColors {
  static final Color textIconsColor = Colors.blueGrey;
  static final Color accentColor = Colors.green;
  static final Color primaryText = Colors.blueGrey;
- static final Color secondaryText = Colors.grey;
+ static final Color secondaryText = Colors.blueGrey;
  static final Color divider = Colors.grey[300];
+ static final Color hintColor = Colors.red;
+
 }
