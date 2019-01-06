@@ -25,7 +25,7 @@ app.get('/activities', function (req, res) {
                     if (error)
                         res.status(error.statusCode || 503).json({ error: error.message })
                     else if (result.Items) {
-                        if (req.query.start_date && !isNaN(req.query.start_date) && req.query.end_date && !isNaN(req.query.start_date)) {
+                        if (req.query.start_date !== undefined && !isNaN(req.query.start_date) && req.query.end_date !== undefined && !isNaN(req.query.start_date)) {
                             var filtered = result.Items.filter((item) => { return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date)) })
                             res.status(200).json({ activities: filtered })
                         }
@@ -37,8 +37,16 @@ app.get('/activities', function (req, res) {
                 })
 
             }
-            else
-                res.status(401).json({ error: "User not authorised to make this request." })
+            else {
+                //userId must be passed in query if not admin
+                if (req.query.foreman_id && isNaN(req.query.foreman_id)) {
+                    //fix this
+                    res.status(401).json({ error: "User not authorised to make this request." })
+                }
+                else
+                    res.status(401).json({ error: "User not authorised to make this request." })
+            }
+
         })
         .catch(error => { res.status(error.statusCode || 503).json({ error: error.message }) })
 
@@ -96,7 +104,7 @@ app.get('/activities/activitiesByProject/:project_id', function (req, res) {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else if (result.Items) {
-                            if (req.query.start_date && !isNaN(req.query.start_date) && req.query.end_date && !isNaN(req.query.start_date)) {
+                            if (req.query.start_date !== undefined && !isNaN(req.query.start_date) && req.query.end_date !== undefined && !isNaN(req.query.start_date)) {
                                 var filtered = result.Items.filter((item) => { return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date)) })
                                 res.status(200).json({ activities: filtered })
                             }
@@ -123,7 +131,7 @@ app.post('/activities', function (req, res) {
     verification.isValidUser(req.headers.token).then(isValid => {
         if (isValid) {
             const activity = req.body
-            if (activity.project_id && activity.title && activity.performer && activity.type && activity.description) {
+            if (activity.project_id !== undefined && !isNaN(activity.project_id) && activity.title !== undefined && activity.performer !== undefined && activity.type !== undefined && activity.description !== undefined) {
 
                 const date_in_ms = Date.now() + 7200000
                 const params = {

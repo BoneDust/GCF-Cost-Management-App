@@ -13,12 +13,7 @@ var stageCount = 0
 app.use(bodyParser.json()) // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 
-//endpoint function that returns all stages
-
-
-///Done: get all by projectID
-///TODO: make sure it works correctly.
-
+//endpoint function that returns all stages by project id
 app.get('/stages/stagesByProject/:project_id', (req, res) => {
     verification.isValidUser(req.headers.token)
         .then(isValid => {
@@ -85,7 +80,12 @@ app.post('/stages', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const stage = req.body
-                if (stage.project_id && !isNaN(stage.project_id) && stage.stage_name && stage.description && stage.status && stage.before_pic_url && stage.start_date && stage.estimated_duration) {
+                if (stage.project_id !== undefined && !isNaN(stage.project_id) &&
+                    stage.stage_name !== undefined && stage.description !== undefined &&
+                    stage.status !== undefined && stage.before_pic_url !== undefined &&
+                    stage.start_date !== undefined && !isNaN(stage.start_date) &&
+                    stage.estimated_duration !== undefined) {
+
                     const params = {
                         TableName: STAGES_TABLE,
                         Item: {
@@ -96,7 +96,7 @@ app.post('/stages', (req, res) => {
                             description: stage.description,
                             status: stage.status,
                             before_pic_url: stage.before_pic_url,
-                            start_date: stage.start_date,
+                            start_date: parseInt(stage.start_date),
                             estimated_duration: stage.estimated_duration
                         }
                     }
@@ -131,11 +131,17 @@ app.put('/stages/:stageId', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const stage = req.body
-                if (!isNaN(req.params.stageId) && stage.project_id && !isNaN(stage.project_id) && stage.stage_name && stage.description && stage.status && stage.before_pic_url && stage.after_pic_url && stage.start_date && stage.end_date && stage.estimated_duration) {
+                if (!isNaN(req.params.stageId) && stage.project_id !== undefined && !isNaN(stage.project_id) &&
+                    stage.stage_name !== undefined && stage.description !== undefined && stage.status !== undefined &&
+                    stage.before_pic_url !== undefined && stage.after_pic_url !== undefined &&
+                    stage.start_date !== undefined && !isNaN(stage.start_date) &&
+                    stage.end_date !== undefined && !isNaN(stage.end_date) &&
+                    stage.estimated_duration !== undefined) {
+
                     const params = {
                         TableName: STAGES_TABLE,
                         Key: {
-                            stageId: parseInt(req.params.stageId),
+                            stageId: parseInt(req.params.stageId)
                         },
 
                         ExpressionAttributeValues: {
@@ -145,8 +151,8 @@ app.put('/stages/:stageId', (req, res) => {
                             ":status": stage.status,
                             ":before_pic_url": stage.before_pic_url,
                             ":after_pic_url": stage.after_pic_url,
-                            ":start_date": stage.start_date,
-                            ":end_date": stage.end_date,
+                            ":start_date": parseInt(stage.start_date),
+                            ":end_date": parseInt(stage.end_date),
                             ":estimated_duration": stage.estimated_duration
                         },
                         UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, status = :status, before_pic_url = :before_pic_url, after_pic_url = :after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration"
@@ -192,7 +198,7 @@ app.delete('/stages/:stageId', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message });
                         else {
-                            activityLogger.logActivity(parseInt(result.Attributes.project_id), activityLogger.activityType.UPDATE_STAGE, req.headers.token, parseInt(req.params.stageId))
+                            activityLogger.logActivity(parseInt(result.Attributes.project_id), activityLogger.activityType.DELETE_STAGE, req.headers.token, parseInt(req.params.stageId))
                                 .then(() => res.status(200).json({ message: "Stage successfully deleted" }))
                                 .catch(error => { res.status(200).json({ message: "Stage successfully deleted", activity_error: error.message }) })
                         }

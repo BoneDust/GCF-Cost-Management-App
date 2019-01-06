@@ -18,7 +18,7 @@ app.get('/receipts/stagesByProject/:project_id', (req, res) => {
     verification.isValidUser(req.headers.token)
         .then(isValid => {
             if (isValid) {
-                if (isNaN(req.params.project_id) === false) {
+                if (!isNaN(req.params.project_id)) {
                     const params = {
                         TableName: RECEIPTS_TABLE,
                         FilterExpression: "project_id = :project_id",
@@ -30,10 +30,8 @@ app.get('/receipts/stagesByProject/:project_id', (req, res) => {
                     dynamoDb.scan(params, (error, result) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
-                        else if (result.Items)
-                            res.status(200).json({ receipts: result.Items })
                         else
-                            res.status(200).json({ receipts: [] })
+                            res.status(200).json({ receipts: result.Items })
                     })
                 }
                 else
@@ -69,7 +67,7 @@ app.get('/receipts/:receiptId', (req, res) => {
                     })
                 }
                 else
-                    res.status(400).json({ error: "Receipt id provided provided is not a number" })
+                    res.status(400).json({ error: "Receipt id provided is not a number" })
             }
             else
                 res.status(401).json({ error: "User not authorised to make this request." })
@@ -83,7 +81,11 @@ app.post('/receipts', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const receipt = req.body
-                if (receipt.project_id && !isNaN(receipt.project_id) && receipt.supplier && receipt.description && receipt.total_cost && receipt.pic_url && receipt.purchase_date) {
+                if (receipt.project_id !== undefined && !isNaN(receipt.project_id) &&
+                    receipt.supplier !== undefined && receipt.description !== undefined &&
+                    receipt.total_cost !== undefined && receipt.pic_url !== undefined &&
+                    receipt.purchase_date !== undefined && !isNaN(receipt.purchase_date)) {
+
                     const params = {
                         TableName: RECEIPTS_TABLE,
                         Item: {
@@ -93,7 +95,7 @@ app.post('/receipts', (req, res) => {
                             description: receipt.description,
                             total_cost: receipt.total_cost,
                             pic_url: receipt.pic_url,
-                            purchase_date: receipt.purchase_date
+                            purchase_date: parseInt(receipt.purchase_date)
                         }
                     }
 
@@ -120,12 +122,15 @@ app.post('/receipts', (req, res) => {
 })
 
 //endpoint function that updates  a receipt by receiptId
-app.put('/receipt/:receiptId', (req, res) => {
+app.put('/receipts/:receiptId', (req, res) => {
     verification.isValidUser(req.headers.token)
         .then(isValid => {
             if (isValid) {
                 const receipt = req.body;
-                if (!isNaN(req.params.receiptId) && receipt.project_id && !isNaN(receipt.project_id) && receipt.supplier && receipt.description && receipt.total_cost && receipt.pic_url && receipt.purchase_date) {
+                if (!isNaN(req.params.receiptId) && receipt.project_id !== undefined && !isNaN(receipt.project_id) &&
+                    receipt.supplier !== undefined && receipt.description !== undefined &&
+                    receipt.total_cost !== undefined && receipt.pic_url !== undefined &&
+                    receipt.purchase_date !== undefined && !isNaN(receipt.purchase_date)) {
                     const params = {
                         TableName: RECEIPTS_TABLE,
                         Key: {
@@ -137,7 +142,7 @@ app.put('/receipt/:receiptId', (req, res) => {
                             ":description": receipt.description,
                             ":total_cost": receipt.total_cost,
                             ":pic_url": receipt.pic_url,
-                            ":purchase_date": receipt.purchase_date,
+                            ":purchase_date": parseInt(receipt.purchase_date)
                         },
                         UpdateExpression: "SET project_id = :project_id, supplier = :supplier, description = :description, total_cost = :total_cost, pic_url = :pic_url, purchase_date = :purchase_date"
                     }
@@ -195,14 +200,14 @@ app.delete('/receipts/:receiptId', (req, res) => {
                 error: "User not authorised to make this request."
             })
     }).catch(error => { res.status(400).json({ error: error.message }) })
-});
-///
+})
+
 
 // Handle in-valid route
 app.all('*', function (req, res) {
     const response = { data: null, message: 'Route not found!!' }
     res.status(400).send(response)
-});
+})
 
 // wrap express app instance with serverless http function
 module.exports.handler = serverless(app);

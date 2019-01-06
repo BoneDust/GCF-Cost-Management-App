@@ -68,28 +68,28 @@ module.exports = {
                 options.form.performer = performer
                 if (type === "Client") {
                     const clientName = await details.getClientName(itemId)
-                    options.form.description = type + " " + clientName + " was " + action + " by " + options.form.performer
+                    options.form.description = type + " '" + clientName + "' was " + action + " by " + options.form.performer + "."
 
                 }
 
                 else if (type === "User") {
                     const username = await details.getUsername(itemId)
-                    options.form.description = type + " " + username + " was " + action + " by " + options.form.performer
+                    options.form.description = type + " '" + username + "' was " + action + " by " + options.form.performer + "."
                 }
 
                 else if (type === "Project") {
                     const projectName = await details.getProjectName(itemId)
-                    options.form.description = type + " " + projectName + " was " + action + " by " + options.form.performer
+                    options.form.description = type + " '" + projectName + "' was " + action + " by " + options.form.performer + "."
                 }
                 else if (type === "Stage") {
                     const stageName = await details.getStageName(itemId)
                     const projectName = await details.getProjectName(project_id)
-                    options.form.description = description = type + " " + stageName + " was " + action + " by " + options.form.performer + " in project " + projectName
+                    options.form.description = description = type + " '" + stageName + "' was " + action + " by " + options.form.performer + " in project '" + projectName + "'."
 
                 }
                 else {
                     const projectName = await details.getProjectName(project_id)
-                    options.form.description = description = type + " " + itemId + " was " + action + " by " + options.form.performer + " in project " + projectName
+                    options.form.description = description = type + " " + itemId + " was " + action + " by " + options.form.performer + " in project '" + projectName + "'."
                 }
             }
             catch (error) {

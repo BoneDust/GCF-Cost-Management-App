@@ -48,7 +48,7 @@ module.exports = {
 
     getProjectName: async function (projectId) {
 
-        if (projectId !== undefined && isNaN(projectId)) {
+        if (projectId !== undefined && !isNaN(projectId)) {
             const params = {
                 TableName: PROJECT_TABLE,
                 Key: {
@@ -62,11 +62,11 @@ module.exports = {
                 return ("Unknown")
         }
         else
-            return ("Unknown")
+            return ("Unknown Invalid")
     },
 
     getClientName: async function (clientId) {
-        if (clientId !== undefined && isNaN(clientId)) {
+        if (clientId !== undefined && !isNaN(clientId)) {
             const params = {
                 TableName: CLIENT_TABLE,
                 Key: {
@@ -84,7 +84,7 @@ module.exports = {
     },
 
     getStageName: async function (stageId) {
-        if (stageId !== undefined && isNaN(stageId)) {
+        if (stageId !== undefined && !isNaN(stageId)) {
             const params = {
                 TableName: STAGE_TABLE,
                 Key: { stageId: parseInt(stageId) }

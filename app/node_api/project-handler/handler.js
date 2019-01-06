@@ -16,8 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bod
 //endpoint function that returns all projects by various filters
 
 app.get('/projects', (req, res) => {
-    verification.isValidUser(req.headers.token)
-        .then(isValid => { //the filterimg might meed to be fimed tumed for authority 
+    verification.isValidAdmin(req.headers.token)
+        .then(isValid => {
             if (isValid) {
                 var params = {
                     TableName: PROJECTS_TABLE
@@ -58,8 +58,32 @@ app.get('/projects', (req, res) => {
                         res.status(200).json({ projects: result.Items })
                 })
             }
-            else
-                res.status(401).json({ error: "User not authorised to make this request." })
+            else {
+
+                //if not admin, then must be filtered by  foreman id  eg  projects?foreman_id=1
+                if (req.query.foreman_id && !isNaN(req.query.foreman_id)) {
+                    var params = {
+                        TableName: PROJECTS_TABLE
+                    }
+                    params.FilterExpression = "user_id = :user_id"
+                    params.ExpressionAttributeValues = { ":user_id": parseInt(req.query.foreman_id) }
+
+                    //if filtered by  completion status  also
+                    if (req.query.status) {
+                        params.FilterExpression = params.FilterExpression + " AND status = :status"
+                        params.ExpressionAttributeValues[":status"] = req.query.status
+                    }
+
+                    dynamoDb.scan(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else
+                            res.status(200).json({ projects: result.Items })
+                    })
+                }
+                else
+                    res.status(401).json({ error: "User not authorised to make this request." })
+            }
         })
         .catch(error => { res.status(400).json({ error: error.message }) })
 })
@@ -72,7 +96,9 @@ app.get('/projects/:projectId', (req, res) => {
                 if (!isNaN(req.params.projectId)) {
                     const params = {
                         TableName: PROJECTS_TABLE,
-                        Key: { projectId: parseInt(req.params.projectId) }
+                        Key: {
+                            projectId: parseInt(req.params.projectId)
+                        }
                     }
 
                     dynamoDb.get(params, (error, result) => {
@@ -99,14 +125,16 @@ app.post('/projects', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const project = req.body
-                const floatRegex = /^\d+([.]?\d{1,2})?$/
-                if (project.client_id && !isNaN(project.client_id) &&
-                    project.user_id && !isNaN(project.user_id) &&
-                    project.name && project.estimated_cost && floatRegex.test(project.estimated_cost) &&
-                    project.status && project.expenditure && floatRegex.test(project.expenditure) &&
-                    project.team_size && !isNaN(project.team_size) &&
-                    project.start_date && !isNaN(project.start_date) &&
-                    project.end_date && !isNaN(project.end_date)) {
+                const floatRegex = /^\d+(\.\d{1,2})?$/
+                if (project.client_id !== undefined && !isNaN(project.client_id) &&
+                    project.user_id !== undefined && !isNaN(project.user_id) &&
+                    project.name !== undefined && project.estimated_cost !== undefined && floatRegex.test(project.estimated_cost) &&
+                    project.status !== undefined && project.expenditure !== undefined && floatRegex.test(project.expenditure) &&
+                    project.team_size !== undefined && !isNaN(project.team_size) &&
+                    project.start_date !== undefined && !isNaN(project.start_date) &&
+                    project.end_date !== undefined && !isNaN(project.end_date)) {
+
+
                     const params = {
                         TableName: PROJECTS_TABLE,
                         Item: {
@@ -152,15 +180,15 @@ app.put('/projects/:projectId', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const project = req.body
-                const floatRegex = /^\d+([.]?\d{1,2})?$/
+                const floatRegex = /^\d+(\.\d{1,2})?$/
                 if (!isNaN(req.params.projectId) &&
-                    project.client_id && !isNaN(project.client_id) &&
-                    project.user_id && !isNaN(project.user_id) &&
-                    project.name && project.estimated_cost && floatRegex.test(project.estimated_cost) &&
-                    project.status && project.expenditure && floatRegex.test(project.expenditure) &&
-                    project.team_size && !isNaN(project.team_size) &&
-                    project.start_date && !isNaN(project.start_date) &&
-                    project.end_date && !isNaN(project.end_date)) {
+                    project.client_id !== undefined && !isNaN(project.client_id) &&
+                    project.user_id !== undefined && !isNaN(project.user_id) &&
+                    project.name !== undefined && project.estimated_cost !== undefined && floatRegex.test(project.estimated_cost) &&
+                    project.status !== undefined && project.expenditure !== undefined && floatRegex.test(project.expenditure) &&
+                    project.team_size !== undefined && !isNaN(project.team_size) &&
+                    project.start_date !== undefined && !isNaN(project.start_date) &&
+                    project.end_date !== undefined && !isNaN(project.end_date)) {
 
                     const params = {
                         TableName: PROJECTS_TABLE,

@@ -52,6 +52,7 @@ provider:
     TRASH_TABLE: ${self:custom.trashTableName}
     ACTIVITY_URL: ${self:custom.activityUrl}
 
+
 functions:
   usersFunction:
     handler: user-handler/handler.handler
@@ -147,6 +148,61 @@ functions:
           method: delete
           cors: true
 
+  projectsFunction:
+    handler: project-handler/handler.handler
+    events:
+      - http:
+          path: projects
+          method: get
+          cors: true
+
+      - http:
+          path: projects/{projectId}
+          method: get
+          cors: true
+            
+      - http:
+          path: projects
+          method: post
+          cors: true
+      
+      - http:
+          path: projects/{projectId}
+          method: put
+          cors: true
+        
+      - http:
+          path: projects/{projectId}
+          method: delete
+          cors: true
+
+  clientsFunction:
+    handler: client-handler/handler.handler
+    events:
+      - http:
+          path: clients
+          method: get
+          cors: true
+
+      - http:
+          path: clients/{clientId}
+          method: get
+          cors: true
+            
+      - http:
+          path: clients
+          method: post
+          cors: true
+      
+      - http:
+          path: clients/{clientId}
+          method: put
+          cors: true
+        
+      - http:
+          path: clients/{clientId}
+          method: delete
+          cors: true
 
   activitiesFunction:
     handler: activity-handler/handler.handler
@@ -170,6 +226,7 @@ functions:
           path: activities
           method: post
           cors: true
+
 
 resources:
   Resources:

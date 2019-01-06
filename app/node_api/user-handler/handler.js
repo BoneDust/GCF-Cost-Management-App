@@ -25,7 +25,7 @@ app.get('/users', (req, res) => {
                     TableName: USERS_TABLE
                 }
                 //searching user by name or surname
-                if (req.query.search) {
+                if (req.query.search !== undefined) {
 
                     params.ExpressionAttributeNames = { "#name": "name" }
                     params.FilterExpression = "contains(#name, :phrase) or contains(surname, :phrase)",
@@ -87,7 +87,7 @@ app.post('/users', (req, res) => {
             if (isValid) {
 
                 const user = req.body
-                if (user.name && user.surname && user.password && user.image && user.email && user.privilege) {
+                if (user.name !== undefined && user.surname !== undefined && user.password !== undefined && user.image !== undefined && user.email !== undefined && user.privilege !== undefined) {
                     const params = {
                         TableName: USERS_TABLE,
                         Item: {
@@ -125,7 +125,7 @@ app.post('/users', (req, res) => {
 app.post('/users/login', (req, res) => {
 
     const loginDetails = req.headers
-    if (loginDetails.email && loginDetails.password) {
+    if (loginDetails.email !== undefined && loginDetails.password !== undefined) {
 
         const params = {
             TableName: USERS_TABLE,
@@ -148,6 +148,7 @@ app.post('/users/login', (req, res) => {
                     .then(() => {
 
                         const details = {
+                            id: result.Items[0].userId,
                             name: result.Items[0].name,
                             surname: result.Items[0].surname,
                             email: result.Items[0].email,
