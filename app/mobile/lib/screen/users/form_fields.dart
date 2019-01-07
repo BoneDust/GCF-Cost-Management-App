@@ -151,26 +151,6 @@ class _FormFields extends State<FormFields> {
         ),
         SizedBox(
           height: 10.0,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: 10.0,
-            ),
-            ButtonBar(
-              children: <Widget>[
-                RaisedButton(
-                  color: Colors.blue,
-                  onPressed: () {},
-                  child: Text(
-                    'Save',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            )
-          ],
         )
       ],
     );

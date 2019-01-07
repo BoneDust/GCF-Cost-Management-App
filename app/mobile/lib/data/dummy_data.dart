@@ -20,6 +20,8 @@ class DummyData {
 
   static User get getForemanUser => foremanUsers[random.nextInt(foremanUsers.length)];
 
+  static List<User> get getUsers => List.generate(19, (index) => getForemanUser) + List.generate(19, (index) => adminUser);
+
   static Project getProject() {
     return Project(
         id: 1,
@@ -105,11 +107,11 @@ class DummyData {
   static var projectClient = ["Standard Bank", "FNB"];
 
   static var foremanUsers = [
-    User(name: "Khumo", surname: "Letlape", privilege: Privilege.FOREMAN),
-    User(name: "Mushagi", surname: "Mayibo", privilege: Privilege.FOREMAN),
-    User(name: "Lonwabo", surname: "Rarane", privilege: Privilege.FOREMAN),
-    User(name: "Goodwill", surname: "Tshekele", privilege: Privilege.FOREMAN),
-    User(name: "Goodwill", surname: "Tshekele", privilege: Privilege.FOREMAN),
+    User(name: "Khumo", surname: "Letlape", privilege: Privilege.FOREMAN, contactNo: "", username: ""),
+    User(name: "Mushagi", surname: "Mayibo", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
+    User(name: "Lonwabo", surname: "Rarane", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
+    User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
+    User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
 
   ];
 

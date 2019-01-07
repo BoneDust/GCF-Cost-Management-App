@@ -1,6 +1,6 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
-import 'package:cm_mobile/screen/users/manage_user_screen.dart';
+import 'package:cm_mobile/screen/users/user_screen.dart';
 import 'package:flutter/material.dart';
 
 class UserTile extends StatelessWidget {
@@ -18,7 +18,7 @@ class UserTile extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ManagerUserScreen(user: user)));
+                      builder: (context) => UserScreen(user: user)));
             },
             title: Text(user.name + " " + user.surname),
             subtitle: Container(

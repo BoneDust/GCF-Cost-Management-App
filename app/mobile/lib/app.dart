@@ -13,7 +13,7 @@ import 'package:cm_mobile/screen/project/edit_project.dart';
 import 'package:cm_mobile/screen/receipt/all_receipts.dart';
 import 'package:cm_mobile/screen/stage/add_stage.dart';
 import 'package:cm_mobile/screen/users/create_user_screen.dart';
-import 'package:cm_mobile/screen/users/users.dart';
+import 'package:cm_mobile/screen/users/users_screen.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/services_provider.dart';
@@ -50,11 +50,10 @@ class _MaterialApp extends StatelessWidget{
     '/all_receipts': (BuildContext context) => AllReceiptsScreen(),
     '/edit_project': (BuildContext context) => EditProjectScreen(),
     '/home': (BuildContext context) => HomeScreen(),
-    '/users': (BuildContext context) => ManageUsersScreen(),
+    '/users': (BuildContext context) => UsersScreen(),
     '/create_users': (BuildContext context) => CreateUserScreen(),
     '/menu': (BuildContext context) => MenuScreen(),
     '/projects': (BuildContext context) => ProjectsScreen(),
-    '/profile': (BuildContext context) => ProfileScreen(),
     '/statistics': (BuildContext context) => StatisticsScreen(),
   };
 

@@ -33,7 +33,7 @@ class SliverGridMenu extends StatelessWidget {
     if (privilege == Privilege.FOREMAN)
       entries.addAll([
         GridItemEntry(
-            icon: Typicons.plus_outline,
+            icon: Typicons.doc_add,
             function: () {
               Navigator.pushNamed(context, '/add_receipt');
             },

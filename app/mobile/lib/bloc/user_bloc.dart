@@ -34,3 +34,37 @@ class UserBloc extends BlocBase {
     query.add(userName);
   }
 }
+
+class UsersBloc implements BlocBase {
+  Stream<List<User>> _queryResults = Stream.empty();
+
+  Stream<List<User>> get results => _queryResults;
+  StreamController<User> _addedProjectController = StreamController<User>();
+
+  Stream<User> get outAddedProject => _addedProjectController.stream;
+  Sink<User> get inAddedUser => _addedProjectController.sink;
+
+  final ApiService _apiService;
+
+  ReplaySubject<String> _query = ReplaySubject<String>();
+
+  Sink<String> get query => _query;
+
+  UsersBloc(this._apiService) {
+    _queryResults =
+        _query.distinct().asyncMap(_apiService.queryUsers).asBroadcastStream();
+  }
+
+  @override
+  void dispose() {
+    _query.close();
+    _addedProjectController.close();
+
+  }
+
+  void addUser(User user) {
+    _apiService.addUser(user).then((user) {
+      inAddedUser.add(user);
+    });
+  }
+}

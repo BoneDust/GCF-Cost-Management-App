@@ -157,4 +157,40 @@ class ApiService {
     });
 
     return Receipt();
-  }}
+  }
+
+  Future<User> addUser(User user) async{
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/project";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("token", () => AppData.authToken);
+
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+    });
+
+    return User();
+  }
+
+  Future<List<User>> queryUsers(String value) async {
+
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activites";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("access_token", () => AppData.authToken);
+
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+    });
+
+    var resultList = DummyData.getUsers;
+    var filteredList = resultList;
+
+    return filteredList;
+  }
+
+}
