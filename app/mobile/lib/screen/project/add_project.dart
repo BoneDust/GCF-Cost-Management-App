@@ -65,9 +65,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
             physics: BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             children: <Widget>[
-              Card(
-                elevation: 10,
-                child: Padding(
+              Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: Column(
                     children: <Widget>[
@@ -108,8 +106,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                       ),
                     ],
                   ),
-                ),
-              )
+                )
             ],
           ),
         ),

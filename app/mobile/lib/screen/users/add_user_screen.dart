@@ -6,14 +6,14 @@ import 'package:cm_mobile/screen/users/form_fields.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:flutter/material.dart';
 
-class CreateUserScreen extends StatefulWidget {
+class AddUserScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _CreateUserScreenState();
+    return _AddUserScreenState();
   }
 }
 
-class _CreateUserScreenState extends State<CreateUserScreen> {
+class _AddUserScreenState extends State<AddUserScreen> {
   bool _isLoading = false;
   UsersBloc userBlocs;
 

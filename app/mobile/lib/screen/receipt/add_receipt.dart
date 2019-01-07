@@ -159,9 +159,7 @@ class _AddReceiptState extends State<AddReceiptScreen> {
   }
 
   Widget _receiptFields() {
-    return Card(
-      elevation: 10,
-      child: Padding(
+    return Padding(
         padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: Column(
           children: <Widget>[
@@ -198,7 +196,6 @@ class _AddReceiptState extends State<AddReceiptScreen> {
               ],
             )
           ],
-        ),
       ),
     );
   }
