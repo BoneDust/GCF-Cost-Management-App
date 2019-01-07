@@ -62,7 +62,7 @@ module.exports = {
                 return ("Unknown")
         }
         else
-            return ("Unknown Invalid")
+            return ("Unknown")
     },
 
     getClientName: async function (clientId) {

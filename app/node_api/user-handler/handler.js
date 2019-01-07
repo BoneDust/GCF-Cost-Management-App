@@ -28,8 +28,8 @@ app.get('/users', (req, res) => {
                 if (req.query.search !== undefined) {
 
                     params.ExpressionAttributeNames = { "#name": "name" }
-                    params.FilterExpression = "contains(#name, :phrase) or contains(surname, :phrase)",
-                        params.ExpressionAttributeValues = { ":phrase": req.query.search }
+                    params.FilterExpression = "contains(#name, :phrase) or contains(surname, :phrase)"
+                    params.ExpressionAttributeValues = { ":phrase": req.query.search }
                 }
 
                 dynamoDb.scan(params, (error, result) => {
@@ -196,7 +196,7 @@ app.put('/users/:userId', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const user = req.body
-                if (!isNaN(req.params.userId) && user.name && user.surname && user.password && user.image && user.email && user.privilege) {
+                if (!isNaN(req.params.userId) && user.name !== undefined && user.surname !== undefined && user.password !== undefined && user.image !== undefined && user.email !== undefined && user.privilege !== undefined) {
                     const params = {
                         TableName: USERS_TABLE,
                         Key: {
