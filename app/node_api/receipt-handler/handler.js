@@ -14,7 +14,7 @@ app.use(bodyParser.json()) // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 
 //endpoint function that returns all receipts by projectID
-app.get('/receipts/stagesByProject/:project_id', (req, res) => {
+app.get('/receipts/receiptsByProject/:project_id', (req, res) => {
     verification.isValidUser(req.headers.token)
         .then(isValid => {
             if (isValid) {
