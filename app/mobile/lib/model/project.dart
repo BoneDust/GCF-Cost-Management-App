@@ -4,7 +4,11 @@ import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'project.g.dart';
+
+@JsonSerializable()
 class Project {
   int id;
   String description;
@@ -45,5 +49,7 @@ class Project {
   @override
   int get hashCode => id.hashCode;
 
-  Project.fromJson(Map json) : id = json['id'];
+  factory Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProjectToJson(this);
 }

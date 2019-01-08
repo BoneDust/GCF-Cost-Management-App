@@ -131,12 +131,14 @@ class ApiService {
 
   Future<Project> addProject(Project project) async{
     String _url =
-        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/project";
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/projects";
 
     Map<String, String> headers = Map();
     headers.putIfAbsent("token", () => AppData.authToken);
-
-    await client.post(Uri.parse(_url), headers: headers).then((response){
+    String body = json.encode(project);
+    var encoded = json.encode(project);
+    print(encoded);
+    await client.post(Uri.parse(_url), headers: headers, body: body).then((response){
       var jsonResponse = json.decode(response.body);
       print(jsonResponse);
     });

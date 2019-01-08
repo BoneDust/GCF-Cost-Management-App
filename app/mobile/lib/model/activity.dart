@@ -1,5 +1,8 @@
 import 'package:cm_mobile/enums/activity_type.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'activity.g.dart';
 
+@JsonSerializable()
 class Activity {
   int id;
   int projectId;
@@ -15,4 +18,7 @@ class Activity {
     this.projectId = 0,
     this.description = "",
   });
+  factory Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ActivityToJson(this);
 }
