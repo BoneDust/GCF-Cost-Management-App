@@ -10,46 +10,54 @@ class UserTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UserScreen(user: user)));
-            },
-            title: Text(user.name + " " + user.surname),
-            subtitle: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(PrivilegeType[user.privilege]),
-                  // SizedBox(
-                  //   height: 20.0,
-                  // ),
-                  // Divider(
-                  //   color: Colors.grey[300],
-                  // ),
-                ],
+    return Dismissible(
+      key: Key(user.name),
+      background: Container(color: Colors.red),
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ManagerUserScreen(user: user)));
+              },
+              title: Text(user.name + " " + user.surname),
+              subtitle: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(PrivilegeType[user.privilege]),
+                    // SizedBox(
+                    //   height: 20.0,
+                    // ),
+                    // Divider(
+                    //   color: Colors.grey[300],
+                    // ),
+                  ],
+                ),
+              ),
+              leading: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: AssetImage("assets/images.jpeg"),
+                        fit: BoxFit.cover)),
               ),
             ),
-            leading: Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: AssetImage("assets/images.jpeg"),
-                      fit: BoxFit.cover)),
+            Padding(
+              padding: EdgeInsets.only(top: 16.0),
             ),
-          ),
-          Divider(
-            indent: 82,
-            color: Colors.grey[300],
-          ),
-        ],
+            Divider(
+              height: 1.0,
+              indent: 82,
+              color: Colors.grey[300],
+            ),
+          ],
+        ),
       ),
     );
   }
