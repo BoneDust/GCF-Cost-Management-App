@@ -179,7 +179,8 @@ app.delete('/receipts/:receiptId', (req, res) => {
                     TableName: RECEIPTS_TABLE,
                     Key: {
                         receiptId: parseInt(req.params.receiptId)
-                    }
+                    },
+                    ReturnValues: 'ALL_OLD'
                 }
 
                 dynamoDb.delete(params, (error, result) => {

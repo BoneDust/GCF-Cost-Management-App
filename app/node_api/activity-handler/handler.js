@@ -38,59 +38,59 @@ app.get('/activities', function (req, res) {
             }
             else {
                 //userId must be passed in query if not admin
-                if (req.query.foreman_id !== undefined && isNaN(req.query.foreman_id)) {
-
-                    const params = {
-                        TableName: PROJECTS_TABLE,
-                        ExpressionAttributeNames: { "#status": "status" },
-                        ExpressionAttributeValues: {
-                            ":user_id": parseInt(req.query.foreman_id),
-                            ":status": "in-prgress"///////watchout
-                        },
-                        FilterExpression = "user_id = :user_id AND #status = :status"
-                    }
-
-                    dynamoDb.scan(params, (error, result) => {
-                        if (error)
-                            res.status(error.statusCode || 503).json({ error: error.message })
-                        else {
-
-                            const projects = result.Items
-                            const activityParams = {
-                                TableName: ACTIVITIES_TABLE
-                            }
-
-                            dynamoDb.scan(activityParams, (error, result) => {
-                                if (error)
-                                    res.status(error.statusCode || 503).json({ error: error.message })
-                                else {
-
-                                    var projectFiltered = result.Items.filter((item) => {
-                                        var isFound = false
-                                        for (var project in projects) {
-                                            if (projects[project].projectId === item.project_id) {
-                                                isFound = true
-                                                break
-                                            }
-                                        }
-                                        return (isFound)
-                                    })
-
-                                    if (req.query.start_date !== undefined && !isNaN(req.query.start_date) && req.query.end_date !== undefined && !isNaN(req.query.start_date)) {
-                                        var dateFiltered = projectFiltered.filter((item) => {
-                                            return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date))
-                                        })
-                                        res.status(200).json({ activities: dateFiltered })
-                                    }
-                                    else
-                                        res.status(200).json({ activities: projectFiltered })
-                                }
-                            })
-                        }
-                    })
-                }
-                else
-                    res.status(401).json({ error: "User not authorised to make this request." })
+                /* if (req.query.foreman_id !== undefined && !isNaN(req.query.foreman_id)) {
+ 
+                     const params = {
+                         TableName: PROJECTS_TABLE,
+                         ExpressionAttributeNames: { "#status": "status" },
+                         ExpressionAttributeValues: {
+                             ":user_id": parseInt(req.query.foreman_id),
+                             ":status": "in-prgress"///////watchout
+                         },
+                         FilterExpression = "user_id = :user_id AND #status = :status"
+                     }
+ 
+                     dynamoDb.scan(params, (error, result) => {
+                         if (error)
+                             res.status(error.statusCode || 503).json({ error: error.message })
+                         else {
+ 
+                             const projects = result.Items
+                             const activityParams = {
+                                 TableName: ACTIVITIES_TABLE
+                             }
+ 
+                             dynamoDb.scan(activityParams, (error, result) => {
+                                 if (error)
+                                     res.status(error.statusCode || 503).json({ error: error.message })
+                                 else {
+ 
+                                     var projectFiltered = result.Items.filter((item) => {
+                                         var isFound = false
+                                         for (var project in projects) {
+                                             if (projects[project].projectId === item.project_id) {
+                                                 isFound = true
+                                                 break
+                                             }
+                                         }
+                                         return (isFound)
+                                     })
+ 
+                                     if (req.query.start_date !== undefined && !isNaN(req.query.start_date) && req.query.end_date !== undefined && !isNaN(req.query.start_date)) {
+                                         var dateFiltered = projectFiltered.filter((item) => {
+                                             return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date))
+                                         })
+                                         res.status(200).json({ activities: dateFiltered })
+                                     }
+                                     else
+                                         res.status(200).json({ activities: projectFiltered })
+                                 }
+                             })
+                         }
+                     })
+                 }
+                 else*/
+                res.status(401).json({ error: "User not authorised to make this request." })
             }
 
         })

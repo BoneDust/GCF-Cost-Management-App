@@ -48,7 +48,7 @@ app.get('/stages/:stageId', (req, res) => {
     verification.isValidUser(req.headers.token)
         .then(isValid => {
             if (isValid) {
-                if (isNaN(req.params.stageId) === false) {
+                if (!isNaN(req.params.stageId)) {
                     const params = {
                         TableName: STAGES_TABLE,
                         Key: {
@@ -63,7 +63,7 @@ app.get('/stages/:stageId', (req, res) => {
                             res.status(200).json({ stage: result.Item });
                         else
                             res.status(404).response({ error: "Stage with id " + req.params.stageId + " not found" })
-                    });
+                    })
                 }
                 else
                     res.status(400).json({ error: "Stage id provided is not a number" })
@@ -143,7 +143,7 @@ app.put('/stages/:stageId', (req, res) => {
                         Key: {
                             stageId: parseInt(req.params.stageId)
                         },
-
+                        ExpressionAttributeNames: { "#status": "status" },
                         ExpressionAttributeValues: {
                             ":project_id": parseInt(stage.project_id),
                             ":stage_name": stage.stage_name,
@@ -155,7 +155,7 @@ app.put('/stages/:stageId', (req, res) => {
                             ":end_date": parseInt(stage.end_date),
                             ":estimated_duration": stage.estimated_duration
                         },
-                        UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, status = :status, before_pic_url = :before_pic_url, after_pic_url = :after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration"
+                        UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, #status = :status, before_pic_url = :before_pic_url, after_pic_url = :after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration"
                     }
 
                     dynamoDb.update(params, (error, result) => {
@@ -191,7 +191,8 @@ app.delete('/stages/:stageId', (req, res) => {
                         TableName: STAGES_TABLE,
                         Key: {
                             stageId: stageId
-                        }
+                        },
+                        ReturnValues: 'ALL_OLD'
                     }
 
                     dynamoDb.delete(params, (error, result) => {
