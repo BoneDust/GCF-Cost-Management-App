@@ -66,47 +66,47 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             children: <Widget>[
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          labelText: "name",
-                        ),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        labelText: "name",
                       ),
-                      _dropDownFormField(),
-                      TextFormField(
-                        keyboardType: TextInputType.multiline,
-                        decoration: InputDecoration(labelText: "description"),
+                    ),
+                    _dropDownFormField(),
+                    TextFormField(
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(labelText: "description"),
+                    ),
+                    TextFormField(
+                      maxLines: null,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "estimated cost",
                       ),
-                      TextFormField(
-                        maxLines: null,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: "estimated cost",
-                        ),
+                    ),
+                    TextFormField(
+                      maxLines: null,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "team size",
                       ),
-                      TextFormField(
-                        maxLines: null,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: "team size",
-                        ),
-                      ),
-                      DateTimePickerFormField(
-                        format: dateFormat,
-                        decoration: InputDecoration(labelText: 'Date'),
-                        onChanged: (dt) => setState(() => startDate = dt),
-                      ),
-                      DateTimePickerFormField(
-                        format: dateFormat,
-                        decoration: InputDecoration(labelText: 'Date'),
-                        onChanged: (dt) => setState(() => endDate = dt),
-                      ),
-                    ],
-                  ),
-                )
+                    ),
+                    DateTimePickerFormField(
+                      format: dateFormat,
+                      decoration: InputDecoration(labelText: 'Date'),
+                      onChanged: (dt) => setState(() => startDate = dt),
+                    ),
+                    DateTimePickerFormField(
+                      format: dateFormat,
+                      decoration: InputDecoration(labelText: 'Date'),
+                      onChanged: (dt) => setState(() => endDate = dt),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -193,12 +193,15 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   }
 
   Project project() => Project(
-        name: nameController.text,
-        description: descriptionController.text,
-        teamSize: 23,
-        startDate: startDate,
-        endDate: endDate,
-        foreman: _foremanUser,
-        estimatedCost: 34,
-      );
+      name: nameController.text,
+      description: descriptionController.text,
+      teamSize: 6,
+      startDate: startDate,
+      endDate: endDate,
+      foreman: _foremanUser,
+      status: "Incomplete",
+      estimatedCost: 34.50,
+      expenditure: 0,
+      clientId: 2,
+      userId: 1);
 }

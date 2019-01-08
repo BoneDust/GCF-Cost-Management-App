@@ -2,7 +2,6 @@ import 'dart:core';
 
 import 'package:cm_mobile/model/project.dart';
 import 'package:json_annotation/json_annotation.dart';
-part 'client.g.dart';
 
 @JsonSerializable()
 class Client {
@@ -22,7 +21,12 @@ class Client {
 
   @override
   int get hashCode => id.hashCode;
-  factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
+  Client.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        id = json['id'];
 
-  Map<String, dynamic> toJson() => _$ClientToJson(this);
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'id': id,
+  };
 }

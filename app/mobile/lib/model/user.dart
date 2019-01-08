@@ -1,6 +1,5 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:json_annotation/json_annotation.dart';
-part 'user.g.dart';
 
 @JsonSerializable()
 class User {
@@ -22,7 +21,14 @@ class User {
       this.pictureUrl,
       this.contactNo,
       this.privilege});
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  User.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        surname = json['surname'];
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'surname': surname,
+  };
+
 }

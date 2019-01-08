@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-part 'stage.g.dart';
 
 @JsonSerializable()
 class Stage {
@@ -32,7 +31,14 @@ class Stage {
 
   @override
   int get hashCode => id.hashCode;
-  factory Stage.fromJson(Map<String, dynamic> json) => _$StageFromJson(json);
 
-  Map<String, dynamic> toJson() => _$StageToJson(this);
+  Stage.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        description = json['email'];
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'description': description,
+  };
+
 }

@@ -21,7 +21,7 @@ class UserTile extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ManagerUserScreen(user: user)));
+                        builder: (context) => UserScreen(user: user)));
               },
               title: Text(user.name + " " + user.surname),
               subtitle: Container(

@@ -167,7 +167,6 @@ class ApiService {
 
     Map<String, String> headers = Map();
     headers.putIfAbsent("token", () => AppData.authToken);
-
     await client.post(Uri.parse(_url), headers: headers).then((response){
       var jsonResponse = json.decode(response.body);
       print(jsonResponse);

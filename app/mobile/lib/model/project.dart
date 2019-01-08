@@ -6,8 +6,6 @@ import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'project.g.dart';
-
 @JsonSerializable()
 class Project {
   int id;
@@ -26,6 +24,8 @@ class Project {
   List<Stage> stages;
   int   teamSize;
 
+  var userId;
+
   Project(
       {this.id = 0,
       this.description = "",
@@ -39,7 +39,8 @@ class Project {
       this.endDate,
       this.receipts,
       this.stages,
-      this.teamSize});
+      this.teamSize,
+        this.userId});
 
   @override
   bool operator ==(Object other) =>
@@ -49,7 +50,31 @@ class Project {
   @override
   int get hashCode => id.hashCode;
 
-  factory Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
+  Project.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        description = json['description'],
+        clientId = json['client_id'],
+        name = json['name'],
+        status = json['status'],
+        expenditure = json['expenditure'],
+        foreman = json['foreman'],
+        startDate = json['start_date'],
+        endDate = json['end_date'],
+        receipts = json['receipts'],
+        stages = json['stages'],
+        userId = json['user_id']
 
-  Map<String, dynamic> toJson() => _$ProjectToJson(this);
+  ;
+
+  Map<String, dynamic> toJson() => {
+    'description': "DSfsdfdsfsdf",
+    'client_id': 2,
+    'name': "Whatever",
+    'status': "Incomplete",
+    'expenditure': 0.0,
+    'start_date': 1546710781000,
+    'end_date': 1546710781000 ,
+    'user_id' : 1,
+    'estimated_cost' : 1
+  };
 }
