@@ -22,19 +22,13 @@ class _DetailsCardRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        elevation: 5,
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 10.0, left: 10.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("details")]),
-            ),
-            _DetailsCard(project),
-          ],
-        ));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(padding: EdgeInsets.only(left: 10), child: Text("details", style: TextStyle(color: Colors.blueGrey, fontSize: 30),),),
+        _DetailsCard(project)
+      ],
+    );
   }
 }
 

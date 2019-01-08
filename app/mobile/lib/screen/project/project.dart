@@ -3,7 +3,7 @@ import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
-import 'package:cm_mobile/screen/project/financial_overview.dart';
+import 'package:cm_mobile/screen/project/overview.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
@@ -86,12 +86,9 @@ class _ProjectWidgetState extends State<ProjectWidget> {
                       alignment: Alignment.center,
                       children: <Widget>[
                         Container(
+                          color: Colors.grey,
                           height: double.infinity,
                           width: double.infinity,
-                          child:   Image(
-                            image: AssetImage("assets/images.jpeg"),
-                            fit: BoxFit.cover,
-                          ),
                         ),
                         Container(
                           decoration: BoxDecoration(

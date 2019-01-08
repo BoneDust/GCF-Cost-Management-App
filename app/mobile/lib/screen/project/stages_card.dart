@@ -25,46 +25,25 @@ class _StagesWidgetRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-        child: Column(
+    return  Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ForeManStagesScreen(
-                            stages: stages,
-                          )));
-                },
-                child: Container(
-                  padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                         Text("stages"),
-                         Row(
-                          children: <Widget>[
-                            Text(stages.length.toString()),
-                            Icon(
-                              Icons.chevron_right,
-                              color: Colors.grey,
-                              size: 25.0,
-                            ),
-                          ],
-                        )
-                      ]),
-                )),
-            _StagesCard(stages),
-            RaisedButton(
-                elevation: 10,
-                color: Colors.blueGrey,
-                child: Text("add stage", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 17),),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                onPressed: () => Navigator.of(context).pushNamed("/add_stage"))
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(padding: EdgeInsets.only(left: 10), child: Text("stages", style: TextStyle(color: Colors.blueGrey, fontSize: 30),),),
+                FlatButton(
+                    child: Text("+ ADD STAGE", style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w400)),
+                    onPressed: () => Navigator.of(context).pushNamed("/add_stage"))
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                _StagesCard(stages),
+              ],
+            )
           ],
-        ));
-    ;
+        );
   }
 }
 

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/data/dummy_data.dart';
+import 'package:cm_mobile/model/client.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/service/api_service.dart';
@@ -29,6 +30,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController estimatedCostController = TextEditingController();
   TextEditingController teamSizeController = TextEditingController();
+  User _foremanUser;
 
   bool _isLoading = false;
 
@@ -76,6 +78,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                       ),
                     ),
                     _dropDownFormField(),
+                    _dropDownClient(),
                     TextFormField(
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(labelText: "description"),
@@ -115,7 +118,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     );
   }
 
-  User _foremanUser;
   Widget _dropDownFormField() {
     return FormField<User>(
       validator: (value) {
@@ -158,6 +160,55 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
               state.hasError ? state.errorText : '',
               style:
                   TextStyle(color: Colors.redAccent.shade700, fontSize: 12.0),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _dropDownClient() {
+    return FormField<User>(
+      validator: (value) {
+        if (value == null) {
+          return "Select client";
+        }
+      },
+      onSaved: (value) {},
+      builder: (
+          FormFieldState<User> state,
+          ) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new InputDecorator(
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(0.0),
+                labelText: 'client',
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<User>(
+                  isExpanded: true,
+                  hint: new Text("select client"),
+                  value: _foremanUser,
+                  onChanged: (User newValue) {
+                    state.didChange(newValue);
+                    setState(() {
+                      _foremanUser = newValue;
+                    });
+                  },
+                  items: _foremans.map((User value) {
+                    return new DropdownMenuItem<User>(
+                        child: new Text(value.name), value: value);
+                  }).toList(),
+                ),
+              ),
+            ),
+            SizedBox(height: 5.0),
+            Text(
+              state.hasError ? state.errorText : '',
+              style:
+              TextStyle(color: Colors.redAccent.shade700, fontSize: 12.0),
             ),
           ],
         );

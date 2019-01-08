@@ -72,6 +72,7 @@ class ApiService {
         "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activites";
 
     Map<String, String> headers = Map();
+    headers.putIfAbsent("Content-Type", () => "application/json");
     headers.putIfAbsent("access_token", () => AppData.authToken);
 
     await client.post(Uri.parse(_url), headers: headers).then((response){
@@ -135,9 +136,10 @@ class ApiService {
 
     Map<String, String> headers = Map();
     headers.putIfAbsent("token", () => AppData.authToken);
+    headers.putIfAbsent("Content-Type", () => "application/json");
+
     String body = json.encode(project);
-    var encoded = json.encode(project);
-    print(encoded);
+    print(body);
     await client.post(Uri.parse(_url), headers: headers, body: body).then((response){
       var jsonResponse = json.decode(response.body);
       print(jsonResponse);

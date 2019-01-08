@@ -75,6 +75,7 @@ class Project {
     'start_date': 1546710781000,
     'end_date': 1546710781000 ,
     'user_id' : 1,
+    'team_size': 3,
     'estimated_cost' : 1
   };
 }

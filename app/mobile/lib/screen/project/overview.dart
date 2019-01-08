@@ -19,27 +19,32 @@ class _FinancialOverviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        elevation: 5,
-        child: Padding(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text(
+            "overview",
+            style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+          ),
+        ),
+        Padding(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 5),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("finance overview"),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-              ),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  _buildBoxWithText("R5000", "has been spent", Colors.deepPurple),
-                  _buildBoxWithText("R100000", "estimated project cost",
-                      Colors.blueGrey)
+                  _buildBoxWithText(
+                      "R5000", "has been spent", Colors.green),
+                  _buildBoxWithText(
+                      "R100000", "estimated project cost", Colors.blueGrey)
                 ],
               ),
               Padding(
@@ -55,13 +60,15 @@ class _FinancialOverviewCard extends StatelessWidget {
                   semanticsValue: "fsfsd",
                   backgroundColor: Colors.blueGrey,
                   value: 0.9,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                 ),
               ),
               Center(child: Text("project is within budget"))
             ],
           ),
-        ));
+        )
+      ],
+    );
   }
 
   Widget _buildBoxWithText(String title, String subtitle, Color color) {
@@ -92,7 +99,9 @@ class _FinancialOverviewCard extends StatelessWidget {
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: TextStyle(color: color, ),
+            style: TextStyle(
+              color: color,
+            ),
           )
         ],
       ),
