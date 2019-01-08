@@ -30,17 +30,13 @@ class App extends StatefulWidget {
 }
 
 class _App extends State<App> {
-
-
   @override
   Widget build(BuildContext context) {
-    return ServicesContainer(
-      child: AppDataContainer(child: _Blocs()));
+    return ServicesContainer(child: AppDataContainer(child: _Blocs()));
   }
 }
 
-class _MaterialApp extends StatelessWidget{
-
+class _MaterialApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
     '/auth': (BuildContext context) => AuthScreen(),
     '/activities': (BuildContext context) => ActivitiesScreen(),
@@ -54,7 +50,7 @@ class _MaterialApp extends StatelessWidget{
     '/create_users': (BuildContext context) => AddUserScreen(),
     '/menu': (BuildContext context) => MenuScreen(),
     '/projects': (BuildContext context) => ProjectsScreen(),
-    '/statistics': (BuildContext context) => StatisticsScreen(),
+    '/statistics': (BuildContext context) => Stats(),
   };
 
   final Widget home;
@@ -63,7 +59,7 @@ class _MaterialApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       title: Details.COMPANY_TITLE,
       routes: routes,
       theme: ThemeData(
@@ -99,7 +95,6 @@ class _MaterialApp extends StatelessWidget{
       home: home,
     );
   }
-
 }
 
 class _Blocs extends StatefulWidget {
@@ -163,7 +158,9 @@ class _AppBottomNavigator extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          body: TabBarView(children: tabEntry.children,  physics: NeverScrollableScrollPhysics()),
+          body: TabBarView(
+              children: tabEntry.children,
+              physics: NeverScrollableScrollPhysics()),
           bottomNavigationBar: Material(
             type: MaterialType.card,
             elevation: 20.0,
@@ -184,7 +181,7 @@ class _AppBottomNavigator extends StatelessWidget {
     User user = userContainerState.user;
 
     if (user.privilege == Privilege.ADMIN) {
-      tabEntry.children.add(StatisticsScreen());
+      tabEntry.children.add(Stats());
       tabEntry.tabs.add(Tab(
         icon: Icon(Typicons.chart_bar_outline),
         text: "stats",

@@ -41,7 +41,6 @@ class _StatisticsScreenState extends State<StatisticsScreen>
 // class _StatisticsScreenBody extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
-//     // TODO: implement build
 //     return Center(
 //       child: CircularProgressIndicator(),
 //     );
