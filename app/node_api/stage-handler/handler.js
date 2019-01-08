@@ -6,7 +6,7 @@ const verification = require('./../verification')
 const activityLogger = require('./../activity_logger')
 const app = express()
 
-const STAGES_TABLE = process.env.STAGES_TABLEs
+const STAGES_TABLE = process.env.STAGES_TABLE
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 var stageCount = 0
 

@@ -42,12 +42,12 @@ app.get('/activities', function (req, res) {
 
                     const params = {
                         TableName: PROJECTS_TABLE,
-                        ProjectionExpression: "projectId",
+                        ExpressionAttributeNames: { "#status": "status" },
                         ExpressionAttributeValues: {
                             ":user_id": parseInt(req.query.foreman_id),
                             ":status": "in-prgress"///////watchout
                         },
-                        FilterExpression = "user_id = :user_id AND status = :status"
+                        FilterExpression = "user_id = :user_id AND #status = :status"
                     }
 
                     dynamoDb.scan(params, (error, result) => {
@@ -157,8 +157,7 @@ app.get('/activities/activitiesByProject/:project_id', function (req, res) {
                             else
                                 res.status(200).json({ activities: result.Items })
                         }
-                        else
-                            res.status(200).json({ activities: [] })
+
                     })
                 }
                 else

@@ -25,13 +25,13 @@ app.get('/projects', (req, res) => {
                 var userFiltered = false
                 var clientFiltered = false
                 //if filtered by  foreman id  eg  projects?foreman_id=1
-                if (req.query.foreman_id && !isNaN(req.query.foreman_id)) {
+                if (req.query.foreman_id !== undefined && !isNaN(req.query.foreman_id)) {
                     params.FilterExpression = "user_id = :user_id"
                     params.ExpressionAttributeValues = { ":user_id": parseInt(req.query.foreman_id) }
                     userFiltered = true
                 }
                 //if filtered by  client id also eg  projects?foreman_id=1&client_id=3 or projects?client_id=3 
-                if (req.query.client_id && !isNaN(req.query.client_id)) {
+                if (req.query.client_id !== undefined && !isNaN(req.query.client_id)) {
                     params.FilterExpression = userFiltered ? params.FilterExpression + " AND client_id = :client_id" : "client_id = :client_id"
                     if (userFiltered)
                         params.ExpressionAttributeValues[":client_id"] = parseInt(req.query.client_id)
@@ -40,13 +40,14 @@ app.get('/projects', (req, res) => {
                     clientFiltered = true
                 }
                 //if filtered by  completion status  also
-                if (req.query.status) {
+                if (req.query.status !== undefined && req.query.status !== null) {
+                    params.ExpressionAttributeNames = { "#status": "status" }
                     if (clientFiltered || userFiltered) {
-                        params.FilterExpression = params.FilterExpression + " AND status = :status"
+                        params.FilterExpression = params.FilterExpression + " AND #status = :status"
                         params.ExpressionAttributeValues[":status"] = req.query.status
                     }
                     else {
-                        params.FilterExpression = "status = :status"
+                        params.FilterExpression = "#status = :status"
                         params.ExpressionAttributeValues = { ":status": req.query.status }
                     }
                 }
@@ -61,7 +62,7 @@ app.get('/projects', (req, res) => {
             else {
 
                 //if not admin, then must be filtered by  foreman id  eg  projects?foreman_id=1
-                if (req.query.foreman_id && !isNaN(req.query.foreman_id)) {
+                if (req.query.foreman_id !== undefined && !isNaN(req.query.foreman_id)) {
                     var params = {
                         TableName: PROJECTS_TABLE
                     }
@@ -69,8 +70,9 @@ app.get('/projects', (req, res) => {
                     params.ExpressionAttributeValues = { ":user_id": parseInt(req.query.foreman_id) }
 
                     //if filtered by  completion status  also
-                    if (req.query.status) {
-                        params.FilterExpression = params.FilterExpression + " AND status = :status"
+                    if (req.query.status !== undefined && req.query.status !== null) {
+                        params.ExpressionAttributeNames = { "#status": "status" }
+                        params.FilterExpression = params.FilterExpression + " AND #status = :status"
                         params.ExpressionAttributeValues[":status"] = req.query.status
                     }
 
@@ -193,7 +195,7 @@ app.put('/projects/:projectId', (req, res) => {
                     const params = {
                         TableName: PROJECTS_TABLE,
                         Key: { projectId: parseInt(req.params.projectId) },
-                        ExpressionAttributeNames: { "#name": "name" },
+                        ExpressionAttributeNames: { "#name": "name", "#status": "status" },
                         ExpressionAttributeValues: {
                             ":client_id": parseInt(project.client_id),
                             ":user_id": parseInt(project.user_id),
@@ -205,7 +207,7 @@ app.put('/projects/:projectId', (req, res) => {
                             ":start_date": parseInt(project.start_date),
                             ":end_date": parseInt(project.end_date)
                         },
-                        UpdateExpression: "SET #name = :name, client_id = :client_id, user_id = :user_id, status = :status, estimated_cost = :estimated_cost, expenditure = :expenditure, team_size = :team_size, start_date = :start_date, end_date = :end_date"
+                        UpdateExpression: "SET #name = :name, client_id = :client_id, user_id = :user_id, #status = :status, estimated_cost = :estimated_cost, expenditure = :expenditure, team_size = :team_size, start_date = :start_date, end_date = :end_date"
                     }
 
                     dynamoDb.update(params, (error, result) => {
