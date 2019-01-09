@@ -106,10 +106,10 @@ app.get('/projects/:projectId', (req, res) => {
                     dynamoDb.get(params, (error, result) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
-                        else if (result.Item)
+                        else if (result.Item !== undefined)
                             res.status(200).json({ project: result.Item })
                         else
-                            res.status(404).response({ error: "Project with id " + req.params.projectId + " not found" })
+                            res.status(404).json({ error: "Project with id " + req.params.projectId + " not found" })
                     })
                 }
                 else
@@ -120,6 +120,7 @@ app.get('/projects/:projectId', (req, res) => {
         })
         .catch(error => { res.status(400).json({ error: error.message }) })
 })
+
 
 //endpoint function that create a new Project
 app.post('/projects', (req, res) => {
@@ -248,7 +249,9 @@ app.delete('/projects/:projectId', (req, res) => {
                             res.status(error.statusCode || 503).json({ error: error.message });
                         else {
                             activityLogger.logActivity(projectId, activityLogger.activityType.DELETE_PROJECT, req.headers.token, projectId)
-                                .then(() => res.status(200).json({ message: "Project successfully deleted" }))
+                                .then(() => {
+                                    res.status(200).json({ message: "Project successfully deleted" })
+                                })
                                 .catch(error => { res.status(200).json({ message: "Project successfully deleted", activity_error: error.message }) })
                         }
                     })
