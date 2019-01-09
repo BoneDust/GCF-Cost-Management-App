@@ -3,6 +3,7 @@ import 'package:cm_mobile/data/app_data.dart';
 import 'package:cm_mobile/data/dummy_data.dart';
 import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/auth_state.dart';
+import 'package:cm_mobile/model/client.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/model/user_login.dart';
@@ -196,4 +197,49 @@ class ApiService {
     return filteredList;
   }
 
+  Future<Client> addClient(Client user) async{
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/project";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("token", () => AppData.authToken);
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+    });
+
+    return Client();
+  }
+
+
+  Future<List<Client>> queryClients(String value) async {
+
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activites";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("access_token", () => AppData.authToken);
+
+    await client.post(Uri.parse(_url), headers: headers).then((response){
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+    });
+
+    var resultList = DummyData.getClients;
+    var filteredList = resultList;
+
+    return filteredList;
+  }
+
+  Future<Client> getClient(String id) async {
+    await Future.delayed(Duration(seconds: 2));
+
+//     await _client.get(Uri.parse(_url))
+//         .then((response) => response.body)
+//         .then(json.decode)
+//         .then((json) => json["results"])
+//         .then((list) => list.forEach((item) => resultList.add(Project.fromJson(item))));
+
+    return Client();
+  }
 }

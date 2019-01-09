@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 class UserTile extends StatelessWidget {
   final User user;
 
-  const UserTile({@required this.user});
+  final Function function;
+
+  const UserTile({@required this.user, this.function});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class UserTile extends StatelessWidget {
           children: <Widget>[
             ListTile(
               onTap: () {
-                Navigator.push(
+               function != null ? function(context, user) :  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => UserScreen(user: user)));

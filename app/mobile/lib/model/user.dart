@@ -26,6 +26,8 @@ class User {
       : name = json['name'],
         surname = json['surname'];
 
+  String get fullName => name + " " + surname;
+
   Map<String, dynamic> toJson() => {
     'name': name,
     'surname': surname,

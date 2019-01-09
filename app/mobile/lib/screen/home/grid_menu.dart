@@ -1,4 +1,5 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/screen/users/users_screen.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -56,9 +57,8 @@ class SliverGridMenu extends StatelessWidget {
       entries.addAll([
         GridItemEntry(
             icon: Typicons.users_outline,
-            function: () {
-              Navigator.pushNamed(context, '/users');
-            },
+            function: () =>   Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => UsersScreen(title: "select user",))),
             title: "users"),
         GridItemEntry(
             icon: Typicons.chart_bar_outline,

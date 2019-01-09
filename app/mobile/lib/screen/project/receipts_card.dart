@@ -48,7 +48,11 @@ class _ReceiptsWidgetRoot extends StatelessWidget {
             )
           ],
         ),
-       Center(child: FlatButton(onPressed:(){} , child:  Row(
+       Center(child: FlatButton(onPressed:(){
+         Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+             ReceiptsList(receipts: receipts, appBarTitle: "Receipts",)
+         ));
+       } , child:  Row(
          crossAxisAlignment: CrossAxisAlignment.center,
          mainAxisAlignment: MainAxisAlignment.center,
          children: <Widget>[

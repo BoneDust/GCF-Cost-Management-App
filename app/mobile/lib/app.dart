@@ -8,6 +8,7 @@ import 'package:cm_mobile/data/app_colors.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/activity/activities.dart';
+import 'package:cm_mobile/screen/client/add_client_screen.dart';
 import 'package:cm_mobile/screen/project/add_project.dart';
 import 'package:cm_mobile/screen/project/edit_project.dart';
 import 'package:cm_mobile/screen/receipt/all_receipts.dart';
@@ -46,8 +47,8 @@ class _MaterialApp extends StatelessWidget {
     '/all_receipts': (BuildContext context) => AllReceiptsScreen(),
     '/edit_project': (BuildContext context) => EditProjectScreen(),
     '/home': (BuildContext context) => HomeScreen(),
-    '/users': (BuildContext context) => UsersScreen(),
     '/create_users': (BuildContext context) => AddUserScreen(),
+    '/create_client': (BuildContext context) => AddClientScreen(),
     '/menu': (BuildContext context) => MenuScreen(),
     '/projects': (BuildContext context) => ProjectsScreen(),
     '/statistics': (BuildContext context) => Stats(),
@@ -84,7 +85,6 @@ class _MaterialApp extends StatelessWidget {
         buttonTheme: ButtonThemeData(
           highlightColor: AppColors.accentColor,
         ),
-
         primaryIconTheme: IconThemeData(color: AppColors.textIconsColor),
         textTheme: TextTheme(
           headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),

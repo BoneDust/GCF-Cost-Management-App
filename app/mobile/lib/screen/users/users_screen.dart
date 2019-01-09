@@ -6,6 +6,18 @@ import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:flutter/material.dart';
 
 class UsersScreen extends StatefulWidget {
+  final String title;
+  final Function userTileFunction;
+  final bool showOnlyForeMan;
+  final bool showTabs;
+
+  const UsersScreen(
+      {Key key,
+      @required this.title,
+      this.userTileFunction,
+      this.showOnlyForeMan = false, this.showTabs = true})
+      : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return UsersScreenState();
@@ -29,20 +41,7 @@ class UsersScreenState extends State<UsersScreen> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('users'),
-          bottom: TabBar(tabs: [
-            Tab(
-              child: Text("all"),
-            ),
-            Tab(
-              child: Text("admins"),
-            ),
-            Tab(
-              child: Text("foremans"),
-            )
-          ]),
-        ),
+        appBar: _buildAppBar(),
         body: StreamBuilder<List<User>>(
           key: PageStorageKey("users"),
           stream: userBlocs.results,
@@ -70,12 +69,33 @@ class UsersScreenState extends State<UsersScreen> {
   Widget _buildBody(List<User> data) {
     return ListView.builder(
       itemBuilder: (context, index) {
-        return UserTile(user: data[index]);
+        return UserTile(
+          user: data[index],
+          function: widget.userTileFunction,
+        );
       },
       itemCount: data.length,
     );
   }
+
+  Widget _buildAppBar() {
+    return  AppBar(
+      title: Text(widget.title),
+      bottom: widget.showTabs ? TabBar(tabs: [
+        Tab(
+          child: Text("all"),
+        ),
+        Tab(
+          child: Text("admins"),
+        ),
+        Tab(
+          child: Text("foremans"),
+        )
+      ]): null);
+  }
+
 }
+
 
 class _LoadingWidget extends StatelessWidget {
   @override

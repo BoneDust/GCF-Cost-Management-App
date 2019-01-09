@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cm_mobile/enums/activity_type.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/activity.dart';
+import 'package:cm_mobile/model/client.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
@@ -18,9 +19,13 @@ class DummyData {
 
   static var receipts =  List.generate(10, (index) => getReceipt());
 
+
   static User get getForemanUser => foremanUsers[random.nextInt(foremanUsers.length)];
+  static Client get getClient => clients[random.nextInt(clients.length)];
 
   static List<User> get getUsers => List.generate(19, (index) => getForemanUser) + List.generate(19, (index) => adminUser);
+
+  static List<Client> get getClients =>  List.generate(19, (index) => getClient) ;
 
   static Project getProject() {
     return Project(
@@ -113,6 +118,13 @@ class DummyData {
     User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
     User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
 
+  ];
+  static var clients = [
+    Client(name: "FNB"),
+    Client(name: "We Think Code"),
+    Client(name: "Lonwabo"),
+    Client(name: "Themba High School"),
+    Client(name: "Standard bank"),
   ];
 
   static List<String> suppliers = [
