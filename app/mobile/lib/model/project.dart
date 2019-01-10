@@ -67,15 +67,15 @@ class Project {
   ;
 
   Map<String, dynamic> toJson() => {
-    'description': "DSfsdfdsfsdf",
-    'client_id': 2,
-    'name': "Whatever",
-    'status': "Incomplete",
-    'expenditure': 0.0,
-    'start_date': 1546710781000,
-    'end_date': 1546710781000 ,
-    'user_id' : 1,
-    'team_size': 3,
-    'estimated_cost' : 1
+    'description': description,
+    'client_id': clientId,
+    'name': name,
+    'status': status,
+    'expenditure': expenditure,
+    'start_date': startDate.millisecondsSinceEpoch,
+    'end_date': endDate.millisecondsSinceEpoch,
+    'user_id' : userId,
+    'team_size': teamSize,
+    'estimated_cost' : estimatedCost
   };
 }

@@ -1,8 +1,10 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/model/api_response.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/screen/project/add_edit_project.dart';
 import 'package:cm_mobile/screen/projects/project_container.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
@@ -18,6 +20,7 @@ class ProjectsScreen extends StatefulWidget {
 
 class _ProjectsScreenState extends State<ProjectsScreen>
     with AutomaticKeepAliveClientMixin<ProjectsScreen> {
+
   ProjectsBloc projectsBloc;
   Icon actionIcon = Icon(
     Typicons.search_outline,
@@ -143,32 +146,10 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 
   Widget buildScaffold(){
-    ThemeData themeData = Theme.of(context);
 
     return Scaffold(
-        floatingActionButton: privilege == Privilege.ADMIN
-            ? Container(
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.blueGrey,
-                    blurRadius: 5.0,
-                    offset: Offset(0.4, 0.0))
-              ]),
-          child: Theme(
-              data: themeData.copyWith(accentColor: Colors.white),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/add_project");
-                },
-                child: Icon(
-                  Typicons.plus_outline,
-                  color: Colors.green,
-                ),
-              )),
-        )
-            : null,
+        floatingActionButton: _buildFloatingButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         resizeToAvoidBottomPadding: false,
         appBar: buildAppBar(),
         body: StreamBuilder<List<Project>>(
@@ -181,6 +162,44 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                 : _LoadingWidget();
           },
         ));
+  }
+
+  Widget _buildFloatingButton() {
+    ThemeData themeData = Theme.of(context);
+    return privilege == Privilege.ADMIN
+          ? Container(
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.blueGrey,
+                  blurRadius: 5.0,
+                  offset: Offset(0.4, 0.0))
+            ]),
+        child: Theme(
+            data: themeData.copyWith(accentColor: Colors.white),
+            child: FloatingActionButton(
+              onPressed: () {
+                _navigateAndDisplaySelection();
+              },
+              child: Icon(
+                Typicons.plus_outline,
+                color: Colors.green,
+              ),
+            )),
+      )
+          : null;
+  }
+
+  _navigateAndDisplaySelection() async {
+    final result =  await         Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddEditProjectScreen()));
+
+    if (result is ApiResponse) {
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(result.success), backgroundColor: Colors.green));
+    }
   }
 
   Widget _buildBody(List<Project> projects) {

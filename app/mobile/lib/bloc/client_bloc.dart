@@ -1,38 +1,28 @@
 import 'dart:async';
 
 import 'package:cm_mobile/model/client.dart';
-import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'base_bloc.dart';
 
 class ClientBloc extends BlocBase {
-  Stream<Client> _results = Stream.empty();
-
-
-  Stream<Client> get results => _results;
+  StreamController<Client> _getClientController = StreamController<Client>();
+  Stream<Client> get outClient => _getClientController.stream;
+  Sink<Client> get inClient => _getClientController.sink;
 
   final ApiService _apiService;
 
-  ReplaySubject<String> _query = ReplaySubject<String>();
-
-  Sink<String> get query => _query;
-
-  ClientBloc(this._apiService) {
-    _results = _query
-        .distinct()
-        .asyncMap(_apiService.getClient)
-        .asBroadcastStream();
-  }
-
+  ClientBloc(this._apiService);
   @override
   void dispose() {
-    _query.close();
+    _getClientController.close();
   }
 
-  void getUser(String userName) {
-    query.add(userName);
+  void getClient(int id) {
+    _apiService.getClient(id).then((user) {
+      inClient.add(user);
+    });
   }
 }
 
@@ -52,20 +42,22 @@ class ClientsBloc implements BlocBase {
   Sink<String> get query => _query;
 
   ClientsBloc(this._apiService) {
-    _queryResults =
-        _query.distinct().asyncMap(_apiService.queryClients).asBroadcastStream();
+    _queryResults = _query
+        .distinct()
+        .asyncMap(_apiService.queryClients)
+        .asBroadcastStream();
   }
 
   @override
   void dispose() {
     _query.close();
     _addedClientController.close();
-
   }
 
   void addClient(Client client) {
-    _apiService..addClient(client).then((user) {
-      inAddedClient.add(client);
-    });
+    _apiService
+      ..addClient(client).then((user) {
+        inAddedClient.add(client);
+      });
   }
 }

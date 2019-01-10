@@ -1,6 +1,9 @@
 import 'dart:ui';
 
+import 'package:cm_mobile/bloc/client_bloc.dart';
 import 'package:cm_mobile/bloc/project_bloc.dart';
+import 'package:cm_mobile/bloc/user_bloc.dart';
+import 'package:cm_mobile/model/api_response.dart';
 import 'package:cm_mobile/model/client.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
@@ -12,21 +15,29 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class AddProjectScreen extends StatefulWidget {
+class AddEditProjectScreen extends StatefulWidget {
+  final bool isEditing;
+  final Project project;
+
+  const AddEditProjectScreen({Key key, this.isEditing = false, this.project})
+      : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _AddProjectScreenState();
+    return _AddEditProjectScreenState();
   }
 }
 
-class _AddProjectScreenState extends State<AddProjectScreen> {
+class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
   final timeFormat = DateFormat("h:mm a");
   DateTime startDate;
   DateTime endDate;
 
   ProjectsBloc projectsBloc;
+  UserBloc userBloc;
+  ClientBloc clientBloc;
+
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController estimatedCostController = TextEditingController();
@@ -39,13 +50,33 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   Client _selectedClient;
 
   double _sizeValue = 1.0;
-  String _sizeValueString = "";
+
+  String _status;
 
   @override
   void initState() {
-    projectsBloc = ProjectsBloc(ApiService());
-    projectsBloc.outAddedProject
-        .listen((project) => finishedAddingProject(project));
+    if (widget.isEditing) {
+      userBloc = UserBloc(ApiService());
+      clientBloc = ClientBloc(ApiService());
+
+      userBloc.outUser.listen((user) {
+        setState(() {
+          _selectedForeman = user;
+        });
+      });
+      clientBloc.outClient.listen((client) {
+        setState(() {
+          _selectedClient = client;
+        });
+      });
+
+      fillFormsWithProjectData();
+    } else {
+      projectsBloc = ProjectsBloc(ApiService());
+      projectsBloc.outAddedProject
+          .listen((project) => finishedAddingProject(project));
+    }
+
     super.initState();
   }
 
@@ -56,29 +87,14 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text("create a project"),
+            title: Text(widget.isEditing ? "edit project" : "create a project"),
             actions: <Widget>[
               FlatButton(
                   child: Text(
-                    "CREATE",
+                    widget.isEditing ? "SAVE" : "CREATE",
                   ),
                   shape: CircleBorder(),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: new Text("could not create project"),
-                            actions: <Widget>[
-                              FlatButton(onPressed: (){}, child: Text("try again")),
-                              FlatButton(onPressed: (){}, child: Text("dismiss"))                            ],
-                          );
-                        });
-//                    setState(() {
-//                      _isLoading = true;
-//                    });
-//                    projectsBloc.addProject(project());
-                  })
+                  onPressed: widget.isEditing ? _createProject : updateProject)
             ],
           ),
           body: ListView(
@@ -92,6 +108,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                     Theme(
                       data: themeData.copyWith(primaryColor: Colors.blueGrey),
                       child: TextFormField(
+                        controller: nameController,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                           labelText: "name",
@@ -101,6 +118,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                     Theme(
                       data: themeData.copyWith(primaryColor: Colors.blueGrey),
                       child: TextFormField(
+                        controller: descriptionController,
                         keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(labelText: "description"),
                       ),
@@ -108,6 +126,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                     Theme(
                       data: themeData.copyWith(primaryColor: Colors.blueGrey),
                       child: TextFormField(
+                        controller: estimatedCostController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           WhitelistingTextInputFormatter.digitsOnly,
@@ -312,11 +331,14 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     );
   }
 
-  void finishedAddingProject(Project project) {
+  void finishedAddingProject(ApiResponse apiResponse) {
     setState(() {
       _isLoading = false;
     });
-    if (project != null) Navigator.of(context).pop();
+    if (apiResponse.isSuccess)
+      Navigator.of(context).pop(apiResponse);
+    else
+      onAddProjectError(apiResponse.error);
   }
 
   Widget _loadingIndicator() {
@@ -339,18 +361,18 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     );
   }
 
-  Project project() => Project(
+  Project createProject() => Project(
       name: nameController.text,
       description: descriptionController.text,
-      teamSize: 6,
+      teamSize: _sizeValue.toInt(),
       startDate: startDate,
       endDate: endDate,
       foreman: _selectedForeman,
       status: "Incomplete",
-      estimatedCost: 34.50,
-      expenditure: 0,
-      clientId: 2,
-      userId: 1);
+      estimatedCost: double.parse(estimatedCostController.text),
+      expenditure: 0.0,
+      clientId: _selectedClient.id,
+      userId: _selectedForeman.id);
 
   void _showUsersSelectMenu() {
     Navigator.of(context).push(MaterialPageRoute(
@@ -387,6 +409,75 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     setState(() {
       _selectedClient = client;
     });
+  }
+
+  onAddProjectError(error) {
+    setState(() {
+      _isLoading = false;
+    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("$error"),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _createProject();
+                  },
+                  child: Text("try again")),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: Text("dismiss"))
+            ],
+          );
+        });
+  }
+
+  void _createProject() {
+    setState(() {
+      _isLoading = true;
+    });
+    projectsBloc.addProject(createProject());
+  }
+
+  void fillFormsWithProjectData() {
+    nameController.text = widget.project.name;
+    descriptionController.text = widget.project.description;
+    _sizeValue = widget.project.teamSize.toDouble();
+    startDate = widget.project.startDate;
+    endDate = widget.project.endDate;
+    _status = widget.project.status;
+    estimatedCostController.text = widget.project.estimatedCost.toString();
+    userBloc.getUser(widget.project.userId);
+    clientBloc.getClient(widget.project.clientId);
+  }
+
+  User getForeman(int id) {
+    return null;
+  }
+
+  Client getClient(int clientId) {
+    return null;
+  }
+
+  void updateProject() {
+    setState(() {
+      _isLoading = true;
+    });
+    projectsBloc.updateProject(getUpdatedProject());
+  }
+
+  Project getUpdatedProject() {
+    Project project = createProject();
+    project.id = widget.project.id;
+    project.expenditure = widget.project.expenditure;
+    project.status = widget.project.status;
+    return project;
   }
 }
 

@@ -9,12 +9,9 @@ import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/activity/activities.dart';
 import 'package:cm_mobile/screen/client/add_client_screen.dart';
-import 'package:cm_mobile/screen/project/add_project.dart';
-import 'package:cm_mobile/screen/project/edit_project.dart';
 import 'package:cm_mobile/screen/receipt/all_receipts.dart';
 import 'package:cm_mobile/screen/stage/add_stage.dart';
 import 'package:cm_mobile/screen/users/add_user_screen.dart';
-import 'package:cm_mobile/screen/users/users_screen.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/services_provider.dart';
@@ -42,10 +39,8 @@ class _MaterialApp extends StatelessWidget {
     '/auth': (BuildContext context) => AuthScreen(),
     '/activities': (BuildContext context) => ActivitiesScreen(),
     '/add_stage': (BuildContext context) => AddStageScreen(),
-    '/add_project': (BuildContext context) => AddProjectScreen(),
     '/add_receipt': (BuildContext context) => AddReceiptScreen(),
     '/all_receipts': (BuildContext context) => AllReceiptsScreen(),
-    '/edit_project': (BuildContext context) => EditProjectScreen(),
     '/home': (BuildContext context) => HomeScreen(),
     '/create_users': (BuildContext context) => AddUserScreen(),
     '/create_client': (BuildContext context) => AddClientScreen(),
@@ -113,7 +108,7 @@ class _DataBlocImplementationState extends State<_Blocs> {
   void initState() {
     super.initState();
     projectsBloc.query.add("");
-    userBloc.getUser(" ");
+    userBloc.getUser(1);
     activityBloc.query.add("");
     receiptBloc.query.add("");
   }
@@ -151,13 +146,19 @@ class _DataBlocImplementationState extends State<_Blocs> {
   }
 }
 
+final GlobalKey<ScaffoldState> _scaffoldKey =
+GlobalKey<ScaffoldState>();
+
 class _AppBottomNavigator extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     _TabEntry tabEntry = getTabEntry(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        key: _scaffoldKey,
           body: TabBarView(
               children: tabEntry.children,
               physics: NeverScrollableScrollPhysics()),

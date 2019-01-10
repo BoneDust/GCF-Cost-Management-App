@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:cm_mobile/bloc/base_bloc.dart';
+import 'package:cm_mobile/model/api_response.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:rxdart/rxdart.dart';
@@ -10,10 +11,14 @@ class ProjectsBloc implements BlocBase {
   Stream<List<Project>> _queryResults = Stream.empty();
 
   Stream<List<Project>> get results => _queryResults;
-  StreamController<Project> _addedProjectController = StreamController<Project>();
 
-  Stream<Project> get outAddedProject => _addedProjectController.stream;
-  Sink<Project> get inAddedProject => _addedProjectController.sink;
+  StreamController<ApiResponse> _addedProjectController = StreamController<ApiResponse>();
+  Stream<ApiResponse> get outAddedProject => _addedProjectController.stream;
+  Sink<ApiResponse> get inAddedProject => _addedProjectController.sink;
+
+  StreamController<ApiResponse> _updatedProjectController = StreamController<ApiResponse>();
+  Stream<ApiResponse> get outUpdatedProject => _updatedProjectController.stream;
+  Sink<ApiResponse> get inUpdatedProject => _updatedProjectController.sink;
 
   final ApiService _apiService;
 
@@ -30,12 +35,18 @@ class ProjectsBloc implements BlocBase {
   void dispose() {
     _query.close();
     _addedProjectController.close();
-
+    _updatedProjectController.close();
   }
 
   void addProject(Project project) {
     _apiService.addProject(project).then((project) {
       inAddedProject.add(project);
+    });
+  }
+
+  void updateProject(Project project) {
+    _apiService.updateProject(project).then((project) {
+      inUpdatedProject.add(project);
     });
   }
 }
@@ -65,6 +76,7 @@ class ProjectBloc implements BlocBase {
 
   void getProject() {
     _apiService.get(_id).then((project) {
+
       _project = project;
 
       _inProject.add(_project);

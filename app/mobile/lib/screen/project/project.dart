@@ -3,6 +3,7 @@ import 'package:cm_mobile/bloc/project_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/screen/project/add_edit_project.dart';
 import 'package:cm_mobile/screen/project/overview.dart';
 import 'package:cm_mobile/service/api_service.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
@@ -53,7 +54,10 @@ class _ProjectWidgetState extends State<ProjectWidget> {
             onPressed: () {
               Navigator.pushNamed(context, "/add_receipt");
             },
-            child: Icon(Typicons.doc_add, color: Colors.green,),
+            child: Icon(
+              Typicons.doc_add,
+              color: Colors.green,
+            ),
           )),
     );
   }
@@ -70,7 +74,9 @@ class _ProjectWidgetState extends State<ProjectWidget> {
                 (BuildContext context, bool innerBoxIsScrolled) {
               List<Widget> appBarActions = [];
               if (user.privilege == Privilege.ADMIN)
-                appBarActions.add(_ProjectPopMenuButton());
+                appBarActions.add(_ProjectPopMenuButton(
+                  project: project,
+                ));
               return <Widget>[
                 SliverAppBar(
                   actions: appBarActions,
@@ -79,9 +85,12 @@ class _ProjectWidgetState extends State<ProjectWidget> {
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
                     centerTitle: false,
-                    title: Text(snapshot != null && snapshot.data != null
-                        ? snapshot.data.name
-                        : "", overflow: TextOverflow.fade,),
+                    title: Text(
+                      snapshot != null && snapshot.data != null
+                          ? snapshot.data.name
+                          : "",
+                      overflow: TextOverflow.fade,
+                    ),
                     background: Stack(
                       alignment: Alignment.center,
                       children: <Widget>[
@@ -93,20 +102,19 @@ class _ProjectWidgetState extends State<ProjectWidget> {
                         Container(
                           decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                // Where the linear gradient begins and ends
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomLeft,
-                                // Add one stop for each color. Stops should increase from 0 to 1
-                                stops: [0.1, 0.4, 0.5, 1],
-                                colors: [
-                                  // Colors are easy thanks to Flutter's Colors class.
-                                  Colors.white10,
-                                  Colors.white24,
-                                  Colors.white30,
-                                  Colors.white,
-                                ],
-                              )
-                          ),
+                            // Where the linear gradient begins and ends
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomLeft,
+                            // Add one stop for each color. Stops should increase from 0 to 1
+                            stops: [0.1, 0.4, 0.5, 1],
+                            colors: [
+                              // Colors are easy thanks to Flutter's Colors class.
+                              Colors.white10,
+                              Colors.white24,
+                              Colors.white30,
+                              Colors.white,
+                            ],
+                          )),
                         )
                       ],
                     ),
@@ -132,7 +140,6 @@ class _LoadingWidget extends StatelessWidget {
     );
   }
 }
-
 
 class _ProjectScreen extends StatelessWidget {
   final Project project;
@@ -190,6 +197,10 @@ class _ProjectScreen extends StatelessWidget {
 }
 
 class _ProjectPopMenuButton extends StatelessWidget {
+  final Project project;
+
+  const _ProjectPopMenuButton({Key key, this.project}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
@@ -208,7 +219,11 @@ class _ProjectPopMenuButton extends StatelessWidget {
   void onItemClicked(String value, BuildContext context) {
     switch (value) {
       case "Edit":
-        Navigator.of(context).pushNamed("/edit_project");
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => AddEditProjectScreen(
+                  project: project,
+                  isEditing: true,
+                )));
     }
   }
 }

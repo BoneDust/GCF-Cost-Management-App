@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cm_mobile/data/app_data.dart';
 import 'package:cm_mobile/data/dummy_data.dart';
+import 'package:cm_mobile/model/api_response.dart';
 import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/client.dart';
@@ -42,7 +43,7 @@ class ApiService {
     return result;
   }
 
-  Future<User> getUser(String id) async {
+  Future<User> getUser(int id) async {
     User result = DummyData.currentUser;
     await Future.delayed(Duration(seconds: 2));
 
@@ -131,7 +132,8 @@ class ApiService {
         isInitializing: false, isAuthenticated: false, isLoading: false);
   }
 
-  Future<Project> addProject(Project project) async{
+  Future<ApiResponse> addProject(Project project) async{
+    ApiResponse apiResponse = ApiResponse.withError("failed to create project", 1);
     String _url =
         "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/projects";
 
@@ -141,12 +143,20 @@ class ApiService {
 
     String body = json.encode(project);
     print(body);
-    await client.post(Uri.parse(_url), headers: headers, body: body).then((response){
-      var jsonResponse = json.decode(response.body);
-      print(jsonResponse);
-    });
+    try {
+      await client.post(Uri.parse(_url), headers: headers, body: body).then((response){
+        var jsonResponse = json.decode(response.body);
+        if (response.statusCode == 201)
+          apiResponse =  ApiResponse.isSuccess("project created successfully", response.statusCode);
+        else
+          apiResponse =  ApiResponse.withError(jsonResponse['error'], response.statusCode);
+        }).timeout(Duration(seconds: 120));
+    } catch (e) {
+      apiResponse = ApiResponse.withError("no internet connection", 1);
+    }
 
-    return Project();
+
+    return apiResponse;
   }
 
   Future<Receipt> addReceipt(Receipt receipt) async{
@@ -170,10 +180,11 @@ class ApiService {
 
     Map<String, String> headers = Map();
     headers.putIfAbsent("token", () => AppData.authToken);
+
     await client.post(Uri.parse(_url), headers: headers).then((response){
       var jsonResponse = json.decode(response.body);
       print(jsonResponse);
-    });
+    }).timeout(Duration(seconds: 20));
 
     return User();
   }
@@ -231,7 +242,7 @@ class ApiService {
     return filteredList;
   }
 
-  Future<Client> getClient(String id) async {
+  Future<Client> getClient(int id) async {
     await Future.delayed(Duration(seconds: 2));
 
 //     await _client.get(Uri.parse(_url))
@@ -241,5 +252,32 @@ class ApiService {
 //         .then((list) => list.forEach((item) => resultList.add(Project.fromJson(item))));
 
     return Client();
+  }
+
+  Future<ApiResponse> updateProject(Project project) async{
+    ApiResponse apiResponse = ApiResponse.withError("failed to update project", 1);
+    String _url =
+        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/projects";
+
+    Map<String, String> headers = Map();
+    headers.putIfAbsent("token", () => AppData.authToken);
+    headers.putIfAbsent("Content-Type", () => "application/json");
+
+    String body = json.encode(project);
+    print(body);
+    try {
+      await client.put(Uri.parse(_url), headers: headers, body: body).then((response){
+        var jsonResponse = json.decode(response.body);
+        if (response.statusCode == 201)
+          apiResponse =  ApiResponse.isSuccess("project update successfully", response.statusCode);
+        else
+          apiResponse =  ApiResponse.withError(jsonResponse['error'], response.statusCode);
+      }).timeout(Duration(seconds: 120));
+    } catch (e) {
+      apiResponse = ApiResponse.withError("no internet connection", 1);
+    }
+
+
+    return apiResponse;
   }
 }

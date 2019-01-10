@@ -112,19 +112,19 @@ class DummyData {
   static var projectClient = ["Standard Bank", "FNB"];
 
   static var foremanUsers = [
-    User(name: "Khumo", surname: "Letlape", privilege: Privilege.FOREMAN, contactNo: "", username: ""),
-    User(name: "Mushagi", surname: "Mayibo", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
-    User(name: "Lonwabo", surname: "Rarane", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
-    User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
-    User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: ""),
+    User(name: "Khumo", surname: "Letlape", privilege: Privilege.FOREMAN, contactNo: "", username: "", id: 1),
+    User(name: "Mushagi", surname: "Mayibo", privilege:  Privilege.FOREMAN, contactNo: "", username: "", id: 2),
+    User(name: "Lonwabo", surname: "Rarane", privilege:  Privilege.FOREMAN, contactNo: "", username: "", id: 3),
+    User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: "", id: 4),
+    User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: "", id: 5),
 
   ];
   static var clients = [
-    Client(name: "FNB"),
-    Client(name: "We Think Code"),
-    Client(name: "Lonwabo"),
-    Client(name: "Themba High School"),
-    Client(name: "Standard bank"),
+    Client(name: "FNB", id: 1),
+    Client(name: "We Think Code", id: 2),
+    Client(name: "Lonwabo", id: 3),
+    Client(name: "Themba High School", id: 4),
+    Client(name: "Standard bank", id: 5),
   ];
 
   static List<String> suppliers = [
