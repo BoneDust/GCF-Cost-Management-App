@@ -5,10 +5,10 @@ import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
-class DetailsCard extends StatelessWidget {
+class ProjectDetailsCard extends StatelessWidget {
   final Project project;
 
-  DetailsCard(this.project);
+  ProjectDetailsCard(this.project);
 
   @override
   Widget build(BuildContext context) {

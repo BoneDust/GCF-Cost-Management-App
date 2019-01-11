@@ -39,7 +39,6 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   ClientBloc clientBloc;
 
   TextEditingController nameController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
   TextEditingController estimatedCostController = TextEditingController();
   TextEditingController teamSizeController = TextEditingController();
 
@@ -55,6 +54,8 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
 
   @override
   void initState() {
+    projectsBloc = ProjectsBloc(ApiService());
+
     if (widget.isEditing) {
       userBloc = UserBloc(ApiService());
       clientBloc = ClientBloc(ApiService());
@@ -64,15 +65,18 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
           _selectedForeman = user;
         });
       });
+
       clientBloc.outClient.listen((client) {
         setState(() {
           _selectedClient = client;
         });
       });
 
+      projectsBloc.outUpdatedProject
+          .listen((project) => finishedAddingProject(project));
+
       fillFormsWithProjectData();
     } else {
-      projectsBloc = ProjectsBloc(ApiService());
       projectsBloc.outAddedProject
           .listen((project) => finishedAddingProject(project));
     }
@@ -94,7 +98,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                     widget.isEditing ? "SAVE" : "CREATE",
                   ),
                   shape: CircleBorder(),
-                  onPressed: widget.isEditing ? _createProject : updateProject)
+                  onPressed: widget.isEditing ? updateProject : _createProject)
             ],
           ),
           body: ListView(
@@ -113,14 +117,6 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                         decoration: InputDecoration(
                           labelText: "name",
                         ),
-                      ),
-                    ),
-                    Theme(
-                      data: themeData.copyWith(primaryColor: Colors.blueGrey),
-                      child: TextFormField(
-                        controller: descriptionController,
-                        keyboardType: TextInputType.multiline,
-                        decoration: InputDecoration(labelText: "description"),
                       ),
                     ),
                     Theme(
@@ -363,7 +359,6 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
 
   Project createProject() => Project(
       name: nameController.text,
-      description: descriptionController.text,
       teamSize: _sizeValue.toInt(),
       startDate: startDate,
       endDate: endDate,
@@ -415,6 +410,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
     setState(() {
       _isLoading = false;
     });
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -447,7 +443,6 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
 
   void fillFormsWithProjectData() {
     nameController.text = widget.project.name;
-    descriptionController.text = widget.project.description;
     _sizeValue = widget.project.teamSize.toDouble();
     startDate = widget.project.startDate;
     endDate = widget.project.endDate;
@@ -455,14 +450,6 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
     estimatedCostController.text = widget.project.estimatedCost.toString();
     userBloc.getUser(widget.project.userId);
     clientBloc.getClient(widget.project.clientId);
-  }
-
-  User getForeman(int id) {
-    return null;
-  }
-
-  Client getClient(int clientId) {
-    return null;
   }
 
   void updateProject() {

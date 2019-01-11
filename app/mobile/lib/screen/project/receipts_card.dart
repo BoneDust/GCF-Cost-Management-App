@@ -1,10 +1,6 @@
-import 'dart:collection';
-
 import 'package:cm_mobile/model/receipt.dart';
-import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/screen/receipt/receipt_tile.dart';
 import 'package:cm_mobile/screen/receipt/receipts_list.dart';
-import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:flutter/material.dart';
 
 class ReceiptsWidget extends StatelessWidget {

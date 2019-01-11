@@ -38,31 +38,26 @@ class _StatisticsScreenState extends State<StatsPage> {
     new Project(
         id: 1,
         name: "WeThinkCode_JHB",
-        description: "Mobile Project",
         clientId: 1,
         status: "undergoing"),
     new Project(
         id: 1,
         name: "WeThinkCode_JHB",
-        description: "Mobile Project",
         clientId: 1,
         status: "undergoing"),
     new Project(
         id: 1,
         name: "WeThinkCode_JHB",
-        description: "Mobile Project",
         clientId: 1,
         status: "undergoing"),
     new Project(
         id: 1,
         name: "WeThinkCode_JHB",
-        description: "Mobile Project",
         clientId: 1,
         status: "undergoing"),
     new Project(
         id: 1,
         name: "WeThinkCode_JHB",
-        description: "Mobile Project",
         clientId: 1,
         status: "undergoing"),
   ];
@@ -255,10 +250,6 @@ class TaskRowState extends State<TaskRow> {
                   widget.project.name,
                   style: new TextStyle(fontSize: 18.0),
                 ),
-                new Text(
-                  widget.project.description,
-                  style: new TextStyle(fontSize: 12.0, color: Colors.grey),
-                )
               ],
             ),
           ),

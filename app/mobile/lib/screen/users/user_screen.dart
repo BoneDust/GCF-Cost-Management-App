@@ -103,7 +103,6 @@ class UserProjectTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(project.name),
-      subtitle: Text(project.description, maxLines: 1),
     );
   }
 }

@@ -15,81 +15,84 @@ class DummyData {
   static List<Activity> activities =
       List.generate(10, (index) => getActivity());
 
-  static User currentUser = adminUser ;
+  static User currentUser = adminUser;
 
-  static var receipts =  List.generate(10, (index) => getReceipt());
+  static var receipts = List.generate(10, (index) => getReceipt());
 
+  static List<Stage> stages = [
+    Stage(
+        projectId: 1,
+        id: 1,
+        description: "kitchen ",
+        afterPicture: "",
+        beforePicture: "",
+        endDate: DateTime.now(),
+        estimatedDaysDuration: 3,
+        name: "Stage 1",
+        status: "In progress"),
+    Stage(
+        projectId: 1,
+        id: 2,
+        description: "bathroon",
+        afterPicture: "",
+        beforePicture: "",
+        endDate: DateTime.now(),
+        estimatedDaysDuration: 3,
+        name: "Stage 2",
+        status: "In progress"),
+    Stage(
+        projectId: 1,
+        id: 3,
+        description: "Server room",
+        afterPicture: "",
+        beforePicture: "",
+        endDate: DateTime.now(),
+        estimatedDaysDuration: 3,
+        name: "Stage 3",
+        status: "In progress"),
+    Stage(
+        projectId: 1,
+        id: 4,
+        description: "Roof damping",
+        afterPicture: "",
+        beforePicture: "",
+        endDate: DateTime.now(),
+        estimatedDaysDuration: 3,
+        name: "Stage 4",
+        status: "In progress"),
+  ];
 
-  static User get getForemanUser => foremanUsers[random.nextInt(foremanUsers.length)];
+  static User get getForemanUser =>
+      foremanUsers[random.nextInt(foremanUsers.length)];
   static Client get getClient => clients[random.nextInt(clients.length)];
 
-  static List<User> get getUsers => List.generate(19, (index) => getForemanUser) + List.generate(19, (index) => adminUser);
+  static List<User> get getUsers =>
+      List.generate(19, (index) => getForemanUser) +
+      List.generate(19, (index) => adminUser);
 
-  static List<Client> get getClients =>  List.generate(19, (index) => getClient) ;
+  static List<Client> get getClients => List.generate(19, (index) => getClient);
 
   static Project getProject() {
     return Project(
         id: 1,
-        stages: [
-          Stage(
-              projectId: 1,
-              id: 1,
-              description: "kitchen ",
-              afterPicture: "",
-              beforePicture: "",
-              endDate: DateTime.now(),
-              estimatedDaysDuration: 3,
-              name: "Stage 1",
-              status: "In progress"),
-          Stage(
-              projectId: 1,
-              id: 2,
-              description: "bathroon",
-              afterPicture: "",
-              beforePicture: "",
-              endDate: DateTime.now(),
-              estimatedDaysDuration: 3,
-              name: "Stage 2",
-              status: "In progress"),
-          Stage(
-              projectId: 1,
-              id: 3,
-              description: "Server room",
-              afterPicture: "",
-              beforePicture: "",
-              endDate: DateTime.now(),
-              estimatedDaysDuration: 3,
-              name: "Stage 3",
-              status: "In progress"),
-          Stage(
-              projectId: 1,
-              id: 4,
-              description: "Roof damping",
-              afterPicture: "",
-              beforePicture: "",
-              endDate: DateTime.now(),
-              estimatedDaysDuration: 3,
-              name: "Stage 4",
-              status: "In progress"),
-        ],
-        receipts: List.generate(10, (index) =>  getReceipt()),
+        stages: stages,
+        receipts: List.generate(10, (index) => getReceipt()),
         endDate: DateTime.now(),
-        description:
-            descriptions[random.nextInt(descriptions.length)],
         name: projectNames[random.nextInt(projectNames.length)],
         status: projectStatus[random.nextInt(projectStatus.length)],
         clientId: projectClient.length,
         estimatedCost: random.nextDouble(),
         expenditure: random.nextDouble(),
+        userId: random.nextInt(4),
         foreman: foremanUsers[random.nextInt(foremanUsers.length)],
         startDate: DateTime.now(),
         teamSize: random.nextInt(10));
   }
 
   static User adminUser =
-      User(name: "Dale", surname: "McLead", privilege: Privilege.ADMIN);
+      User(name: "Dale", surname: "McLead", privilege: Privilege.ADMIN, id: 1,);
   static User foremanUser = getForemanUser;
-  static List<Project> projectList = List.generate(10, (index) => getProject());
+  static List<Project> projectList = List.generate(100, (index) => getProject());
 
   static List<String> projectNames = [
     "Standard bank Johanessburg",
@@ -112,12 +115,41 @@ class DummyData {
   static var projectClient = ["Standard Bank", "FNB"];
 
   static var foremanUsers = [
-    User(name: "Khumo", surname: "Letlape", privilege: Privilege.FOREMAN, contactNo: "", username: "", id: 1),
-    User(name: "Mushagi", surname: "Mayibo", privilege:  Privilege.FOREMAN, contactNo: "", username: "", id: 2),
-    User(name: "Lonwabo", surname: "Rarane", privilege:  Privilege.FOREMAN, contactNo: "", username: "", id: 3),
-    User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: "", id: 4),
-    User(name: "Goodwill", surname: "Tshekele", privilege:  Privilege.FOREMAN, contactNo: "", username: "", id: 5),
-
+    User(
+        name: "Khumo",
+        surname: "Letlape",
+        privilege: Privilege.FOREMAN,
+        contactNo: "",
+        username: "",
+        id: 1),
+    User(
+        name: "Mushagi",
+        surname: "Mayibo",
+        privilege: Privilege.FOREMAN,
+        contactNo: "",
+        username: "",
+        id: 2),
+    User(
+        name: "Lonwabo",
+        surname: "Rarane",
+        privilege: Privilege.FOREMAN,
+        contactNo: "",
+        username: "",
+        id: 3),
+    User(
+        name: "Goodwill",
+        surname: "Tshekele",
+        privilege: Privilege.FOREMAN,
+        contactNo: "",
+        username: "",
+        id: 4),
+    User(
+        name: "Goodwill",
+        surname: "Tshekele",
+        privilege: Privilege.FOREMAN,
+        contactNo: "",
+        username: "",
+        id: 5),
   ];
   static var clients = [
     Client(name: "FNB", id: 1),
@@ -134,26 +166,37 @@ class DummyData {
   ];
 
   static List<String> activityTitles = [
-    "Receipt from supplier " + suppliers[random.nextInt(suppliers.length)] + "was added" ,
-    "Stage "+ random.nextInt(10).toString()+", " + projectNames[random.nextInt(projectNames.length)] +", is done",
-    "Project has , " + projectNames[random.nextInt(projectNames.length)] +", created",
-
+    "Receipt from supplier " +
+        suppliers[random.nextInt(suppliers.length)] +
+        "was added",
+    "Stage " +
+        random.nextInt(10).toString() +
+        ", " +
+        projectNames[random.nextInt(projectNames.length)] +
+        ", is done",
+    "Project has , " +
+        projectNames[random.nextInt(projectNames.length)] +
+        ", created",
   ];
 
   static Activity getActivity() {
-    return Activity(getRandomActivity(),
-        title: activityTitles[random.nextInt(activityTitles.length)],
-        description:  descriptions[random.nextInt(descriptions.length)],
+    return Activity(
+      title: activityTitles[random.nextInt(activityTitles.length)],
+      performer: "perfomer",
+      type: getRandomActivity(),
+      description: descriptions[random.nextInt(descriptions.length)],
+      activityId: 1,
+      creationDate: DateTime.now(),
+      projectId: 3
     );
   }
 
   static Receipt getReceipt() {
     return Receipt(
-      supplier: suppliers[random.nextInt(suppliers.length)] ,
-      description: descriptions[random.nextInt(descriptions.length)],
-      totalCost: random.nextDouble(),
-      purchaseDate: DateTime.now()
-    );
+        supplier: suppliers[random.nextInt(suppliers.length)],
+        description: descriptions[random.nextInt(descriptions.length)],
+        totalCost: random.nextDouble(),
+        purchaseDate: DateTime.now());
   }
 
   static ActivityType getRandomActivity() {

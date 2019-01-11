@@ -55,7 +55,7 @@ class _ActivityScreen extends StatelessWidget {
                   subtitle: Text("description"),
                 ),
                 ListTile(
-                  title: Text(activity.dateCreated.toIso8601String()),
+                  title: Text(activity.creationDate.toIso8601String()),
                   subtitle: Text("date created"),
                 ),
               ],

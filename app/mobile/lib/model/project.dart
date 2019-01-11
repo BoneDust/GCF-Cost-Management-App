@@ -9,26 +9,23 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 class Project {
   int id;
-  String description;
+  int userId;
+  int teamSize;
   int clientId;
   String name;
   double estimatedCost;
   String status;
   double expenditure;
-  User foreman;
   DateTime startDate;
   DateTime endDate;
+
+  User foreman;
   List<Receipt> receipts;
   List<Activity> activities;
-
   List<Stage> stages;
-  int   teamSize;
-
-  var userId;
 
   Project(
       {this.id = 0,
-      this.description = "",
       this.clientId = 0,
       this.name = "",
       this.estimatedCost = 0.0,
@@ -40,7 +37,7 @@ class Project {
       this.receipts,
       this.stages,
       this.teamSize,
-        this.userId});
+      this.userId});
 
   @override
   bool operator ==(Object other) =>
@@ -51,31 +48,37 @@ class Project {
   int get hashCode => id.hashCode;
 
   Project.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        description = json['description'],
+      : id = json['projectId'],
+        userId = json['user_id'],
+        teamSize = json['team_size'],
         clientId = json['client_id'],
         name = json['name'],
+        estimatedCost = getDouble(json["estimated_cost"]),
         status = json['status'],
-        expenditure = json['expenditure'],
-        foreman = json['foreman'],
-        startDate = json['start_date'],
-        endDate = json['end_date'],
-        receipts = json['receipts'],
-        stages = json['stages'],
-        userId = json['user_id']
-
+        expenditure = getDouble(json['expenditure']),
+        startDate = DateTime.fromMillisecondsSinceEpoch(json['start_date']),
+        endDate = DateTime.fromMillisecondsSinceEpoch(json['end_date'])
   ;
 
   Map<String, dynamic> toJson() => {
-    'description': description,
-    'client_id': clientId,
-    'name': name,
-    'status': status,
-    'expenditure': expenditure,
-    'start_date': startDate.millisecondsSinceEpoch,
-    'end_date': endDate.millisecondsSinceEpoch,
-    'user_id' : userId,
-    'team_size': teamSize,
-    'estimated_cost' : estimatedCost
-  };
+        "projectId": id,
+        "user_id": userId,
+        "estimated_cost": estimatedCost,
+        "end_date": endDate.millisecondsSinceEpoch,
+        "client_id": clientId,
+        "start_date": startDate.millisecondsSinceEpoch,
+        "status": status,
+        "team_size": teamSize,
+        "name": name,
+        "expenditure": expenditure
+      };
+
+  static double getDouble(var number) {
+    if (number is double) return number;
+    if (number is int) {
+      return number.toDouble();
+    }
+    if (number is String) return double.parse(number);
+    return 0.0;
+  }
 }

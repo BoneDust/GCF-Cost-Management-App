@@ -30,6 +30,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   Widget appBarTitle;
   bool _isSearching = false;
   Color _appBarBackgroundColor = Colors.white;
+  List<Project> projects;
 
   TextEditingController searchTextController = TextEditingController();
   AppDataContainerState appDataContainerState;
@@ -157,6 +158,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
           stream: projectsBloc.results,
           builder: (BuildContext context,
               AsyncSnapshot<List<Project>> snapshot) {
+            projects = snapshot.data;
             return snapshot.data != null
                 ? _buildBody(snapshot.data)
                 : _LoadingWidget();
@@ -194,8 +196,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   _navigateAndDisplaySelection() async {
     final result =  await         Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => AddEditProjectScreen()));
-
     if (result is ApiResponse) {
+
+      if (result.object is Project){
+        projects.insert(0, result.object);
+      }
       Scaffold.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(result.success), backgroundColor: Colors.green));

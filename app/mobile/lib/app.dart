@@ -6,6 +6,7 @@ import 'package:cm_mobile/bloc/receipt_bloc.dart';
 import 'package:cm_mobile/bloc/user_bloc.dart';
 import 'package:cm_mobile/data/app_colors.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/activity/activities.dart';
 import 'package:cm_mobile/screen/client/add_client_screen.dart';
@@ -105,28 +106,11 @@ class _DataBlocImplementationState extends State<_Blocs> {
   final ProjectsBloc projectsBloc = ProjectsBloc(ApiService());
 
   @override
-  void initState() {
-    super.initState();
-    projectsBloc.query.add("");
-    userBloc.getUser(1);
-    activityBloc.query.add("");
-    receiptBloc.query.add("");
-  }
-
-  @override
   Widget build(BuildContext context) {
     AppDataContainerState dataContainerState = AppDataContainer.of(context);
 
-    activityBloc.results
-        .listen((activities) => dataContainerState.setActivities(activities));
-
-    receiptBloc.results
-        .listen((receipts) => dataContainerState.setReceipts(receipts));
-
-    userBloc.results.listen((user) => dataContainerState.setUser(user));
-
     authBloc.results
-        .listen((authState) => dataContainerState.setAuthState(authState));
+        .listen((authState) =>_onAuthenticated(dataContainerState, authState));
 
     return BlocProvider(
         bloc: authBloc,
@@ -143,6 +127,25 @@ class _DataBlocImplementationState extends State<_Blocs> {
                     )),
               )
             : _MaterialApp(home: AuthScreen()));
+  }
+
+  void _onAuthenticated(AppDataContainerState dataContainer, AuthenticationState authState) {
+    userBloc.results.listen((user) => _onUserReceived(dataContainer, user));
+    userBloc.query.add(1);
+    dataContainer.setAuthState(authState);
+  }
+
+  void _onUserReceived(AppDataContainerState dataContainer, User user) {
+
+    activityBloc.results
+        .listen((activities) => dataContainer.setActivities(activities));
+
+    receiptBloc.results
+        .listen((receipts) => dataContainer.setReceipts(receipts));
+
+    activityBloc.query.add("");
+    receiptBloc.query.add("");
+    dataContainer.setUser(user);
   }
 }
 

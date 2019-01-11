@@ -8,19 +8,17 @@ import 'base_bloc.dart';
 
 class UserBloc extends BlocBase {
   Stream<User> _results = Stream.empty();
-
-  StreamController<User> _userController = StreamController<User>();
-  get outUser => _userController.stream.asBroadcastStream();
-  Sink<User> get inUser => _userController.sink;
-
-
   Stream<User> get results => _results;
 
   final ApiService _apiService;
 
   ReplaySubject<int> _query = ReplaySubject<int>();
-
   Sink<int> get query => _query;
+
+
+  StreamController<User> _userController = StreamController<User>();
+  Stream<User> get outUser => _userController.stream;
+  Sink<User> get inUser => _userController.sink;
 
   UserBloc(this._apiService) {
     _results = _query
@@ -34,10 +32,12 @@ class UserBloc extends BlocBase {
     _query.close();
     _userController.close();
   }
-
-  void getUser(int userName) {
-    query.add(userName);
+  void getUser(int id) {
+    _apiService.getUser(id).then((user) {
+      inUser.add(user);
+    });
   }
+
 }
 
 class UsersBloc implements BlocBase {

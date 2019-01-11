@@ -90,11 +90,6 @@ class _ProjectContentCard extends StatelessWidget {
             maxLines: 1,
           ),
           Text(
-            project.description,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-          Text(
             project.status,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
