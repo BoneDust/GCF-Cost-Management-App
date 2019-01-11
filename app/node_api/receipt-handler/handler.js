@@ -31,7 +31,7 @@ app.get('/receipts/receiptsByProject/:project_id', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else
-                            res.status(200).json({ receipts: result.Items })
+                            res.status(200).json({ receipts: result.Items, size: result.Count || 0 })
                     })
                 }
                 else
@@ -61,7 +61,7 @@ app.get('/receipts/:receiptId', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else if (result.Item)
-                            res.status(200).json({ receipt: result.Item })
+                            res.status(200).json({ receipt: result.Item, size: 1 })
                         else
                             res.status(404).json({ error: "Receipt with id " + req.params.receiptId + " not found" })
                     })
@@ -105,8 +105,8 @@ app.post('/receipts', (req, res) => {
                         else {
                             receiptCount = receiptCount + 1
                             activityLogger.logActivity(parseInt(receipt.project_id), activityLogger.activityType.CREATE_RECEIPT, req.headers.token, receiptCount)
-                                .then(() => res.status(201).json({ message: "Receipt successfully created" }))
-                                .catch(error => { res.status(201).json({ message: "Receipt successfully created", activity_error: error.message }) })
+                                .then(() => res.status(201).json({ message: "Receipt successfully created", receipt: params.Item }))
+                                .catch(error => { res.status(201).json({ message: "Receipt successfully created", receipt: params.Item, activity_error: error.message }) })
                         }
                     })
                 }
@@ -144,7 +144,8 @@ app.put('/receipts/:receiptId', (req, res) => {
                             ":pic_url": receipt.pic_url,
                             ":purchase_date": parseInt(receipt.purchase_date)
                         },
-                        UpdateExpression: "SET project_id = :project_id, supplier = :supplier, description = :description, total_cost = :total_cost, pic_url = :pic_url, purchase_date = :purchase_date"
+                        UpdateExpression: "SET project_id = :project_id, supplier = :supplier, description = :description, total_cost = :total_cost, pic_url = :pic_url, purchase_date = :purchase_date",
+                        ReturnValues: "ALL_NEW"
                     }
 
                     dynamoDb.update(params, (error, result) => {
@@ -152,8 +153,8 @@ app.put('/receipts/:receiptId', (req, res) => {
                             res.status(error.statusCode || 503).json({ error: error.message });
                         else {
                             activityLogger.logActivity(parseInt(receipt.project_id), activityLogger.activityType.UPDATE_RECEIPT, req.headers.token, parseInt(req.params.receiptId))
-                                .then(() => res.status(200).json({ message: "Receipt successfully updated" }))
-                                .catch(error => { res.status(200).json({ message: "Receipt successfully updated", activity_error: error.message }) })
+                                .then(() => res.status(200).json({ message: "Receipt successfully updated", receipt: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "Receipt successfully updated", receipt: result.Attributes, activity_error: error.message }) })
                         }
                     })
                 }
@@ -188,8 +189,8 @@ app.delete('/receipts/:receiptId', (req, res) => {
                         res.status(error.statusCode || 503).json({ error: error.message });
                     else {
                         activityLogger.logActivity(parseInt(result.Attributes.project_id), activityLogger.activityType.DELETE_RECEIPT, req.headers.token, parseInt(req.params.receiptId))
-                            .then(() => res.status(200).json({ message: "Receipt successfully deleted" }))
-                            .catch(error => { res.status(200).json({ message: "Receipt successfully deleted", activity_error: error.message }) })
+                            .then(() => res.status(200).json({ message: "Receipt successfully deleted", receipt: result.Attributes }))
+                            .catch(error => { res.status(200).json({ message: "Receipt successfully deleted", receipt: result.Attributes, activity_error: error.message }) })
                     }
                 })
             }

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const AWS = require('aws-sdk')
 const verification = require('./../verification')
 const activityLogger = require('./../activity_logger')
+const cascadeDelete = require('./cascadeDeleteStagesReceipts')
 const app = express()
 
 const PROJECTS_TABLE = process.env.PROJECTS_TABLE
@@ -56,7 +57,7 @@ app.get('/projects', (req, res) => {
                     if (error)
                         res.status(error.statusCode || 503).json({ error: error.message })
                     else
-                        res.status(200).json({ projects: result.Items })
+                        res.status(200).json({ projects: result.Items, size: result.Count || 0 })
                 })
             }
             else {
@@ -80,7 +81,7 @@ app.get('/projects', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else
-                            res.status(200).json({ projects: result.Items })
+                            res.status(200).json({ projects: result.Items, size: result.Count || 0 })
                     })
                 }
                 else
@@ -107,7 +108,7 @@ app.get('/projects/:projectId', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else if (result.Item !== undefined)
-                            res.status(200).json({ project: result.Item })
+                            res.status(200).json({ project: result.Item, size: 1 })
                         else
                             res.status(404).json({ error: "Project with id " + req.params.projectId + " not found" })
                     })
@@ -160,8 +161,8 @@ app.post('/projects', (req, res) => {
                         else {
                             projectCount = projectCount + 1
                             activityLogger.logActivity(projectCount, activityLogger.activityType.CREATE_PROJECT, req.headers.token, projectCount)
-                                .then(() => res.status(201).json({ message: "Project successfully created" }))
-                                .catch(error => { res.status(201).json({ message: "Project successfully created", activity_error: error.message }) })
+                                .then(() => res.status(201).json({ message: "Project successfully created", project: params.Item }))
+                                .catch(error => { res.status(201).json({ message: "Project successfully created", project: params.Item, activity_error: error.message }) })
                         }
                     })
                 }
@@ -208,7 +209,8 @@ app.put('/projects/:projectId', (req, res) => {
                             ":start_date": parseInt(project.start_date),
                             ":end_date": parseInt(project.end_date)
                         },
-                        UpdateExpression: "SET #name = :name, client_id = :client_id, user_id = :user_id, #status = :status, estimated_cost = :estimated_cost, expenditure = :expenditure, team_size = :team_size, start_date = :start_date, end_date = :end_date"
+                        UpdateExpression: "SET #name = :name, client_id = :client_id, user_id = :user_id, #status = :status, estimated_cost = :estimated_cost, expenditure = :expenditure, team_size = :team_size, start_date = :start_date, end_date = :end_date",
+                        ReturnValues: "ALL_NEW"
                     }
 
                     dynamoDb.update(params, (error, result) => {
@@ -216,8 +218,8 @@ app.put('/projects/:projectId', (req, res) => {
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else {
                             activityLogger.logActivity(parseInt(req.params.projectId), activityLogger.activityType.UPDATE_PROJECT, req.headers.token, parseInt(req.params.projectId))
-                                .then(() => res.status(200).json({ message: "Project successfully updated" }))
-                                .catch(error => { res.status(200).json({ message: "Project successfully updated", activity_error: error.message }) })
+                                .then(() => res.status(200).json({ message: "Project successfully updated", project: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "Project successfully updated", project: result.Attributes, activity_error: error.message }) })
                         }
                     })
                 }
@@ -241,7 +243,8 @@ app.delete('/projects/:projectId', (req, res) => {
                     const projectId = parseInt(req.params.projectId)
                     const params = {
                         TableName: PROJECTS_TABLE,
-                        Key: { projectId: projectId }
+                        Key: { projectId: projectId },
+                        ReturnValues: "ALL_OLD"
                     }
 
                     dynamoDb.delete(params, (error, result) => {
@@ -250,9 +253,12 @@ app.delete('/projects/:projectId', (req, res) => {
                         else {
                             activityLogger.logActivity(projectId, activityLogger.activityType.DELETE_PROJECT, req.headers.token, projectId)
                                 .then(() => {
-                                    res.status(200).json({ message: "Project successfully deleted" })
+                                    //batch delete stages and receipts
+                                    cascadeDelete.deleteStagesByProject(projectId)
+                                    cascadeDelete.deleteReceiptsByProject(projectId)
+                                    res.status(200).json({ message: "Project successfully deleted", project: result.Attributes })
                                 })
-                                .catch(error => { res.status(200).json({ message: "Project successfully deleted", activity_error: error.message }) })
+                                .catch(error => { res.status(200).json({ message: "Project successfully deleted", project: result.Attributes, activity_error: error.message }) })
                         }
                     })
                 }

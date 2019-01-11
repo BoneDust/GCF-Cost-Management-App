@@ -28,10 +28,10 @@ app.get('/activities', function (req, res) {
                     else {
                         if (req.query.start_date !== undefined && !isNaN(req.query.start_date) && req.query.end_date !== undefined && !isNaN(req.query.end_date)) {
                             var filtered = result.Items.filter((item) => { return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date)) })
-                            res.status(200).json({ activities: filtered })
+                            res.status(200).json({ activities: filtered, size: filtered.length })
                         }
                         else
-                            res.status(200).json({ activities: result.Items })
+                            res.status(200).json({ activities: result.Items, size: result.Count || 0 })
                     }
                 })
 
@@ -45,7 +45,7 @@ app.get('/activities', function (req, res) {
                         ExpressionAttributeNames: { "#status": "status" },
                         ExpressionAttributeValues: {
                             ":user_id": parseInt(req.query.foreman_id),
-                            ":status": "in-prgress"
+                            ":status": "active"
                         },
                         FilterExpression: "user_id = :user_id AND #status = :status"
                     }
@@ -67,7 +67,7 @@ app.get('/activities', function (req, res) {
                                     var projectFiltered = result.Items.filter((item) => {
                                         var isFound = false
                                         for (var project in projects) {
-                                            if (projects[project].projectId === item.project_id) {
+                                            if (projects[project].projectId === item.project_id) {/// NEED TO MAKE SURE THAT THESE ARE INTEGERS
                                                 isFound = true
                                                 break
                                             }
@@ -79,10 +79,10 @@ app.get('/activities', function (req, res) {
                                         var dateFiltered = projectFiltered.filter((item) => {
                                             return (item.creation_date_ms >= parseInt(req.query.start_date) && item.creation_date_ms <= parseInt(req.query.end_date))
                                         })
-                                        res.status(200).json({ activities: dateFiltered })
+                                        res.status(200).json({ activities: dateFiltered, size: projectFiltered.length })
                                     }
                                     else
-                                        res.status(200).json({ activities: projectFiltered })
+                                        res.status(200).json({ activities: projectFiltered, size: projectFiltered.length })
 
                                 }
                             })
@@ -117,7 +117,7 @@ app.get('/activities/:id', function (req, res) {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else if (result.Item)
-                            res.status(200).json({ activity: result.Item })
+                            res.status(200).json({ activity: result.Item, size: 1 })
                         else
                             res.status(404).json({ error: "Activity with id " + req.params.id + " not found" })
                     })
@@ -156,7 +156,7 @@ app.get('/activities/activitiesByProject/:project_id', function (req, res) {
                                 res.status(200).json({ activities: filtered })
                             }
                             else
-                                res.status(200).json({ activities: result.Items })
+                                res.status(200).json({ activities: result.Items, size: result.Count || 0 })
                         }
 
                     })
@@ -199,7 +199,7 @@ app.post('/activities', function (req, res) {
                         res.status(error.statusCode || 503).json({ error: error.message });
                     else {
                         activityCount = activityCount + 1
-                        res.status(201).json({ message: "activity successfully created" })
+                        res.status(201).json({ message: "activity successfully created", activity: params.Item })
                     }
                 });
             }

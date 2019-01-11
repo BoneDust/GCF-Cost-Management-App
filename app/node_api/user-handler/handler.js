@@ -36,7 +36,7 @@ app.get('/users', (req, res) => {
                     if (error)
                         res.status(error.statusCode || 503).json({ error: error.message })
                     else
-                        res.status(200).json({ users: result.Items })
+                        res.status(200).json({ users: result.Items, size: result.Count || 0 })
                 })
             }
             else
@@ -63,7 +63,7 @@ app.get('/users/:userId', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else if (result.Item)
-                            res.status(200).json({ user: result.Item })
+                            res.status(200).json({ user: result.Item, size: 1 })
                         else
                             res.status(404).json({ error: "UserId " + req.params.userId + " not found" })
                     })
@@ -107,8 +107,8 @@ app.post('/users', (req, res) => {
                         else {
                             userCount = userCount + 1
                             activityLogger.logActivity(0, activityLogger.activityType.CREATE_USER, req.headers.token, userCount)
-                                .then(() => res.status(201).json({ message: "User successfully created" }))
-                                .catch(error => { res.status(201).json({ message: "User successfully created", activity_error: error.message }) })
+                                .then(() => res.status(201).json({ message: "User successfully created", user: params.Item }))
+                                .catch(error => { res.status(201).json({ message: "User successfully created", user: params.Item, activity_error: error.message }) })
                         }
                     })
                 }
@@ -213,7 +213,8 @@ app.put('/users/:userId', (req, res) => {
                             ":image": user.image,
                             ":privilege": user.privilege
                         },
-                        UpdateExpression: "SET #name = :name, surname = :surname, email = :email, password = :password, image = :image, privilege = :privilege"
+                        UpdateExpression: "SET #name = :name, surname = :surname, email = :email, password = :password, image = :image, privilege = :privilege",
+                        ReturnValues: "ALL_NEW"
                     }
 
                     dynamoDb.update(params, (error, result) => {
@@ -221,8 +222,8 @@ app.put('/users/:userId', (req, res) => {
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else {
                             activityLogger.logActivity(0, activityLogger.activityType.UPDATE_USER, req.headers.token, parseInt(req.params.userId))
-                                .then(() => res.status(200).json({ message: "User successfully updated" }))
-                                .catch(error => { res.status(200).json({ message: "User successfully updated", activity_error: error.message }) })
+                                .then(() => res.status(200).json({ message: "User successfully updated", user: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "User successfully updated", usser: result.Attributes, activity_error: error.message }) })
                         }
                     })
                 }
@@ -250,7 +251,8 @@ app.delete('/users/:userId', (req, res) => {
                         TableName: USERS_TABLE,
                         Key: {
                             userId: userId
-                        }
+                        },
+                        ReturnValues: "ALL_OLD"
                     }
 
                     dynamoDb.delete(params, (error, result) => {
@@ -258,8 +260,8 @@ app.delete('/users/:userId', (req, res) => {
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else {
                             activityLogger.logActivity(0, activityLogger.activityType.DELETE_USER, req.headers.token, parseInt(req.params.userId))
-                                .then(() => res.status(200).json({ message: "User successfully deleted" }))
-                                .catch(error => { res.status(200).json({ message: "User successfully deleted", activity_error: error.message }) })
+                                .then(() => res.status(200).json({ message: "User successfully deleted", user: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "User successfully deleted", user: result.Attributes, activity_error: error.message }) })
                         }
                     })
                 }

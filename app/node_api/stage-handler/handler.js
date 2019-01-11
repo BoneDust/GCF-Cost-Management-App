@@ -31,7 +31,7 @@ app.get('/stages/stagesByProject/:project_id', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else
-                            res.status(200).json({ stages: result.Items })
+                            res.status(200).json({ stages: result.Items, size: result.Count || 0 })
                     })
                 }
                 else
@@ -60,7 +60,7 @@ app.get('/stages/:stageId', (req, res) => {
                         if (error)
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else if (result.Item)
-                            res.status(200).json({ stage: result.Item });
+                            res.status(200).json({ stage: result.Item, size: 1 });
                         else
                             res.status(404).response({ error: "Stage with id " + req.params.stageId + " not found" })
                     })
@@ -108,8 +108,8 @@ app.post('/stages', (req, res) => {
                             stageCount = stageCount + 1
 
                             activityLogger.logActivity(parseInt(stage.project_id), activityLogger.activityType.CREATE_STAGE, req.headers.token, stageCount)
-                                .then(() => res.status(201).json({ message: "Stage successfully created" }))
-                                .catch(error => { res.status(201).json({ message: "Stage successfully created", activity_error: error.message }) })
+                                .then(() => res.status(201).json({ message: "Stage successfully created", stage: params.Item }))
+                                .catch(error => { res.status(201).json({ message: "Stage successfully created", stage: params.Item, activity_error: error.message }) })
                         }
                     })
                 }
@@ -155,7 +155,8 @@ app.put('/stages/:stageId', (req, res) => {
                             ":end_date": parseInt(stage.end_date),
                             ":estimated_duration": stage.estimated_duration
                         },
-                        UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, #status = :status, before_pic_url = :before_pic_url, after_pic_url = :after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration"
+                        UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, #status = :status, before_pic_url = :before_pic_url, after_pic_url = :after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration",
+                        ReturnValues: "ALL_NEW"
                     }
 
                     dynamoDb.update(params, (error, result) => {
@@ -163,8 +164,8 @@ app.put('/stages/:stageId', (req, res) => {
                             res.status(error.statusCode || 503).json({ error: error.message });
                         else {
                             activityLogger.logActivity(parseInt(stage.project_id), activityLogger.activityType.UPDATE_STAGE, req.headers.token, parseInt(req.params.stageId))
-                                .then(() => res.status(200).json({ message: "Stage successfully updated" }))
-                                .catch(error => { res.status(200).json({ message: "Stage successfully updated", activity_error: error.message }) })
+                                .then(() => res.status(200).json({ message: "Stage successfully updated", stage: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "Stage successfully updated", stage: result.Attributes, activity_error: error.message }) })
                         }
                     })
                 }
@@ -200,8 +201,8 @@ app.delete('/stages/:stageId', (req, res) => {
                             res.status(error.statusCode || 503).json({ error: error.message });
                         else {
                             activityLogger.logActivity(parseInt(result.Attributes.project_id), activityLogger.activityType.DELETE_STAGE, req.headers.token, parseInt(req.params.stageId))
-                                .then(() => res.status(200).json({ message: "Stage successfully deleted" }))
-                                .catch(error => { res.status(200).json({ message: "Stage successfully deleted", activity_error: error.message }) })
+                                .then(() => res.status(200).json({ message: "Stage successfully deleted", stage: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "Stage successfully deleted", stage: result.Attributes, activity_error: error.message }) })
                         }
                     })
                 }
