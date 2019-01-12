@@ -47,7 +47,7 @@ class _MaterialApp extends StatelessWidget {
     '/create_client': (BuildContext context) => AddClientScreen(),
     '/menu': (BuildContext context) => MenuScreen(),
     '/projects': (BuildContext context) => ProjectsScreen(),
-    '/statistics': (BuildContext context) => Stats(),
+    '/statistics': (BuildContext context) => StatisticsScreen(),
   };
 
   final Widget home;
@@ -185,7 +185,7 @@ class _AppBottomNavigator extends StatelessWidget {
     User user = userContainerState.user;
 
     if (user.privilege == Privilege.ADMIN) {
-      tabEntry.children.add(Stats());
+      tabEntry.children.add(StatisticsScreen());
       tabEntry.tabs.add(Tab(
         icon: Icon(Typicons.chart_bar_outline),
         text: "stats",

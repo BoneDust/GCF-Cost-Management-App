@@ -1,6 +1,6 @@
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_circular_chart/flutter_circular_chart.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class StatisticsScreen extends StatefulWidget {
   @override
@@ -33,7 +33,12 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         ),
         centerTitle: true,
       ),
-      body: _StatisticsScreenBody(),
+      body: Column(
+        children: <Widget>[
+          Text('Weekly spend'),
+          HorizontalBarLabelChart.withSampleData(),
+        ],
+      ),
     );
   }
 }
@@ -47,110 +52,56 @@ class _StatisticsScreenState extends State<StatisticsScreen>
 //   }
 // }
 
-class _StatisticsScreenBody extends StatelessWidget {
-  final GlobalKey<AnimatedCircularChartState> _chartKey =
-      new GlobalKey<AnimatedCircularChartState>();
-  final GlobalKey<AnimatedCircularChartState> _chartKey2 =
-      new GlobalKey<AnimatedCircularChartState>();
-  final GlobalKey<AnimatedCircularChartState> _chartKey3 =
-      new GlobalKey<AnimatedCircularChartState>();
+class HorizontalBarLabelChart extends StatelessWidget {
+  final List<charts.Series> seriesList;
+  final bool animate;
+
+  const HorizontalBarLabelChart(this.seriesList, {this.animate});
+
+  factory HorizontalBarLabelChart.withSampleData() {
+    return new HorizontalBarLabelChart(
+      _createSampleData(),
+      animate: false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    int percentage = ((20 / (20 + 55)) * 100).toInt();
-    return new Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new AnimatedCircularChart(
-            key: _chartKey,
-            size: const Size(90.0, 90.0),
-            initialChartData: [
-              new CircularStackEntry(
-                <CircularSegmentEntry>[
-                  new CircularSegmentEntry(26.0, Colors.greenAccent,
-                      rankKey: 'Q1'),
-                  new CircularSegmentEntry(
-                      74.0, const Color.fromRGBO(0, 0, 0, 0.5),
-                      rankKey: 'Q2'),
-                ],
-                rankKey: 'Quarterly Profits',
-              ),
-            ],
-            holeLabel: '$percentage %',
-            labelStyle: new TextStyle(
-              color: Colors.black,
-            ),
-            chartType: CircularChartType.Radial,
-          ),
-          new AnimatedCircularChart(
-            key: _chartKey2,
-            size: const Size(90.0, 90.0),
-            initialChartData: [
-              new CircularStackEntry(
-                <CircularSegmentEntry>[
-                  new CircularSegmentEntry(26.0, Colors.greenAccent,
-                      rankKey: 'Q1'),
-                  new CircularSegmentEntry(
-                      74.0, const Color.fromRGBO(0, 0, 0, 0.5),
-                      rankKey: 'Q2'),
-                ],
-                rankKey: 'Quarterly Profits',
-              ),
-            ],
-            holeLabel: '$percentage %',
-            labelStyle: new TextStyle(
-              color: Colors.black,
-            ),
-            chartType: CircularChartType.Radial,
-          ),
-          new AnimatedCircularChart(
-            key: _chartKey3,
-            size: const Size(90.0, 90.0),
-            initialChartData: [
-              new CircularStackEntry(
-                <CircularSegmentEntry>[
-                  new CircularSegmentEntry(26.0, Colors.greenAccent,
-                      rankKey: 'Q1'),
-                  new CircularSegmentEntry(
-                      74.0, const Color.fromRGBO(0, 0, 0, 0.5),
-                      rankKey: 'Q2'),
-                ],
-                rankKey: 'Quarterly Profits',
-              ),
-            ],
-            holeLabel: '$percentage %',
-            labelStyle: new TextStyle(
-              color: Colors.black,
-            ),
-            chartType: CircularChartType.Radial,
-          ),
-        ],
+    return new charts.BarChart(
+      seriesList,
+      animate: animate,
+      vertical: false,
+      barRendererDecorator: new charts.BarLabelDecorator<String>(),
+      domainAxis: new charts.OrdinalAxisSpec(
+        renderSpec: new charts.NoneRenderSpec(),
       ),
-      // child: new AnimatedCircularChart(
-      //   key: _chartKey,
-      //   size: const Size(90.0, 90.0),
-      //   initialChartData: [
-      //     new CircularStackEntry(
-      //       <CircularSegmentEntry>[
-      //         new CircularSegmentEntry(26.0, Colors.greenAccent, rankKey: 'Q1'),
-      //         new CircularSegmentEntry(74.0, const Color.fromRGBO(0, 0, 0, 0.5),
-      //             rankKey: 'Q2'),
-      //       ],
-      //       // <CircularSegmentEntry>[
-      //       //   new CircularSegmentEntry(26.0, Colors.greenAccent, rankKey: 'Q3'),
-      //       //   new CircularSegmentEntry(74.0, const Color.fromRGBO(0, 0, 0, 0.5),
-      //       //       rankKey: 'Q4'),
-      //       // ],
-      //       rankKey: 'Quarterly Profits',
-      //     ),
-      //   ],
-      //   holeLabel: '$percentage %',
-      //   labelStyle: new TextStyle(
-      //     color: Colors.black,
-      //   ),
-      //   chartType: CircularChartType.Radial,
-      // ),
     );
   }
+
+  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
+    final data = [
+      new OrdinalSales('2014', 5),
+      new OrdinalSales('2015', 25),
+      new OrdinalSales('2016', 100),
+      new OrdinalSales('2017', 75),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+          id: 'Sales',
+          domainFn: (OrdinalSales sales, _) => sales.year,
+          measureFn: (OrdinalSales sales, _) => sales.sales,
+          data: data,
+          // Set a label accessor to control the text of the bar label.
+          labelAccessorFn: (OrdinalSales sales, _) =>
+              '${sales.year}: \$${sales.sales.toString()}')
+    ];
+  }
+}
+
+class OrdinalSales {
+  final String year;
+  final int sales;
+
+  OrdinalSales(this.year, this.sales);
 }
