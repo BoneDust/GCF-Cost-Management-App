@@ -110,7 +110,7 @@ class _DataBlocImplementationState extends State<_Blocs> {
     AppDataContainerState dataContainerState = AppDataContainer.of(context);
 
     authBloc.results
-        .listen((authState) =>_onAuthenticated(dataContainerState, authState));
+        .listen((authState) => _onAuthenticated(dataContainerState, authState));
 
     return BlocProvider(
         bloc: authBloc,
@@ -129,14 +129,14 @@ class _DataBlocImplementationState extends State<_Blocs> {
             : _MaterialApp(home: AuthScreen()));
   }
 
-  void _onAuthenticated(AppDataContainerState dataContainer, AuthenticationState authState) {
+  void _onAuthenticated(
+      AppDataContainerState dataContainer, AuthenticationState authState) {
     userBloc.results.listen((user) => _onUserReceived(dataContainer, user));
     userBloc.query.add(1);
     dataContainer.setAuthState(authState);
   }
 
   void _onUserReceived(AppDataContainerState dataContainer, User user) {
-
     activityBloc.results
         .listen((activities) => dataContainer.setActivities(activities));
 
@@ -149,19 +149,16 @@ class _DataBlocImplementationState extends State<_Blocs> {
   }
 }
 
-final GlobalKey<ScaffoldState> _scaffoldKey =
-GlobalKey<ScaffoldState>();
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class _AppBottomNavigator extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     _TabEntry tabEntry = getTabEntry(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        key: _scaffoldKey,
+          key: _scaffoldKey,
           body: TabBarView(
               children: tabEntry.children,
               physics: NeverScrollableScrollPhysics()),

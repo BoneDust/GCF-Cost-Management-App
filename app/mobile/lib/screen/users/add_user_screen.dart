@@ -22,8 +22,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     userBlocs = UsersBloc(ApiService());
     userBlocs.query.add("");
 
-    userBlocs.outAddedProject
-        .listen((user) => finishedAddingUser(user));
+    userBlocs.outAddedProject.listen((user) => finishedAddingUser(user));
 
     super.initState();
   }
@@ -66,7 +65,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
           ),
         ),
         _isLoading ? _loadingIndicator() : Column()
-
       ],
     );
   }

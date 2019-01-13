@@ -79,12 +79,24 @@ class _FormFields extends State<FormFields> {
         new ListTile(
           leading: previewImage,
           title: TextFormField(
+            // validator: (String fullName) {
+            //   if (fullName.isEmpty) {
+            //     return 'Name is required';
+            //   }
+            // },
+            validator: (val) => val.isEmpty ? 'fullname is required.' : null,
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10.0), labelText: 'Full name'),
           ),
         ),
         new ListTile(
           title: TextFormField(
+            // validator: (String userName) {
+            //   if (userName.isEmpty) {
+            //     return 'Username is required';
+            //   }
+            // },
+            validator: (val) => val.isEmpty ? 'username is required.' : null,
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10.0), labelText: 'Username'),
           ),
@@ -108,6 +120,9 @@ class _FormFields extends State<FormFields> {
         ),
         new ListTile(
           title: TextFormField(
+            validator: (val) => val.length < 10
+                ? 'Contact number too short. Please enter a correct number.'
+                : null,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(10.0),
@@ -118,6 +133,8 @@ class _FormFields extends State<FormFields> {
         new ListTile(
           contentPadding: EdgeInsets.only(left: 17.0, right: 17.0),
           title: new FormField(
+            validator: (val) =>
+                val.isEmpty ? 'invalid user privilege \'\'.' : null,
             builder: (FormFieldState state) {
               return InputDecorator(
                 decoration: InputDecoration(

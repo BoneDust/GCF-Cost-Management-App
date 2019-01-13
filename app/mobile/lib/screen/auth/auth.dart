@@ -7,13 +7,13 @@ import 'package:cm_mobile/model/user_login.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
-class AuthScreen extends StatefulWidget{
+class AuthScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _AuthScreen();
   }
-
 }
+
 class _AuthScreen extends State<AuthScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -27,11 +27,11 @@ class _AuthScreen extends State<AuthScreen> {
   void initState() {
     authBloc = BlocProvider.of<AuthBloc>(context);
     if (listener != null)
-      listener = authBloc.results
-          .listen((authState) => onError(authState));
+      listener = authBloc.results.listen((authState) => onError(authState));
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
@@ -75,18 +75,21 @@ class _AuthScreen extends State<AuthScreen> {
                           ),
                           child: Column(
                             children: <Widget>[
-                              _buildTextFormField(
-                                  "username", _usernameController, usernameValidator),
+                              _buildTextFormField("username",
+                                  _usernameController, usernameValidator),
                               Padding(
                                 padding: EdgeInsets.only(bottom: 30),
                               ),
-                              _buildTextFormField(
-                                  "password", _passwordController, passwordValidator),
+                              _buildTextPwdFormField("password",
+                                  _passwordController, passwordValidator),
                             ],
                           )),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 15),
-                        child: Text(_errorText, style: TextStyle(color: Colors.red),),
+                        child: Text(
+                          _errorText,
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
                       Container(
                         width: double.infinity,
@@ -99,9 +102,10 @@ class _AuthScreen extends State<AuthScreen> {
                               side: BorderSide(color: Colors.white)),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              appDataContainerState.setAuthState(AuthenticationState.loading());
+                              appDataContainerState
+                                  .setAuthState(AuthenticationState.loading());
                               authBloc.authenticateUser(UserLogin());
-                            }else
+                            } else
                               setState(() {
                                 _autoValidate = true;
                               });
@@ -114,12 +118,9 @@ class _AuthScreen extends State<AuthScreen> {
                           style: TextStyle(color: Colors.white),
                         ),
                         shape: BeveledRectangleBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(7.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(7.0)),
                         ),
-                        onPressed: () {
-
-                        },
+                        onPressed: () {},
                       ),
                     ],
                   )),
@@ -135,15 +136,17 @@ class _AuthScreen extends State<AuthScreen> {
     return Stack(
       children: <Widget>[
         Container(
-          child:  BackdropFilter(
-            filter:  ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-            child:  Container(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+            child: Container(
               decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
             ),
           ),
         ),
         Center(
-          child: CircularProgressIndicator(backgroundColor: Colors.green,),
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.green,
+          ),
         ),
       ],
     );
@@ -154,33 +157,48 @@ class _AuthScreen extends State<AuthScreen> {
     return TextFormField(
       validator: validator,
       autovalidate: _autoValidate,
-
       controller: controller,
-
-      style: TextStyle(color: Colors.white,),
+      style: TextStyle(
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
           labelText: labelText,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(25))),
     );
   }
 
-  String usernameValidator(String value){
-    if (value.isEmpty)
-      return "username cannot be empty";
+  Widget _buildTextPwdFormField(
+      String labelText, TextEditingController controller, Function validator) {
+    return TextFormField(
+      validator: validator,
+      autovalidate: _autoValidate,
+      controller: controller,
+      style: TextStyle(
+        color: Colors.white,
+      ),
+      decoration: InputDecoration(
+          labelText: labelText,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(25))),
+      obscureText: true,
+    );
+  }
+
+  String usernameValidator(String value) {
+    if (value.isEmpty) return "username cannot be empty";
     return null;
   }
-  String passwordValidator(String value){
-    if (value.isEmpty)
-      return "passsword cannot be empty";
+
+  String passwordValidator(String value) {
+    if (value.isEmpty) return "passsword cannot be empty";
     return null;
   }
 
   onError(AuthenticationState authState) {
-    if (!authState.isAuthenticated){
+    if (!authState.isAuthenticated) {
       setState(() {
         _errorText = "username or password doesn't match";
       });
-    };
+    }
   }
 
   @override

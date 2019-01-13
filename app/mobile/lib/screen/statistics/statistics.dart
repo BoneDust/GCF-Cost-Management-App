@@ -33,11 +33,8 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: <Widget>[
-          Text('Weekly spend'),
-          HorizontalBarLabelChart.withSampleData(),
-        ],
+      body: Container(
+        child: HorizontalBarLabelChart.withSampleData(),
       ),
     );
   }

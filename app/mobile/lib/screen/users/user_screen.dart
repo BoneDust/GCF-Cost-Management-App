@@ -29,8 +29,6 @@ class _UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
@@ -49,14 +47,14 @@ class _UserScreen extends StatelessWidget {
           )
         ];
       },
-      body:ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-          children: <Widget>[
-            user.privilege == Privilege.FOREMAN ? UserProjectsCard() : Column(),
-            UserDetailsCard(user: user),
-          ],
-        ),
+      body: ListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        children: <Widget>[
+          user.privilege == Privilege.FOREMAN ? UserProjectsCard() : Column(),
+          UserDetailsCard(user: user),
+        ],
+      ),
     );
   }
 }
@@ -77,7 +75,13 @@ class UserProjectsCard extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(padding: EdgeInsets.only(left: 10), child: Text("projects", style: TextStyle(color: Colors.blueGrey, fontSize: 30),),),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
+                "projects",
+                style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+              ),
+            ),
             Card(
                 elevation: 5,
                 child: ListView(

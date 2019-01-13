@@ -112,6 +112,8 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                     Theme(
                       data: themeData.copyWith(primaryColor: Colors.blueGrey),
                       child: TextFormField(
+                        validator: (val) =>
+                            val.isEmpty ? 'Please enter the name' : null,
                         controller: nameController,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
@@ -122,6 +124,9 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                     Theme(
                       data: themeData.copyWith(primaryColor: Colors.blueGrey),
                       child: TextFormField(
+                        validator: (val) => val.isEmpty
+                            ? 'Please input the estimated project cost'
+                            : null,
                         controller: estimatedCostController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
