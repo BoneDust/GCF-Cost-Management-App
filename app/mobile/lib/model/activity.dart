@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:cm_mobile/enums/activity_type.dart';
+import 'package:cm_mobile/model/model_base.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 
-class Activity {
+class Activity extends ModelBase{
   String performer;
   int activityId;
   int projectId;

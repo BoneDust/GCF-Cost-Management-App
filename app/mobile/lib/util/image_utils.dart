@@ -7,8 +7,8 @@ class ImageUtils{
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
 
-    if (user.pictureUrl != null && user.pictureUrl.isNotEmpty)
-      return user.pictureUrl;
+    if (user.image != null && user.image.isNotEmpty)
+      return user.image;
     return "assets/avatar.png";
   }
 }

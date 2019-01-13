@@ -1,21 +1,12 @@
-import 'package:cm_mobile/bloc/activity_bloc.dart';
-import 'package:cm_mobile/bloc/auth_bloc.dart';
-import 'package:cm_mobile/bloc/bloc_provider.dart';
-import 'package:cm_mobile/bloc/project_bloc.dart';
-import 'package:cm_mobile/bloc/receipt_bloc.dart';
-import 'package:cm_mobile/bloc/user_bloc.dart';
 import 'package:cm_mobile/data/app_colors.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
-import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
-import 'package:cm_mobile/screen/activity/activities.dart';
 import 'package:cm_mobile/screen/client/add_client_screen.dart';
+import 'package:cm_mobile/screen/project/projects_screen.dart';
 import 'package:cm_mobile/screen/receipt/all_receipts.dart';
-import 'package:cm_mobile/screen/stage/add_stage.dart';
-import 'package:cm_mobile/screen/users/add_user_screen.dart';
-import 'package:cm_mobile/service/api_service.dart';
+import 'package:cm_mobile/screen/stage/add_edit_stage.dart';
+import 'package:cm_mobile/screen/users/add_edit_user_screen.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
-import 'package:cm_mobile/widget/services_provider.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'data/details.dart';
@@ -31,31 +22,28 @@ class App extends StatefulWidget {
 class _App extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return ServicesContainer(child: AppDataContainer(child: _Blocs()));
+    return AppDataContainer(child: _MaterialApp());
   }
 }
 
 class _MaterialApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
     '/auth': (BuildContext context) => AuthScreen(),
-    '/activities': (BuildContext context) => ActivitiesScreen(),
-    '/add_stage': (BuildContext context) => AddStageScreen(),
-    '/add_receipt': (BuildContext context) => AddReceiptScreen(),
+    '/add_stage': (BuildContext context) => AddEditStageScreen(),
+    '/add_receipt': (BuildContext context) => AddEditReceiptScreen(),
     '/all_receipts': (BuildContext context) => AllReceiptsScreen(),
     '/home': (BuildContext context) => HomeScreen(),
-    '/create_users': (BuildContext context) => AddUserScreen(),
-    '/create_client': (BuildContext context) => AddClientScreen(),
+    '/create_users': (BuildContext context) => AddEditUserScreen(),
+    '/create_client': (BuildContext context) => AddEditClientScreen(),
     '/menu': (BuildContext context) => MenuScreen(),
     '/projects': (BuildContext context) => ProjectsScreen(),
     '/statistics': (BuildContext context) => StatisticsScreen(),
   };
 
-  final Widget home;
-
-  _MaterialApp({Key key, this.home}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    AppDataContainerState dataContainerState = AppDataContainer.of(context);
+
     return MaterialApp(
       title: Details.COMPANY_TITLE,
       routes: routes,
@@ -88,64 +76,10 @@ class _MaterialApp extends StatelessWidget {
           body1: TextStyle(fontSize: 14.0),
         ),
       ),
-      home: home,
+      home: dataContainerState.authState.isAuthenticated
+          ? _AppBottomNavigator()
+          : AuthScreen(),
     );
-  }
-}
-
-class _Blocs extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _DataBlocImplementationState();
-}
-
-class _DataBlocImplementationState extends State<_Blocs> {
-  final UserBloc userBloc = UserBloc(ApiService());
-  final ActivityBloc activityBloc = ActivityBloc(ApiService());
-  final ReceiptBloc receiptBloc = ReceiptBloc(ApiService());
-  final AuthBloc authBloc = AuthBloc(ApiService());
-  final ProjectsBloc projectsBloc = ProjectsBloc(ApiService());
-
-  @override
-  Widget build(BuildContext context) {
-    AppDataContainerState dataContainerState = AppDataContainer.of(context);
-
-    authBloc.results
-        .listen((authState) => _onAuthenticated(dataContainerState, authState));
-
-    return BlocProvider(
-        bloc: authBloc,
-        child: dataContainerState.authState.isAuthenticated
-            ? BlocProvider(
-                bloc: userBloc,
-                child: BlocProvider(
-                    bloc: activityBloc,
-                    child: BlocProvider(
-                      bloc: receiptBloc,
-                      child: dataContainerState.user != null
-                          ? _MaterialApp(home: _AppBottomNavigator())
-                          : Column(),
-                    )),
-              )
-            : _MaterialApp(home: AuthScreen()));
-  }
-
-  void _onAuthenticated(
-      AppDataContainerState dataContainer, AuthenticationState authState) {
-    userBloc.results.listen((user) => _onUserReceived(dataContainer, user));
-    userBloc.query.add(1);
-    dataContainer.setAuthState(authState);
-  }
-
-  void _onUserReceived(AppDataContainerState dataContainer, User user) {
-    activityBloc.results
-        .listen((activities) => dataContainer.setActivities(activities));
-
-    receiptBloc.results
-        .listen((receipts) => dataContainer.setReceipts(receipts));
-
-    activityBloc.query.add("");
-    receiptBloc.query.add("");
-    dataContainer.setUser(user);
   }
 }
 

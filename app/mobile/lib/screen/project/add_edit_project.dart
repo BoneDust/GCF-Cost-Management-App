@@ -1,15 +1,12 @@
 import 'dart:ui';
 
-import 'package:cm_mobile/bloc/client_bloc.dart';
-import 'package:cm_mobile/bloc/project_bloc.dart';
-import 'package:cm_mobile/bloc/user_bloc.dart';
-import 'package:cm_mobile/model/api_response.dart';
+import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/model/client.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/client/clients_screen.dart';
 import 'package:cm_mobile/screen/users/users_screen.dart';
-import 'package:cm_mobile/service/api_service.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +16,7 @@ class AddEditProjectScreen extends StatefulWidget {
   final bool isEditing;
   final Project project;
 
-  const AddEditProjectScreen({Key key, this.isEditing = false, this.project})
+  const AddEditProjectScreen({Key key, this.isEditing = false, this.project,})
       : super(key: key);
 
   @override
@@ -34,9 +31,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   DateTime startDate;
   DateTime endDate;
 
-  ProjectsBloc projectsBloc;
-  UserBloc userBloc;
-  ClientBloc clientBloc;
+  GenericBloc<Project> projectsBloc;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController estimatedCostController = TextEditingController();
@@ -54,31 +49,18 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
 
   @override
   void initState() {
-    projectsBloc = ProjectsBloc(ApiService());
+    projectsBloc = GenericBloc<Project>();
 
     if (widget.isEditing) {
-      userBloc = UserBloc(ApiService());
-      clientBloc = ClientBloc(ApiService());
 
-      userBloc.outUser.listen((user) {
-        setState(() {
-          _selectedForeman = user;
-        });
-      });
-
-      clientBloc.outClient.listen((client) {
-        setState(() {
-          _selectedClient = client;
-        });
-      });
-
-      projectsBloc.outUpdatedProject
-          .listen((project) => finishedAddingProject(project));
+      projectsBloc.outUpdatedItem
+          .listen((project) => onProjectReceived(project)).onError(handleError);
 
       fillFormsWithProjectData();
     } else {
-      projectsBloc.outAddedProject
-          .listen((project) => finishedAddingProject(project));
+
+      projectsBloc.outCreateItem
+          .listen((project) => onProjectReceived(project)).onError(handleError);
     }
 
     super.initState();
@@ -154,6 +136,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                       data: themeData.copyWith(primaryColor: Colors.blueGrey),
                       child: DateTimePickerFormField(
                         format: dateFormat,
+                        initialValue: startDate,
                         decoration: InputDecoration(labelText: 'start date'),
                         onChanged: (dt) => setState(() => startDate = dt),
                       ),
@@ -162,6 +145,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                       data: themeData.copyWith(primaryColor: Colors.blueGrey),
                       child: DateTimePickerFormField(
                         format: dateFormat,
+                        initialValue: endDate,
                         decoration: InputDecoration(labelText: 'end date'),
                         onChanged: (dt) => setState(() => endDate = dt),
                       ),
@@ -172,7 +156,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
             ],
           ),
         ),
-        _isLoading ? _loadingIndicator() : Column()
+        _isLoading ? LoadingIndicator(text: widget.isEditing ? "saving project" : "creating project") : Column()
       ],
     );
   }
@@ -332,34 +316,16 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
     );
   }
 
-  void finishedAddingProject(ApiResponse apiResponse) {
+  void onProjectReceived(Project project) {
     setState(() {
       _isLoading = false;
     });
-    if (apiResponse.isSuccess)
-      Navigator.of(context).pop(apiResponse);
-    else
-      onAddProjectError(apiResponse.error);
-  }
-
-  Widget _loadingIndicator() {
-    return Stack(
-      children: <Widget>[
-        Container(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-            child: Container(
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
-            ),
-          ),
-        ),
-        Center(
-          child: CircularProgressIndicator(
-            backgroundColor: Colors.green,
-          ),
-        ),
-      ],
-    );
+    if (widget.isEditing){
+      project.foreman = widget.project.foreman;
+      project.receipts = widget.project.receipts;
+      project.client = widget.project.client;
+    }
+    Navigator.of(context).pop(project);
   }
 
   Project createProject() => Project(
@@ -411,7 +377,42 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
     });
   }
 
-  onAddProjectError(error) {
+
+  void _createProject() {
+    setState(() {
+      _isLoading = true;
+    });
+    projectsBloc.create(createProject());
+  }
+
+  void fillFormsWithProjectData() {
+    nameController.text = widget.project.name;
+    _sizeValue = widget.project.teamSize.toDouble();
+    startDate = widget.project.startDate;
+    endDate = widget.project.endDate;
+    _status = widget.project.status;
+    estimatedCostController.text = widget.project.estimatedCost.toString();
+    _selectedForeman = widget.project.foreman;
+    _selectedClient = widget.project.client;
+  }
+
+  void updateProject() {
+    setState(() {
+      _isLoading = true;
+    });
+    Project createdProject = getUpdatedProject();
+    projectsBloc.update(createdProject, createdProject.id);
+  }
+
+  Project getUpdatedProject() {
+    Project project = createProject();
+    project.id = widget.project.id;
+    project.expenditure = widget.project.expenditure;
+    project.status = widget.project.status;
+    return project;
+  }
+
+  handleError(error) {
     setState(() {
       _isLoading = false;
     });
@@ -425,7 +426,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
               FlatButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    _createProject();
+                    widget.isEditing ? updateProject() : _createProject();
                   },
                   child: Text("try again")),
               FlatButton(
@@ -437,39 +438,6 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
             ],
           );
         });
-  }
-
-  void _createProject() {
-    setState(() {
-      _isLoading = true;
-    });
-    projectsBloc.addProject(createProject());
-  }
-
-  void fillFormsWithProjectData() {
-    nameController.text = widget.project.name;
-    _sizeValue = widget.project.teamSize.toDouble();
-    startDate = widget.project.startDate;
-    endDate = widget.project.endDate;
-    _status = widget.project.status;
-    estimatedCostController.text = widget.project.estimatedCost.toString();
-    userBloc.getUser(widget.project.userId);
-    clientBloc.getClient(widget.project.clientId);
-  }
-
-  void updateProject() {
-    setState(() {
-      _isLoading = true;
-    });
-    projectsBloc.updateProject(getUpdatedProject());
-  }
-
-  Project getUpdatedProject() {
-    Project project = createProject();
-    project.id = widget.project.id;
-    project.expenditure = widget.project.expenditure;
-    project.status = widget.project.status;
-    return project;
   }
 }
 

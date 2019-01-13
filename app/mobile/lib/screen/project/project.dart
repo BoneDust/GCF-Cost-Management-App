@@ -1,65 +1,116 @@
-import 'package:cm_mobile/bloc/bloc_provider.dart';
-import 'package:cm_mobile/bloc/project_bloc.dart';
-import 'package:cm_mobile/bloc/stage_bloc.dart';
-import 'package:cm_mobile/bloc/user_bloc.dart';
+import 'dart:async';
+
+import 'package:cm_mobile/bloc/generic_bloc.dart';
+import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
-import 'package:cm_mobile/model/api_response.dart';
+import 'package:cm_mobile/model/client.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/project/add_edit_project.dart';
 import 'package:cm_mobile/screen/project/overview.dart';
-import 'package:cm_mobile/service/api_service.dart';
+import 'package:cm_mobile/screen/receipt/add_edit_receipt.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 
 class ProjectWidget extends StatefulWidget {
   final Project project;
 
-  ProjectWidget(this.project);
+  ProjectWidget({this.project});
 
   @override
   State<StatefulWidget> createState() {
-    return _ProjectWidgetState(project);
+    return ProjectWidgetState(project);
   }
 }
 
-class _ProjectWidgetState extends State<ProjectWidget> {
+class ProjectWidgetState extends State<ProjectWidget> {
   Project project;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  UserBloc userBloc;
-  StagesBloc stagesBloc;
+  GenericBloc<User> userBloc;
+  GenericBloc<Stage> stagesBloc;
+  GenericBloc<Client> clientBloc;
+  GenericBloc<Project> projectBloc;
+  GenericBloc<Receipt> receiptBloc;
 
-  _ProjectWidgetState(this.project);
+  bool _isLoading = false;
+
+  String _loadingText;
+
+  ModelStatusType status = ModelStatusType.UNCHANGED;
+
+
+  ProjectWidgetState(this.project);
+  StreamSubscription outProjectDeletedListener;
+  StreamSubscription outUserListener;
+  StreamSubscription outClientListener;
+  StreamSubscription outStagesListener;
+  StreamSubscription outReceiptsListener;
 
   @override
   void initState() {
-    userBloc = UserBloc(ApiService());
-    stagesBloc = StagesBloc(ApiService());
+    userBloc = GenericBloc<User>();
+    stagesBloc = GenericBloc<Stage>();
+    clientBloc = GenericBloc<Client>();
+    projectBloc = GenericBloc<Project>();
+    receiptBloc = GenericBloc<Receipt>();
 
-    userBloc.getUser(project.userId);
-    stagesBloc.query.add("");
+    outProjectDeletedListener = projectBloc.outDeletedItem.listen((isDeleted) {
+      if (isDeleted) status = ModelStatusType.DELETED;
+      _exitProjectScreen();
+    });
+    outProjectDeletedListener.onError(onDeleteError);
+    outUserListener = userBloc.outItem.listen((user) {
+      setState(() {
+        project.foreman = user;
+      });
+    });
+
+    outClientListener = clientBloc.outItem.listen((client) {
+      setState(() {
+        project.client = client;
+      });
+    });
+
+    outStagesListener = stagesBloc.outItemsByProject.listen((stages) {
+      setState(() {
+        project.stages = stages;
+      });
+    });
+
+    outReceiptsListener = receiptBloc.outItemsByProject.listen((receipts) {
+      setState(() {
+        project.receipts = receipts;
+      });
+    });
+
+
+    userBloc.get(project.userId);
+    clientBloc.get(project.clientId);
+    stagesBloc.getByProject(project.id);
+    receiptBloc.getByProject(project.id);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
-    return Scaffold(
-      body: buildBodyWithStreamer(),
-      floatingActionButton: Theme(
-          data: themeData.copyWith(accentColor: Colors.white),
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/add_receipt");
-            },
-            child: Icon(
-              Typicons.doc_add,
-              color: Colors.green,
+    return Stack(
+      children: <Widget>[
+        WillPopScope(
+            child: Scaffold(
+              key: _scaffoldKey,
+              body: buildBodyWithStreamer(),
+              floatingActionButton: _buildFloatingActionButton(),
             ),
-          )),
+            onWillPop: _onWillPop),
+        _isLoading ? LoadingIndicator(text: _loadingText) : Column()
+      ],
     );
   }
 
@@ -71,9 +122,7 @@ class _ProjectWidgetState extends State<ProjectWidget> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           List<Widget> appBarActions = [];
           if (user.privilege == Privilege.ADMIN)
-            appBarActions.add(_ProjectPopMenuButton(
-              project: project,
-            ));
+            appBarActions.add(_projectPopMenuButton());
           return <Widget>[
             SliverAppBar(
               actions: appBarActions,
@@ -130,25 +179,10 @@ class _ProjectWidgetState extends State<ProjectWidget> {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     Privilege privilege = userContainerState.user.privilege;
 
-    List<Widget> stage = [
-      BlocProvider(
-        bloc: stagesBloc,
-        child: StreamBuilder(
-            stream: stagesBloc.results,
-            builder: (BuildContext context, AsyncSnapshot<List<Stage>> snapshot) {
-              project.stages = snapshot.data;
-              return snapshot.data != null
-                  ?  StagesWidget(project.stages)
-                  : _LoadingWidget();
-            }),
-      ),
-      Padding(
-        padding: EdgeInsets.only(bottom: 20),
-      ),
-    ];
+    List<Widget> stage = [StagesWidget(project, this)];
 
     List<Widget> receipt = [
-      ReceiptsWidget(project.receipts),
+      ReceiptsWidget(receipts: project.receipts),
       Padding(
         padding: EdgeInsets.only(bottom: 20),
       ),
@@ -169,40 +203,12 @@ class _ProjectWidgetState extends State<ProjectWidget> {
       _projectWidgets.addAll(stage);
       _projectWidgets.addAll(receipt);
     }
-    _projectWidgets.add(BlocProvider(
-      bloc: userBloc,
-      child: StreamBuilder(
-          stream: userBloc.outUser,
-          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-            project.foreman = snapshot.data;
-            return snapshot.data != null
-                ? ProjectDetailsCard(project)
-                : _LoadingWidget();
-          }),
-    ));
+    _projectWidgets.add(ProjectDetailsCard(project));
 
     return _projectWidgets;
   }
-}
 
-class _LoadingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
-}
-
-class _ProjectPopMenuButton extends StatelessWidget {
-  final Project project;
-
-  const _ProjectPopMenuButton({Key key, this.project}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _projectPopMenuButton() {
     return PopupMenuButton<String>(
         onSelected: (value) {
           onItemClicked(value, context);
@@ -219,22 +225,148 @@ class _ProjectPopMenuButton extends StatelessWidget {
   void onItemClicked(String value, BuildContext context) {
     switch (value) {
       case "Edit":
-        _navigateAndDisplaySelection(context);
+        _navigateAndDisplayEdit(context);
+        break;
+      case "Remove":
+        _removeProject();
     }
   }
 
-  _navigateAndDisplaySelection(BuildContext context) async {
+  _navigateAndDisplayEdit(BuildContext context) async {
     final result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => AddEditProjectScreen(
               project: project,
               isEditing: true,
             )));
 
-    if (result is ApiResponse) {
-      Scaffold.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(SnackBar(
-            content: Text(result.success), backgroundColor: Colors.green));
+    if (result is Project) {
+      setState(() {
+        project = result;
+      });
+      status = ModelStatusType.UPDATED;
+      _scaffoldKey.currentState.removeCurrentSnackBar();
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("project saved"), backgroundColor: Colors.green));
     }
+  }
+
+  void _removeProject([bool prompt = true]) {
+
+    void remove(){
+      setState(() {
+        _isLoading = true;
+        _loadingText = "removing project";
+      });
+      projectBloc.delete(project.id);
+    }
+
+    if (prompt)
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text("delete project?"),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("no")),
+                FlatButton(
+
+                    onPressed: () {
+                      Navigator.pop(context);
+                      remove();
+                    },
+                    child: Text("yes"))
+              ],
+            );
+          });
+    else
+      remove();
+
+  }
+
+  Future<bool> _onWillPop() async {
+    _exitProjectScreen();
+    return false;
+  }
+
+  @override
+  void dispose() {
+    outProjectDeletedListener.cancel();
+    outUserListener.cancel();
+    outClientListener.cancel();
+    outStagesListener.cancel();
+    outReceiptsListener.cancel();
+    super.dispose();
+  }
+
+  void _exitProjectScreen() {
+    ModelStatus modelStatus = ModelStatus(status: status, model: project);
+
+    Navigator.of(context).pop(modelStatus);
+  }
+
+  Widget _buildFloatingActionButton() {
+    ThemeData themeData = Theme.of(context);
+
+    return Theme(
+        data: themeData.copyWith(accentColor: Colors.white),
+        child: FloatingActionButton(
+          onPressed: () {
+            _navigateAndDisplayReceipt();          },
+          child: Icon(
+            Typicons.doc_add,
+            color: Colors.green,
+          ),
+        ));
+  }
+
+
+  _navigateAndDisplayReceipt() async {
+    final result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddEditReceiptScreen(
+            isEditing: true,
+            project : widget.project
+        )));
+
+    if (result is Receipt) {
+      _scaffoldKey.currentState.removeCurrentSnackBar();
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text("receipt created"), backgroundColor: Colors.green));
+
+      setState(() {
+        widget.project.receipts.insert(0, result);
+      });
+
+    }
+  }
+
+  onDeleteError(error) {
+    setState(() {
+      _isLoading = false;
+    });
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("$error"),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _removeProject(false);
+                  },
+                  child: Text("try again")),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("dismiss"))
+            ],
+          );
+        });
   }
 }

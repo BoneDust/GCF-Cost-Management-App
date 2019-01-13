@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:cm_mobile/bloc/auth_bloc.dart';
-import 'package:cm_mobile/bloc/bloc_provider.dart';
-import 'package:cm_mobile/model/auth_state.dart';
+ import 'package:cm_mobile/model/auth_state.dart';
+import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/model/user_login.dart';
+import 'package:cm_mobile/service/api_auth_service.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -17,18 +20,19 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreen extends State<AuthScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  var listener;
+  StreamSubscription listener;
   bool _autoValidate = false;
   AuthBloc authBloc;
 
   String _errorText = "";
 
+  bool _isLoading = false;
+
   @override
   void initState() {
-    authBloc = BlocProvider.of<AuthBloc>(context);
-    if (listener != null)
-      listener = authBloc.results.listen((authState) => onError(authState));
-
+    authBloc = AuthBloc(AuthApiService());
+    listener = authBloc.outLogin.listen(_loginResult);
+    listener.onError(handleError);
     super.initState();
   }
 
@@ -102,8 +106,8 @@ class _AuthScreen extends State<AuthScreen> {
                               side: BorderSide(color: Colors.white)),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              appDataContainerState
-                                  .setAuthState(AuthenticationState.loading());
+                              _isLoading = true;
+                              appDataContainerState.setAuthState(AuthenticationState.loading());
                               authBloc.authenticateUser(UserLogin());
                             } else
                               setState(() {
@@ -127,30 +131,12 @@ class _AuthScreen extends State<AuthScreen> {
             ),
           ),
         ),
-        authState.isLoading ? _loadingIndicator() : Column()
+        _isLoading ? LoadingIndicator() : Column()
       ],
     );
   }
 
-  Widget _loadingIndicator() {
-    return Stack(
-      children: <Widget>[
-        Container(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-            child: Container(
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
-            ),
-          ),
-        ),
-        Center(
-          child: CircularProgressIndicator(
-            backgroundColor: Colors.green,
-          ),
-        ),
-      ],
-    );
-  }
+
 
   Widget _buildTextFormField(
       String labelText, TextEditingController controller, Function validator) {
@@ -193,17 +179,38 @@ class _AuthScreen extends State<AuthScreen> {
     return null;
   }
 
-  onError(AuthenticationState authState) {
-    if (!authState.isAuthenticated) {
-      setState(() {
-        _errorText = "username or password doesn't match";
-      });
-    }
-  }
-
   @override
   void dispose() {
     super.dispose();
     listener?.cancel();
+  }
+
+  void _loginResult(User user) {
+    AppDataContainerState dataContainerState = AppDataContainer.of(context);
+    if (user != null) {
+      dataContainerState.user = user;
+      dataContainerState.setAuthState(AuthenticationState.authenticated());
+    }
+  }
+
+  handleError(error) {
+    setState(() {
+      _isLoading = false;
+    });
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("$error"),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("ok"))
+            ],
+          );
+        });
   }
 }

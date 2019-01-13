@@ -1,25 +1,29 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:cm_mobile/bloc/bloc_provider.dart';
-import 'package:cm_mobile/bloc/receipt_bloc.dart';
+import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/receipt.dart';
+import 'package:cm_mobile/screen/project/projects_screen.dart';
 import 'package:cm_mobile/screen/receipt/image_viewer.dart';
-import 'package:cm_mobile/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddReceiptScreen extends StatefulWidget {
-  Project project;
+class AddEditReceiptScreen extends StatefulWidget {
+  final Project project;
+  final bool isEditing;
+
+  const AddEditReceiptScreen({Key key, this.project, this.isEditing = false}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _AddReceiptState();
+    return _AddReceiptState(project);
   }
 }
 
-class _AddReceiptState extends State<AddReceiptScreen> {
+class _AddReceiptState extends State<AddEditReceiptScreen> {
+  Project _project;
 
   TextEditingController descriptionController = TextEditingController();
   TextEditingController totalCostController = TextEditingController();
@@ -47,26 +51,32 @@ class _AddReceiptState extends State<AddReceiptScreen> {
 
   bool _isLoading = false;
 
-  int projectId;
 
-  ReceiptBloc receiptBloc;
+  GenericBloc<Receipt> receiptBloc;
+
+  _AddReceiptState(this._project);
+  StreamSubscription outReceiptsListener;
 
   @override
   void initState() {
-    receiptBloc = ReceiptBloc(ApiService());
-    receiptBloc.outAddedReceipt
+
+    receiptBloc =  GenericBloc<Receipt> ();
+
+    outReceiptsListener =  receiptBloc.outCreateItem
         .listen((receipt) => finishedAddingReceipt(receipt));
+
+    outReceiptsListener.onError(handleError);
 
     super.initState();
   }
 
-  get getReceipt => Receipt(
+  Receipt createReceiptObject() => Receipt(
+    projectId: _project.id,
     description: descriptionController.text,
-    totalCost: 12,
-    supplier: supplierController.text,
-    projectId: projectId,
+    totalCost: double.parse(totalCostController.text),
     purchaseDate: DateTime.now(),
-
+    picture: "sdf",
+    supplier: supplierController.text
   );
 
   Future getImage() async {
@@ -163,17 +173,21 @@ class _AddReceiptState extends State<AddReceiptScreen> {
         padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: Column(
           children: <Widget>[
+            _projectFormField(),
             TextFormField(
               keyboardType: TextInputType.number,
+              controller: totalCostController,
               decoration: InputDecoration(
                   labelText: "amount",
                   prefix: Text("R")
               ),
             ),
             TextFormField(
+              controller: supplierController,
               decoration: InputDecoration(labelText: "supplier"),
             ),
             TextFormField(
+              controller: descriptionController,
               maxLines: null,
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
@@ -188,10 +202,7 @@ class _AddReceiptState extends State<AddReceiptScreen> {
                     child: Text("submit", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.white),),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                     onPressed: () {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      receiptBloc.addReceipt(Receipt());
+                      _createReceipt();
                     })
               ],
             )
@@ -200,11 +211,124 @@ class _AddReceiptState extends State<AddReceiptScreen> {
     );
   }
 
+  Widget _projectFormField() {
+    return FormField<Receipt>(
+      validator: (value) {
+        if (value == null) {
+          return "select project";
+        }
+      },
+      onSaved: (value) {},
+      builder: (
+          FormFieldState<Receipt> state,
+          ) {
+        return GestureDetector(
+          onTap: () {
+            navigateAndDisplayProject(context);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new InputDecorator(
+                  decoration: const InputDecoration(
+                      labelText: "project",
+                      contentPadding: EdgeInsets.all(10.0),
+                      isDense: true,),
+                  child: SizedBox(
+                    height: 40,
+                    child: Row(
+                      children: <Widget>[
+                        Text(_project == null
+                            ? "select project"
+                            : _project.name)
+                      ],
+                    ),
+                  )),
+              SizedBox(height: 5.0),
+              Text(
+                state.hasError ? state.errorText : '',
+                style:
+                TextStyle(color: Colors.redAccent.shade700, fontSize: 12.0),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+  onProjectSelected(
+      BuildContext context,
+      Project project,
+      ) {
+    Navigator.of(context).pop();
+    setState(() {
+      project = project;
+    });
+  }
+
+  navigateAndDisplayProject(BuildContext context) async {
+    final result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ProjectsScreen(
+          title: "select project",
+          isSelectOnClick: true,
+          showTabs: false,
+        )));
+
+    if (result is Project) {
+      setState(() {
+        _project = result;
+      });
+    }
+  }
+
   void finishedAddingReceipt(Receipt receipt) {
     setState(() {
       _isLoading = false;
     });
-    if (receipt != null) Navigator.of(context).pop();
+    if (receipt != null) Navigator.of(context).pop(receipt);
+  }
+
+  @override
+  void dispose() {
+    outReceiptsListener.cancel();
+    super.dispose();
+  }
+
+  handleError(error) {
+    setState(() {
+      _isLoading = false;
+    });
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("$error"),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _createReceipt();
+                  },
+                  child: Text("try again")),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: Text("dismiss"))
+            ],
+          );
+        });
+  }
+
+  void _createReceipt() {
+    setState(() {
+      _isLoading = true;
+    });
+    receiptBloc.create(createReceiptObject());
   }
 
 }

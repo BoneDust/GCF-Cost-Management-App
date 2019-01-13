@@ -1,10 +1,17 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/screen/client/clients_screen.dart';
+import 'package:cm_mobile/screen/home/home.dart';
 import 'package:cm_mobile/screen/users/users_screen.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class SliverGridMenu extends StatelessWidget {
+
+  final HomeState parent;
+
+  const SliverGridMenu({Key key, @ required this.parent}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     List<GridItemEntry> menuEntries = getMenuEntries(context);
@@ -31,17 +38,13 @@ class SliverGridMenu extends StatelessWidget {
     TabController tabController = DefaultTabController.of(context);
     List<GridItemEntry> entries = [];
 
-    if (privilege == Privilege.FOREMAN)
-      entries.addAll([
-        GridItemEntry(
-            icon: Typicons.doc_add,
-            function: () {
-              Navigator.pushNamed(context, '/add_receipt');
-            },
-            title: "add receipt"),
-      ]);
-
     entries.addAll([
+      GridItemEntry(
+          icon: Typicons.doc_add,
+          function: () {
+            parent.navigateAndDisplayReceipt();
+          },
+          title: "add receipt"),
       GridItemEntry(
           icon: Typicons.clipboard,
           function: () => tabController.animateTo(1),
@@ -58,8 +61,13 @@ class SliverGridMenu extends StatelessWidget {
         GridItemEntry(
             icon: Typicons.users_outline,
             function: () =>   Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => UsersScreen(title: "select user",))),
+                MaterialPageRoute(builder: (context) => UsersScreen(title: "users",))),
             title: "users"),
+        GridItemEntry(
+            icon: Typicons.vcard,
+            function: () =>   Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ClientsScreen(title: "clients" ))),
+            title: "clients"),
         GridItemEntry(
             icon: Typicons.chart_bar_outline,
             function: () => tabController.animateTo(2),
@@ -68,6 +76,8 @@ class SliverGridMenu extends StatelessWidget {
 
     return entries;
   }
+
+
 }
 
 class GridItemEntry {

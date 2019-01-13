@@ -1,21 +1,44 @@
+import 'package:cm_mobile/bloc/bloc_provider.dart';
+import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/model/activity.dart';
+import 'package:cm_mobile/screen/activity/activities.dart';
+import 'package:cm_mobile/screen/activity/activity.dart';
 import 'package:cm_mobile/screen/activity/activity_list.dart';
-import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class ActivitiesCard extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _ActivitiesCardState();
   }
 }
 
 class _ActivitiesCardState extends State<ActivitiesCard> {
+  GenericBloc<Activity> activityBloc;
+
+  @override
+  void initState() {
+    activityBloc = GenericBloc<Activity>();
+    activityBloc.getAll();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    AppDataContainerState userContainerState = AppDataContainer.of(context);
-    List<Activity> activities = userContainerState.activities.take(3).toList();
+    return BlocProvider<GenericBloc<Activity>>(
+        bloc: activityBloc,
+        child: StreamBuilder<List<Activity>>(
+          stream: activityBloc.outItems,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Activity>> snapshot) {
+            return snapshot.data != null
+                ? _buildBody(snapshot.data)
+                : _LoadingWidget();
+          },
+        ));
+  }
+
+  Widget _buildBody(List<Activity> activities) {
     return Card(
       elevation: 5,
       child: Column(
@@ -29,22 +52,35 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
             ),
             children: [
               ActivityList(
-                activities: activities,
+                activities: activities.take(3).toList(),
                 isScrollable: false,
               ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-                child: RaisedButton(
-                    color: Colors.blueGrey,
-                    elevation: 5,
-                    child: Text("show activities", style: TextStyle(color: Colors.white),),
-                    onPressed: () =>
-                        Navigator.of(context).pushNamed("/activities")),
-              )
+              Center(child: FlatButton(onPressed:(){
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ActivitiesScreen(activities: activities)));
+              } , child:  Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.keyboard_arrow_down),
+                  Text("all activites")
+                ],)),)
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _LoadingWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.green,
       ),
     );
   }

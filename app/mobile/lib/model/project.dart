@@ -1,13 +1,12 @@
-import 'dart:collection';
-
 import 'package:cm_mobile/model/activity.dart';
+import 'package:cm_mobile/model/client.dart';
+import 'package:cm_mobile/model/model_base.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:cm_mobile/util/custom_json_converter.dart';
 
-@JsonSerializable()
-class Project {
+class Project extends ModelBase {
   int id;
   int userId;
   int teamSize;
@@ -20,9 +19,10 @@ class Project {
   DateTime endDate;
 
   User foreman;
+  Client client;
   List<Receipt> receipts;
   List<Activity> activities;
-  List<Stage> stages;
+  List<Stage>   stages;
 
   Project(
       {this.id = 0,
@@ -53,12 +53,11 @@ class Project {
         teamSize = json['team_size'],
         clientId = json['client_id'],
         name = json['name'],
-        estimatedCost = getDouble(json["estimated_cost"]),
+        estimatedCost = CustomJsonConverter.getDouble(json["estimated_cost"]),
         status = json['status'],
-        expenditure = getDouble(json['expenditure']),
+        expenditure = CustomJsonConverter.getDouble(json['expenditure']),
         startDate = DateTime.fromMillisecondsSinceEpoch(json['start_date']),
-        endDate = DateTime.fromMillisecondsSinceEpoch(json['end_date'])
-  ;
+        endDate = DateTime.fromMillisecondsSinceEpoch(json['end_date']), super.fromJson(json);
 
   Map<String, dynamic> toJson() => {
         "projectId": id,
@@ -72,13 +71,4 @@ class Project {
         "name": name,
         "expenditure": expenditure
       };
-
-  static double getDouble(var number) {
-    if (number is double) return number;
-    if (number is int) {
-      return number.toDouble();
-    }
-    if (number is String) return double.parse(number);
-    return 0.0;
-  }
 }

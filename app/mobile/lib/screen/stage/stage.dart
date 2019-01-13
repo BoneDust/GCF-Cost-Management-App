@@ -2,10 +2,10 @@ import 'package:cm_mobile/model/stage.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 
-class ForeManStageScreen extends StatelessWidget {
+class StageScreen extends StatelessWidget {
   final Stage stage;
 
-  const ForeManStageScreen({Key key, @required this.stage}) : super(key: key);
+  const StageScreen({Key key, @required this.stage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +32,10 @@ class _StageScreen extends StatelessWidget {
     return  ListView(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         children: <Widget>[
-          StageDetails(
-            stage: stage,
-          ),
           SnapShotCard(
             stage: stage,
           ),
-          Duration(),
+          StageDetails(),
         ],
       );
   }

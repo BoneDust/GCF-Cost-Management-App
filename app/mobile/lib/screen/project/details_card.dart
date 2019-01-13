@@ -42,30 +42,38 @@ class _DetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
+
     List<Widget> detailsList = [];
-    if (user.privilege == Privilege.ADMIN)
+    if (project.foreman != null){
+      if (user.privilege == Privilege.ADMIN)
+        detailsList.addAll([
+          ListTile(
+            title: Text(project.foreman.name + " " + project.foreman.surname),
+            subtitle: Text("Foreman"),
+            leading: Icon(Typicons.user_outline),
+          ),
+          Divider(
+            color: Colors.black54,
+          )
+        ]);
+    }
+
+    if (project.client != null){
       detailsList.addAll([
         ListTile(
-          title: Text(project.foreman.name + " " + project.foreman.surname),
-          subtitle: Text("Foreman"),
-          leading: Icon(Typicons.user_outline),
+          title: Text(project.client.name),
+          subtitle: Text("company"),
+          leading: Icon(Typicons.vcard),
         ),
         Divider(
           color: Colors.black54,
-        )
+        ),
       ]);
+    }
 
     detailsList.addAll([
       ListTile(
-        title: Text(project.clientId.toString()),
-        subtitle: Text("company"),
-        leading: Icon(Typicons.vcard),
-      ),
-      Divider(
-        color: Colors.black54,
-      ),
-      ListTile(
-        title: Text(project.name),
+        title: Text(project.teamSize.toString()),
         subtitle: Text("team size"),
         leading: Icon(Typicons.users_outline),
       ),

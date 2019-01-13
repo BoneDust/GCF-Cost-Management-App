@@ -1,28 +1,42 @@
-import 'package:cm_mobile/bloc/auth_bloc.dart';
-import 'package:cm_mobile/bloc/bloc_provider.dart';
+import 'package:cm_mobile/bloc/generic_bloc.dart';
+import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/screen/home/grid_menu.dart';
 import 'package:cm_mobile/screen/home/activities_card.dart';
-import 'package:cm_mobile/util/image_utils.dart';
+import 'package:cm_mobile/model/activity.dart';
+import 'package:cm_mobile/screen/receipt/add_edit_receipt.dart';
+import 'package:cm_mobile/screen/receipt/receipt.dart';
+
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class HomeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomeState();
+    return HomeState();
   }
 }
 
-class _HomeState extends State<HomeScreen>
+class HomeState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin<HomeScreen> {
   @override
   bool get wantKeepAlive => true;
+  GenericBloc<Activity> activityBloc;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
             icon: Icon(
@@ -37,32 +51,43 @@ class _HomeState extends State<HomeScreen>
         ),
         centerTitle: true,
       ),
-      body: _HomeBody(),
+      body: _buildHome(),
     );
   }
-}
 
-class _HomeBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-
+  Widget _buildHome(){
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: CustomScrollView(
           slivers: <Widget>[
             SliverList(
                 delegate: SliverChildListDelegate([
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-              ),
-              ActivitiesCard(),
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-              )
-            ])),
-            SliverGridMenu(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                  ),
+                  ActivitiesCard(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                  )
+                ])),
+            SliverGridMenu(parent: this,),
             SliverPadding(padding: EdgeInsets.only(bottom: 50))
           ],
         ));
+  }
+
+  navigateAndDisplayReceipt() async {
+    final result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddEditReceiptScreen()));
+
+    if (result is Receipt) {
+      _scaffoldKey.currentState.removeCurrentSnackBar();
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        action: SnackBarAction(textColor: Colors.white, label: "VIEW", onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReceiptScreen(result)));
+        }),
+          content: Text("receipt created"), backgroundColor: Colors.green));
+
+    }
   }
 }

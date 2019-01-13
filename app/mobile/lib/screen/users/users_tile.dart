@@ -1,14 +1,15 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/users/user_screen.dart';
+import 'package:cm_mobile/screen/users/users_screen.dart';
 import 'package:flutter/material.dart';
 
 class UserTile extends StatelessWidget {
   final User user;
-
+  final UsersScreenState parent;
   final Function function;
 
-  const UserTile({@required this.user, this.function});
+  const UserTile({@required this.user, this.function, this.parent});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,9 @@ class UserTile extends StatelessWidget {
           children: <Widget>[
             ListTile(
               onTap: () {
-               function != null ? function(context, user) :  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UserScreen(user: user)));
+                function != null
+                    ? function(context, user)
+                    : parent.navigateAndDisplayProject(context, user);
               },
               title: Text(user.name + " " + user.surname),
               subtitle: Container(

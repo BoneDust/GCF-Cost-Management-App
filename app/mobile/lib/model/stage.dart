@@ -1,7 +1,8 @@
+import 'package:cm_mobile/model/model_base.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
-class Stage {
+class Stage extends ModelBase {
   int id;
   int projectId;
   String name;
@@ -22,6 +23,7 @@ class Stage {
       this.beforePicture = "",
       this.afterPicture = "",
       this.endDate,
+      this.startDate,
       this.estimatedDaysDuration = 2});
 
   @override
@@ -33,12 +35,25 @@ class Stage {
   int get hashCode => id.hashCode;
 
   Stage.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        description = json['email'];
+      : id = json['id'],
+        projectId = json['project_id'],
+        name = json['stage_name'],
+        description = json['description'],
+        status = json['status'],
+        beforePicture = json['before_pic_url'],
+        afterPicture = json['after_pic_url'],
+        estimatedDaysDuration = json['estimated_duration'];
 
   Map<String, dynamic> toJson() => {
-    'name': name,
-    'description': description,
-  };
-
+        'id': id,
+        'stage_name': name,
+        'description': description,
+        'project_id': projectId,
+        'status': status,
+        'before_pic_url': beforePicture,
+        'after_pic_url': afterPicture,
+        'start_date': startDate.millisecondsSinceEpoch,
+        'end_date': endDate.millisecondsSinceEpoch,
+        'estimated_duration': estimatedDaysDuration,
+      };
 }

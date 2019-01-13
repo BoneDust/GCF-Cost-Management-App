@@ -1,16 +1,14 @@
-import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/client.dart';
-import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/client/client_screen.dart';
-import 'package:cm_mobile/screen/users/user_screen.dart';
+import 'package:cm_mobile/screen/client/clients_screen.dart';
 import 'package:flutter/material.dart';
 
 class ClientTile extends StatelessWidget {
   final Client client;
-
+  final ClientsScreenState parent;
   final Function function;
 
-  const ClientTile({@required this.client, this.function});
+  const ClientTile({@required this.client, this.function, this.parent});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +20,9 @@ class ClientTile extends StatelessWidget {
           children: <Widget>[
             ListTile(
               onTap: () {
-               function != null ? function(context, client) :  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ClientScreen(client: client)));
+                function != null
+                    ? function(context, client)
+                    : parent.navigateAndDisplayClient(context, client);
               },
               title: Text(client.name),
             ),

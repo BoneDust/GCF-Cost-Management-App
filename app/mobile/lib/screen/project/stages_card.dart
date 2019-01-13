@@ -1,50 +1,87 @@
 import 'dart:math';
 
+import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/stage.dart';
+import 'package:cm_mobile/screen/project/project.dart';
+import 'package:cm_mobile/screen/stage/add_edit_stage.dart';
 import 'package:cm_mobile/screen/stage/stage.dart';
-import 'package:cm_mobile/screen/stage/stages.dart';
 import 'package:flutter/material.dart';
 
-class StagesWidget extends StatelessWidget {
-  final List<Stage> stages;
+class StagesWidget extends StatefulWidget {
+  final Project project;
+  ProjectWidgetState parent;
 
-  StagesWidget(this.stages);
+  StagesWidget(this.project, this.parent);
 
   @override
-  Widget build(BuildContext context) {
-    return stages == null || stages.isEmpty
-        ? Column()
-        : _StagesWidgetRoot(stages);
+  State<StatefulWidget> createState() {
+    return _StagesWidget();
   }
 }
 
-class _StagesWidgetRoot extends StatelessWidget {
-  final List<Stage> stages;
+class _StagesWidget extends State<StagesWidget> {
 
-  _StagesWidgetRoot(this.stages);
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(padding: EdgeInsets.only(left: 10), child: Text("stages", style: TextStyle(color: Colors.blueGrey, fontSize: 30),),),
-                FlatButton(
-                    child: Text("+ ADD STAGE", style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w400)),
-                    onPressed: () => Navigator.of(context).pushNamed("/add_stage"))
-              ],
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
+                "stages",
+                style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+              ),
             ),
-            Column(
-              children: <Widget>[
-                _StagesCard(stages),
-              ],
-            )
+            widget.project.stages != null && widget.project.stages.isNotEmpty
+                ? _buildAddButton(context)
+                : Column(),
           ],
-        );
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child:       Center(
+            child: widget.project.stages != null
+                ? widget.project.stages.isNotEmpty
+                ? _StagesCard(widget.project.stages)
+                : _buildAddButton(context, true)
+                : Column(),
+          ),
+        )
+      ],
+    );
   }
+
+  Widget _buildAddButton(BuildContext context, [bool isLargeText = false]) {
+    return FlatButton(
+        child: Text("+ ADD STAGE",
+            style:
+                TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w400, fontSize: isLargeText ? 20 : 14)),
+        onPressed: () => _navigateAndDisplaySelection(context));
+  }
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    final result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddEditStageScreen(
+          isEditing: true,
+          projectId : widget.project.id
+        )));
+
+    if (result is Stage) {
+      widget.parent.setState(() {
+        widget.project.stages.insert(0, result);
+      });
+      Scaffold.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+            content: Text("stage created"), backgroundColor: Colors.green));
+    }
+  }
+
 }
 
 class _StagesCard extends StatelessWidget {
@@ -83,15 +120,22 @@ class _StageSampleCard extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: () => _showStage(context, stage),
         child: Card(
-          child: Center(child: Text(stage.name, style: TextStyle(color: Colors.white),)),
+          child: Center(
+              child: Text(
+            stage.name,
+            style: TextStyle(color: Colors.white),
+          )),
           color: Colors.indigo,
         ),
       ),
     );
   }
 
+
   _showStage(BuildContext context, Stage stage) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ForeManStageScreen(stage: stage,)));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => StageScreen(
+              stage: stage,
+            )));
   }
 }

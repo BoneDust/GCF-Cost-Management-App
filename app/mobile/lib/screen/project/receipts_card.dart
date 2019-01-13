@@ -6,56 +6,74 @@ import 'package:flutter/material.dart';
 class ReceiptsWidget extends StatelessWidget {
   final List<Receipt> receipts;
 
-  ReceiptsWidget(this.receipts);
+  ReceiptsWidget({this.receipts,});
 
   @override
   Widget build(BuildContext context) {
-    return receipts == null || receipts.isEmpty
-        ? Column()
-        : _ReceiptsWidgetRoot(receipts);
-  }
-}
-
-class _ReceiptsWidgetRoot extends StatelessWidget {
-  final List<Receipt> receipts;
-
-  _ReceiptsWidgetRoot(this.receipts);
-
-  @override
-  Widget build(BuildContext context) {
-    var topThreeReceipts = receipts.take(3).toList();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(left: 10),
           child: Text(
-            "receipts(" + receipts.length.toString() +")",
+            "receipts(" +
+                (receipts != null ? receipts.length.toString() : "0") +
+                ")",
             style: TextStyle(color: Colors.blueGrey, fontSize: 30),
           ),
         ),
-        Column(
-          children: <Widget>[
-            Column(
-              children: topThreeReceipts.map((receipt) {
-                return ReceiptTile(receipt);
-              }).toList(),
-            )
-          ],
-        ),
-       Center(child: FlatButton(onPressed:(){
-         Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-             ReceiptsList(receipts: receipts, appBarTitle: "Receipts",)
-         ));
-       } , child:  Row(
-         crossAxisAlignment: CrossAxisAlignment.center,
-         mainAxisAlignment: MainAxisAlignment.center,
-         children: <Widget>[
-         Icon(Icons.keyboard_arrow_down),
-         Text("more receipts")
-       ],)),)
+        _buildReceiptList(context, receipts),
       ],
+    );
+  }
+
+  _buildReceiptList(BuildContext context, List<Receipt> receipts) {
+    List<Widget> _children = [];
+
+    if (receipts != null) {
+      _children.addAll([
+        receipts.isEmpty
+            ? Center(
+                child: Text(
+                  "no receipts yet",
+                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+                ),
+              )
+            : Column(
+                children: <Widget>[
+                  Column(
+                    children: receipts.take(3).map((receipt) {
+                      return ReceiptTile(receipt);
+                    }).toList(),
+                  )
+                ],
+              ),
+      ]);
+
+      if (receipts.length > 3)
+        _children.add(Center(
+          child: FlatButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ReceiptsList(
+                          receipts: receipts,
+                          appBarTitle: "Receipts",
+                        )));
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.keyboard_arrow_down),
+                  Text("more receipts")
+                ],
+              )),
+        ));
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: _children,
     );
   }
 }

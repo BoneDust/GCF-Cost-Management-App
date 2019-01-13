@@ -1,75 +1,197 @@
-import 'package:cm_mobile/bloc/project_bloc.dart';
+import 'dart:async';
+
+import 'package:cm_mobile/bloc/generic_bloc.dart';
+import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/screen/project/project_tile.dart';
+import 'package:cm_mobile/screen/project/projects_screen.dart';
+import 'package:cm_mobile/screen/users/add_edit_user_screen.dart';
 import 'package:cm_mobile/screen/users/user_details_card.dart';
-import 'package:cm_mobile/service/api_service.dart';
-import 'package:cm_mobile/widget/app_data_provider.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   final User user;
 
-  const UserScreen({Key key, @required this.user}) : super(key: key);
+  const UserScreen({Key key, this.user}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _UserScreen(
-        user: user,
-      ),
-    );
+  State<StatefulWidget> createState() {
+    return _UserScreen(user: user);
   }
 }
 
-class _UserScreen extends StatelessWidget {
-  final User user;
+class _UserScreen extends State<UserScreen> {
+  User user;
+  GenericBloc<User> userBloc;
+  bool _isLoading = false;
 
-  const _UserScreen({Key key, @required this.user}) : super(key: key);
+  String _loadingText;
+  StreamSubscription outProjectDeletedListener;
+
+  ModelStatusType status = ModelStatusType.UNCHANGED;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  _UserScreen({@required this.user});
 
   @override
+  void initState() {
+    userBloc = GenericBloc<User>();
+
+    outProjectDeletedListener = userBloc.outDeletedItem.listen((isDeleted) {
+      if (isDeleted) status = ModelStatusType.DELETED;
+      _exitScreen();
+    });
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverAppBar(
-            expandedHeight: 250.0,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(user.name + " " + user.surname),
-              centerTitle: false,
-              background: Image(
-                image: AssetImage("assets/images.jpeg"),
-                fit: BoxFit.cover,
-              ),
+    return Stack(
+      children: <Widget>[
+
+        WillPopScope(child: Scaffold(
+          body: NestedScrollView(
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  actions: <Widget>[_projectPopMenuButton()],
+                  expandedHeight: 250.0,
+                  floating: false,
+                  pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text(user.name + " " + user.surname),
+                    centerTitle: false,
+                    background: Image(
+                      image: AssetImage("assets/images.jpeg"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+              ];
+            },
+            body: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              children: <Widget>[
+                user.privilege == Privilege.FOREMAN ? UserProjectsCard() : Column(),
+                UserDetailsCard(user: user),
+              ],
             ),
-          )
-        ];
-      },
-      body: ListView(
-        shrinkWrap: true,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-        children: <Widget>[
-          user.privilege == Privilege.FOREMAN ? UserProjectsCard() : Column(),
-          UserDetailsCard(user: user),
-        ],
-      ),
+          ),
+        ), onWillPop: _onWillPop),
+        _isLoading ? LoadingIndicator(text: _loadingText) : Column()
+
+      ],
     );
+  }
+
+  Widget _projectPopMenuButton() {
+    return PopupMenuButton<String>(
+        onSelected: (value) {
+          onItemClicked(value, context);
+        },
+        itemBuilder: (_) => <PopupMenuItem<String>>[
+              PopupMenuItem<String>(
+                child: Text("Edit"),
+                value: "Edit",
+              ),
+              PopupMenuItem<String>(child: Text("Remove"), value: "Remove"),
+            ]);
+  }
+
+  void onItemClicked(String value, BuildContext context) {
+    switch (value) {
+      case "Edit":
+        _navigateAndDisplayEdit(context);
+        break;
+      case "Remove":
+        _removeUser();
+    }
+  }
+
+  _navigateAndDisplayEdit(BuildContext context) async {
+    final result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddEditUserScreen(
+              user: user,
+              isEditing: true,
+            )));
+
+    if (result is User) {
+      setState(() {
+        user = result;
+      });
+      status = ModelStatusType.UPDATED;
+      _scaffoldKey.currentState.removeCurrentSnackBar();
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("project saved"), backgroundColor: Colors.green));
+    }
+  }
+
+  void _removeUser([bool prompt = true]) {
+    void remove() {
+      setState(() {
+        _isLoading = true;
+        _loadingText = "removing user";
+      });
+      userBloc.delete(user.id);
+    }
+
+    if (prompt)
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text("delete user?"),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("no")),
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      remove();
+                    },
+                    child: Text("yes"))
+              ],
+            );
+          });
+    else
+      remove();
+  }
+
+  Future<bool> _onWillPop() async {
+    _exitScreen();
+    return false;
+  }
+
+  void _exitScreen() {
+    ModelStatus modelStatus = ModelStatus(status: status, model: user);
+
+    Navigator.of(context).pop(modelStatus);
+  }
+
+  @override
+  void dispose() {
+    outProjectDeletedListener.cancel();
+    super.dispose();
   }
 }
 
 class UserProjectsCard extends StatelessWidget {
-  ProjectsBloc projectsBloc;
+  GenericBloc<Project> projectsBloc;
 
   UserProjectsCard() {
-    projectsBloc = ProjectsBloc(ApiService());
-    projectsBloc.query.add("");
+    projectsBloc = GenericBloc<Project>();
+    projectsBloc.getAll();
   }
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: projectsBloc.results,
+      stream: projectsBloc.outItems,
       initialData: <Project>[],
       builder: (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
         return Column(
@@ -82,31 +204,57 @@ class UserProjectsCard extends StatelessWidget {
                 style: TextStyle(color: Colors.blueGrey, fontSize: 30),
               ),
             ),
-            Card(
-                elevation: 5,
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: snapshot.data.take(3).map((project) {
-                    return UserProjectTile(project: project);
-                  }).toList(),
-                ))
+            _buildProjectList(context, snapshot.data)
           ],
         );
       },
     );
   }
-}
 
-class UserProjectTile extends StatelessWidget {
-  final Project project;
+  _buildProjectList(BuildContext context, List<Project> projects) {
+    List<Widget> _children = [];
 
-  const UserProjectTile({Key key, this.project}) : super(key: key);
+    if (projects != null) {
+      _children.addAll([
+        projects.isEmpty
+            ? Center(
+          child: Text(
+            "no projects yet",
+            style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+          ),
+        )
+            : Column(
+          children: <Widget>[
+            Column(
+              children: projects.take(3).map((project) {
+                return BasicProjectTile(project: project,);
+              }).toList(),
+            )
+          ],
+        ),
+      ]);
 
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(project.name),
+      if (projects.length > 3)
+        _children.add(Center(
+          child: FlatButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ProjectsScreen()));
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.keyboard_arrow_down),
+                  Text("more projects")
+                ],
+              )),
+        ));
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: _children,
     );
   }
 }

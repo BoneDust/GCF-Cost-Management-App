@@ -30,7 +30,7 @@ class ClientDetailsCard extends StatelessWidget {
               ListTile(
                 title: Column(
                   children: <Widget>[
-                    Text(client.contactNumber),
+                    Text(client.contactNumber.toString()),
                     Text(client.contactPerson)
                   ],
                 ),
