@@ -17,8 +17,8 @@ class AuthApiService {
         "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/users/login";
 
     Map<String, String> headers = Map();
-    headers.putIfAbsent("email", () => "ucjcjcjcj@fjff.comdrcrv");
-    headers.putIfAbsent("password", () => "dfgsdfsd");
+    headers.putIfAbsent("email", () => "admin@user.com");
+    headers.putIfAbsent("password", () => "asdfeqewf353539999**-");
 
     try {
       await client.post(Uri.parse(_url), headers: headers).then((response) {

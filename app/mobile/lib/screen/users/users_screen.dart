@@ -122,8 +122,12 @@ class UsersScreenState extends State<UsersScreen> with SingleTickerProviderState
       setState(() {
         _filteredUsers.insert(0, result);
       });
-      _scaffoldKey.currentState..showSnackBar(SnackBar(content: Text("user successfully created"), backgroundColor: Colors.green));
-    }
+
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          action: SnackBarAction(textColor: Colors.white, label: "VIEW", onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserScreen(user: result,)));
+          }),
+          content: Text("user created"), backgroundColor: Colors.green));    }
   }
 
   Widget _buildFloatingActionButton(BuildContext context) {

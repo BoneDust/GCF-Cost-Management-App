@@ -125,13 +125,6 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
           ),
         ),
         ListTile(
-          title: TextFormField(
-            controller: _descriptionController,
-            decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(10.0), labelText: 'description'),
-          ),
-        ),
-        ListTile(
           title: Text("start immidiately"),
           trailing:  Switch(onChanged: (bool value) {
             setState(() {
@@ -140,15 +133,19 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
           }, value: _isStartImmediately),
         ),
         !_isStartImmediately ?
-        DateTimePickerFormField(
+        ListTile(
+          title: DateTimePickerFormField(
             format: dateFormat,
             decoration: InputDecoration(labelText: 'start date'),
             onChanged: (dt) => setState(() => startDate = dt),
-          ) : Column(),
-        DateTimePickerFormField(
-          format: dateFormat,
-          decoration: InputDecoration(labelText: 'end date'),
-          onChanged: (dt) => setState(() => endDate = dt),
+          ),
+        ) : Column(),
+        ListTile(
+          title: DateTimePickerFormField(
+            format: dateFormat,
+            decoration: InputDecoration(labelText: 'end date'),
+            onChanged: (dt) => setState(() => endDate = dt),
+          ),
         )
 
       ],
@@ -156,7 +153,7 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
   }
 }
 
-Widget _loadingIndicator() {
+Widget _loadingIndicator()   {
   return Stack(
     children: <Widget>[
       Container(

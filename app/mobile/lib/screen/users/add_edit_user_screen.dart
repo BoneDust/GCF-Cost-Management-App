@@ -35,6 +35,8 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
   File _image;
 
   TextEditingController nameController = TextEditingController();
+  TextEditingController surnameController = TextEditingController();
+
   TextEditingController _emailController = TextEditingController();
 
   void _toggle() {
@@ -60,7 +62,7 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
     }
 
 
-    previewImage = Container(
+    previewImage =  Container(
       decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
       child: IconButton(
         icon: Icon(
@@ -68,7 +70,6 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
           color: Colors.white,
         ),
         onPressed: () {
-          getImage();
         },
       ),
     );
@@ -126,7 +127,7 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
         name: nameController.text,
         privilege: _privilege,
         email: _emailController.text,
-        surname: nameController.text,
+        surname: surnameController.text,
         password: _password,
         image: "fdhgdf",
       );
@@ -166,6 +167,8 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
   void fillFormsWithUserData() {
     _emailController.text = widget.user.email;
     _privilege = widget.user.privilege;
+    nameController.text = widget.user.name;
+    surnameController.text = widget.user.surname;
   }
 
   void updateUser() {
@@ -218,11 +221,24 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
           padding: EdgeInsets.only(top: 10.0),
         ),
         ListTile(
-          leading: previewImage,
-          title: TextFormField(
-            controller: nameController,
-            decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(10.0), labelText: 'full name'),
+          leading: CircleAvatar(child: previewImage ,),
+          title: Column(
+            children: <Widget>[
+              ListTile(
+                title: TextFormField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(10.0), labelText: 'name'),
+                ),
+              ),
+              ListTile(
+                title: TextFormField(
+                  controller: surnameController,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(10.0), labelText: 'surname'),
+                ),
+              ),
+            ],
           ),
         ),
         ListTile(
@@ -249,7 +265,9 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
             obscureText: _obscureText,
           ),
         ),
-        _dropDownFormField(),
+        ListTile(
+          title:  _dropDownFormField()
+        ),
         SizedBox(
           height: 10.0,
         )

@@ -1,22 +1,17 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/screen/menu/menu.dart';
 import 'package:cm_mobile/util/image_utils.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class MenuProfileCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: <Widget>[_Content()],
-      ),
-    );
-  }
-}
 
-class _Content extends StatelessWidget {
+  final MenuScreenState parent;
+
+  const MenuProfileCard({Key key, this.parent}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
@@ -30,12 +25,16 @@ class _Content extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              _buildRoundButton(Typicons.cog_outline, "settings"),
+              _buildRoundButton(Typicons.moon, "", (){
+
+              }),
               CircleAvatar(
                 minRadius: 80,
                 backgroundImage: AssetImage(ImageUtils.getAvatarPicture(context)),
               ),
-              _buildRoundButton(Typicons.pencil, "edit`"),
+              _buildRoundButton(Typicons.pencil, "edit", (){
+                parent.navigateAndDisplayEdit(context, user);
+              }),
 
             ],
           ),
@@ -53,11 +52,11 @@ class _Content extends StatelessWidget {
     );
   }
 
-  Widget _buildRoundButton(IconData icon, String title) {
+  Widget _buildRoundButton(IconData icon, String title, Function function) {
     return Container(
       height: 80,
       width: 80,
-      child: FlatButton(onPressed: (){}, child: Column(
+      child: FlatButton(onPressed: function, child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,

@@ -315,7 +315,7 @@ class ProjectWidgetState extends State<ProjectWidget> {
         data: themeData.copyWith(accentColor: Colors.white),
         child: FloatingActionButton(
           onPressed: () {
-            _navigateAndDisplayReceipt();          },
+            _navigateAndDisplayProject();          },
           child: Icon(
             Typicons.doc_add,
             color: Colors.green,
@@ -324,7 +324,7 @@ class ProjectWidgetState extends State<ProjectWidget> {
   }
 
 
-  _navigateAndDisplayReceipt() async {
+  _navigateAndDisplayProject() async {
     final result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => AddEditReceiptScreen(
             isEditing: true,

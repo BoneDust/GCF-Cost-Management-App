@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:cm_mobile/bloc/auth_bloc.dart';
-import 'package:cm_mobile/bloc/bloc_provider.dart';
+import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/menu/user_profile.dart';
+import 'package:cm_mobile/screen/users/add_edit_user_screen.dart';
 import 'package:cm_mobile/service/api_auth_service.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,11 @@ import 'package:flutter/material.dart';
 class MenuScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _MenuScreenState();
+    return MenuScreenState();
   }
 }
 
-class _MenuScreenState extends State<MenuScreen> {
+class MenuScreenState extends State<MenuScreen> {
   bool _isLoading = false;
 
   AuthBloc authBloc;
@@ -33,6 +34,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
     super.initState();
   }
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class _MenuScreenState extends State<MenuScreen> {
     return Stack(
       children: <Widget>[
         Scaffold(
+          key: _scaffoldKey,
           appBar: AppBar(
             title: Text("Menu"),
           ),
@@ -54,7 +57,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   List<Widget> _buildMenuScreenWidget(BuildContext context) {
     List<Widget> menuScreenWidget = [
-      MenuProfileCard(),
+      MenuProfileCard(parent: this,),
     ];
 
     menuScreenWidget.add(RaisedButton(
@@ -95,6 +98,24 @@ class _MenuScreenState extends State<MenuScreen> {
     AppDataContainer.of(context)
         .setAuthState(AuthenticationState.unauthenticated());
   }
+
+  navigateAndDisplayEdit(BuildContext context, User user) async {
+    final result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddEditUserScreen(
+          user: user,
+          isEditing: true,
+        )));
+
+    if (result is User) {
+      setState(() {
+        user = result;
+      });
+      _scaffoldKey.currentState.removeCurrentSnackBar();
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("saved changes"), backgroundColor: Colors.green));
+    }
+  }
+
 }
 
 Widget _loadingIndicator() {
