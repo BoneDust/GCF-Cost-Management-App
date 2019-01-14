@@ -5,7 +5,7 @@ import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/model/client.dart';
 import 'package:cm_mobile/screen/client/add_client_screen.dart';
 import 'package:cm_mobile/screen/client/client_details_card.dart';
-import 'package:cm_mobile/widget/loading_widget.dart';
+import 'package:cm_mobile/screen/project/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class ClientScreen extends StatefulWidget {

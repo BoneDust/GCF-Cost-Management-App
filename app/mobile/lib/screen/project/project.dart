@@ -13,7 +13,7 @@ import 'package:cm_mobile/screen/project/overview.dart';
 import 'package:cm_mobile/screen/receipt/add_edit_receipt.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
-import 'package:cm_mobile/widget/loading_widget.dart';
+import 'package:cm_mobile/screen/project/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'index.dart';
 

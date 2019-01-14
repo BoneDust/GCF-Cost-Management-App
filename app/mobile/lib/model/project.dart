@@ -53,9 +53,9 @@ class Project extends ModelBase {
         teamSize = json['team_size'],
         clientId = json['client_id'],
         name = json['name'],
-        estimatedCost = CustomJsonConverter.getDouble(json["estimated_cost"]),
+        estimatedCost = CustomJsonTools.getDouble(json["estimated_cost"]),
         status = json['status'],
-        expenditure = CustomJsonConverter.getDouble(json['expenditure']),
+        expenditure = CustomJsonTools.getDouble(json['expenditure']),
         startDate = DateTime.fromMillisecondsSinceEpoch(json['start_date']),
         endDate = DateTime.fromMillisecondsSinceEpoch(json['end_date']), super.fromJson(json);
 

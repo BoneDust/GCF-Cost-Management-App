@@ -1,11 +1,17 @@
+import 'dart:async';
+import 'dart:collection';
+
 import 'package:cm_mobile/data/app_colors.dart';
+import 'package:cm_mobile/data/mode_cache.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/client/add_client_screen.dart';
 import 'package:cm_mobile/screen/project/projects_screen.dart';
 import 'package:cm_mobile/screen/receipt/all_receipts.dart';
 import 'package:cm_mobile/screen/stage/add_edit_stage.dart';
 import 'package:cm_mobile/screen/users/add_edit_user_screen.dart';
+import 'package:cm_mobile/util/model_from_json.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +26,24 @@ class App extends StatefulWidget {
 }
 
 class _App extends State<App> {
+  _App(){
+    ModelJsonFileUtil.getAll<Project>().then(onValue).catchError(onError);
+  }
   @override
   Widget build(BuildContext context) {
     return AppDataContainer(child: _MaterialApp());
   }
+
+  void onValue(List<Project> value) {
+    ModelCache.projects = value;
+  }
+
+  onError(error) {
+    ModelCache.projects = [];
+
+  }
 }
+
 
 class _MaterialApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
@@ -42,6 +61,7 @@ class _MaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     AppDataContainerState dataContainerState = AppDataContainer.of(context);
 
     return MaterialApp(

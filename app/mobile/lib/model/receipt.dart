@@ -34,7 +34,7 @@ class Receipt extends ModelBase {
         projectId = json['project_id'],
         description = json['description'],
         supplier = json['supplier'],
-        totalCost = CustomJsonConverter.getDouble(json['total_cost']),
+        totalCost = CustomJsonTools.getDouble(json['total_cost']),
         picture = json['pic_url'],
         purchaseDate =
             DateTime.fromMillisecondsSinceEpoch(json['purchase_date']);

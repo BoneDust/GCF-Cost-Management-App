@@ -7,7 +7,7 @@ import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/model/user_login.dart';
 import 'package:cm_mobile/service/api_auth_service.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
-import 'package:cm_mobile/widget/loading_widget.dart';
+import 'package:cm_mobile/screen/project/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {

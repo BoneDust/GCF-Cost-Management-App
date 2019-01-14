@@ -42,9 +42,9 @@ class _FinancialOverviewCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   _buildBoxWithText(
-                      "R5000", "has been spent", Colors.green),
+                      project.expenditure.toString()," has been spent", Colors.green),
                   _buildBoxWithText(
-                      "R100000", "estimated project cost", Colors.blueGrey)
+                      project.estimatedCost.toString(), "estimated project cost", Colors.blueGrey)
                 ],
               ),
               Padding(

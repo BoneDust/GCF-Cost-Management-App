@@ -7,6 +7,8 @@ import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/util/custom_json_converter.dart';
+import 'package:cm_mobile/util/save_json_file.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -27,11 +29,15 @@ class ApiService<T> {
         var jsonResponse = json.decode(response.body);
         print(jsonResponse);
         if (response.statusCode == 200) {
+          JsonFileUtil.writeJsonText(response.body, endPointMap[T] );
+
           print(jsonResponse[endPointMap[T]]);
 
           result = (jsonResponse[endPointMap[T]] as List)
-              .map((i) => createObject(i))
+              .map((i) => CustomJsonTools.createObject<T>(i))
               .toList();
+
+
           return result;
         }
         throw ("could not get " + endPointMap[T]);
@@ -53,7 +59,7 @@ class ApiService<T> {
         var jsonResponse = json.decode(response.body);
         print(jsonResponse);
         if (response.statusCode == 200) {
-          result = createObject(jsonResponse[mapTypes[T]]);
+          result = CustomJsonTools.createObject<T>(jsonResponse[mapTypes[T]]);
           return result;
         }
         throw ("could not get " + mapTypes[T]);
@@ -75,7 +81,7 @@ class ApiService<T> {
         if (response.statusCode == 200) {
           print(jsonResponse[endPointMap[T]]);
           result = (jsonResponse[endPointMap[T]] as List)
-              .map((i) => createObject(i))
+              .map((i) => CustomJsonTools.createObject<T>(i))
               .toList();
           return result;
         }
@@ -102,7 +108,7 @@ class ApiService<T> {
         var jsonResponse = json.decode(response.body);
         print(jsonResponse);
         if (response.statusCode == 201) {
-          result = createObject(jsonResponse[mapTypes[T]]);
+          result = CustomJsonTools.createObject<T>(jsonResponse[mapTypes[T]]);
           return result;
         }
         throw ("could create " + mapTypes[T]);
@@ -126,7 +132,7 @@ class ApiService<T> {
         var jsonResponse = json.decode(response.body);
         print(jsonResponse);
         if (response.statusCode == 200) {
-          result = createObject(jsonResponse[mapTypes[T]]);
+          result = CustomJsonTools.createObject<T>(jsonResponse[mapTypes[T]]);
           return result;
         }
         throw ("could not update " + mapTypes[T]);
@@ -142,24 +148,6 @@ class ApiService<T> {
     return result;
   }
 
-  T createObject(jsonObject) {
-    switch (T) {
-      case Project:
-        return Project.fromJson(jsonObject) as T;
-      case Stage:
-        return Stage.fromJson(jsonObject) as T;
-      case Activity:
-        return Activity.fromJson(jsonObject) as T;
-      case User:
-        return User.fromJson(jsonObject) as T;
-      case Client:
-        return Client.fromJson(jsonObject) as T;
-      case Receipt:
-        return Receipt.fromJson(jsonObject) as T;
-      default:
-        return null;
-    }
-  }
 
 
   Future<bool> delete( int id) async {

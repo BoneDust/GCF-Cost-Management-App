@@ -1,7 +1,10 @@
+import 'package:cm_mobile/data/mode_cache.dart';
 import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/auth_state.dart';
+import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/util/model_from_json.dart';
 import 'package:flutter/material.dart';
 
 class AppDataContainer extends StatefulWidget {
@@ -40,6 +43,7 @@ class AppDataContainerState extends State<AppDataContainer> {
 
   setAuthState(AuthenticationState authState) {
     setState(() {
+
       this.authState = authState;
     });
   }

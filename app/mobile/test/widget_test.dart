@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:test/test.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
 
 void main() {
   Map<String, String> headers = {
@@ -28,45 +27,4 @@ void main() {
     var answer = 42;
     expect(answer, 42);
   });
-
-  test('my first  test', () async {
-
-    upload(File imageFile) async {
-      // open a bytestream
-      var stream = new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-      // get file length
-      var length = await imageFile.length();
-
-      // string to uri
-      var uri = Uri.parse(AppData.baseUrl);
-
-      // create multipart request
-      var request = new http.MultipartRequest("POST", uri);
-      request.headers.putIfAbsent("token", () => AppData.authToken);
-      request.headers.putIfAbsent("Content-Type", () => "application/json");
-
-
-      // multipart that takes file
-      var multipartFile = new http.MultipartFile('file', stream, length,
-          filename: basename(imageFile.path));
-
-      // add file to multipart
-      request.files.add(multipartFile);
-
-      // send
-      var response = await request.send();
-      print(response.statusCode);
-
-      // listen for response
-      response.stream.transform(utf8.decoder).listen((value) {
-        print(value);
-      });
-    }
-    upload(_image);
-
-    var answer = 42;
-    expect(answer, 42);
-  });
-
-
 }

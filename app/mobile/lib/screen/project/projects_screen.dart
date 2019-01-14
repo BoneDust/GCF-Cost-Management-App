@@ -1,13 +1,14 @@
 import 'dart:async';
 
-import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/generic_bloc.dart';
+import 'package:cm_mobile/data/mode_cache.dart';
 import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/filter/ProjectFilter.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/project/add_edit_project.dart';
+import 'package:cm_mobile/screen/project/loading_widget.dart';
 import 'package:cm_mobile/screen/project/project.dart';
 import 'package:cm_mobile/screen/project/project_tile.dart';
 import 'package:cm_mobile/util/filter/filter_tool.dart';
@@ -52,7 +53,8 @@ class ProjectsScreenState extends State<ProjectsScreen>
   bool _isSearching = false;
   Color _appBarBackgroundColor = Colors.white;
   List<Project> filteredProjects;
-  List<Project> projects;
+
+  List<Project> _projects;
 
   TextEditingController searchTextController = TextEditingController();
   AppDataContainerState appDataContainerState;
@@ -62,16 +64,18 @@ class ProjectsScreenState extends State<ProjectsScreen>
   TabController tabController;
 
   ProjectFilter projectFilter;
+  StreamSubscription outProjectListener;
 
   List<Tab>_projectStatusTabs = [
   Tab(text: "all"),
   Tab(text: "active"),
   Tab(text: "done"),
   ];
+
+  bool _isLoadingProjects = true;
   ProjectsScreenState(this.projectFilter){
-
-
-
+    _projects = ModelCache.projects;
+    filteredProjects = _projects;
     if (projectFilter == null)
       projectFilter = ProjectFilter.none();
   }
@@ -79,7 +83,13 @@ class ProjectsScreenState extends State<ProjectsScreen>
   @override
   void initState() {
     projectsBloc = GenericBloc<Project>();
+    outProjectListener =   projectsBloc.outItems
+        .listen((projects) => onProjectsReceived(projects));
+
+    outProjectListener.onError(_handleProjectError);
+
     projectsBloc.getAll();
+
     tabController = TabController(vsync: this, length: 3, initialIndex: 1);
     tabController.addListener(() {
       switch (tabController.index) {
@@ -97,6 +107,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
           break;
       }
     });
+
     super.initState();
   }
 
@@ -110,8 +121,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
     user = appDataContainerState.user;
     privilege = user.privilege;
 
-    return BlocProvider<GenericBloc<Project>>(
-        bloc: projectsBloc, child: buildScaffold());
+    return buildScaffold();
   }
 
   Widget buildAppBar() {
@@ -206,21 +216,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         resizeToAvoidBottomPadding: false,
         appBar: buildAppBar(),
-        body: StreamBuilder<List<Project>>(
-          key: PageStorageKey("projects"),
-          stream: projectsBloc.outItems,
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
-            if (snapshot.data != null) {
-              if (_refreshCompleter != null && !_refreshCompleter.isCompleted)
-                _refreshCompleter.complete(null);
-              projects = snapshot.data;
-              filterProjects(false);
-              return _buildProjectList();
-            }
-            return _LoadingWidget();
-          },
-        ));
+        body: _isLoadingProjects ? LoadingIndicator() : _buildProjectList());
   }
 
   Widget _buildFloatingButton() {
@@ -254,7 +250,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
     final result = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => AddEditProjectScreen()));
     if (result is Project) {
-      projects.insert(0, result);
+      _projects.insert(0, result);
 
       filterProjects(true);
       _scaffoldKey.currentState.removeCurrentSnackBar();
@@ -314,7 +310,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
 
   void filterProjects([bool isSetState = false]) {
     void filter() {
-      filteredProjects = FilterTool.filterProjects(projects, projectFilter);
+      filteredProjects = FilterTool.filterProjects(_projects, projectFilter);
     }
 
     if (isSetState) {
@@ -330,15 +326,34 @@ class ProjectsScreenState extends State<ProjectsScreen>
   void selectProjectAndExit(Project project) {
     Navigator.of(context).pop(project);
   }
-}
 
-class _LoadingWidget extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(
-        backgroundColor: Colors.green,
-      ),
-    );
+  void dispose() {
+    outProjectListener.cancel();
+    super.dispose();
+  }
+
+  _handleProjectError(error) {
+    setState(() {
+      filterProjects(false);
+      _isLoadingProjects = false;
+
+    });
+    if (_refreshCompleter != null && !_refreshCompleter.isCompleted)
+      _refreshCompleter.complete(null);
+    print("error");
+
+  }
+
+  onProjectsReceived(List<Project> projects) {
+    _projects = projects;
+
+    setState(() {
+      _isLoadingProjects = false;
+      filterProjects(false);
+
+    });
+    if (_refreshCompleter != null && !_refreshCompleter.isCompleted)
+      _refreshCompleter.complete(null);
   }
 }
