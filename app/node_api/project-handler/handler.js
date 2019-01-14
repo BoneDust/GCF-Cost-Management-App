@@ -255,7 +255,6 @@ app.delete('/projects/:projectId', (req, res) => {
                                 .then(() => {
                                     //batch delete stages and receipts
                                     cascadeDelete.deleteStagesByProject(projectId)
-                                    cascadeDelete.deleteReceiptsByProject(projectId)
                                     res.status(200).json({ message: "Project successfully deleted", project: result.Attributes })
                                 })
                                 .catch(error => { res.status(200).json({ message: "Project successfully deleted", project: result.Attributes, activity_error: error.message }) })

@@ -84,12 +84,12 @@ module.exports = {
                 else if (type === "Stage") {
                     const stageName = await details.getStageName(itemId)
                     const projectName = await details.getProjectName(project_id)
-                    options.form.description = description = type + " '" + stageName + "' was " + action + " by " + options.form.performer + " in project '" + projectName + "'."
+                    options.form.description = type + " '" + stageName + "' was " + action + " by " + options.form.performer + " in project '" + projectName + "'."
 
                 }
                 else {
                     const projectName = await details.getProjectName(project_id)
-                    options.form.description = description = type + " " + itemId + " was " + action + " by " + options.form.performer + " in project '" + projectName + "'."
+                    options.form.description = type + " " + itemId + " was " + action + " by " + options.form.performer + " in project '" + projectName + "'."
                 }
             }
             catch (error) {

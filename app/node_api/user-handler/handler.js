@@ -223,7 +223,7 @@ app.put('/users/:userId', (req, res) => {
                         else {
                             activityLogger.logActivity(0, activityLogger.activityType.UPDATE_USER, req.headers.token, parseInt(req.params.userId))
                                 .then(() => res.status(200).json({ message: "User successfully updated", user: result.Attributes }))
-                                .catch(error => { res.status(200).json({ message: "User successfully updated", usser: result.Attributes, activity_error: error.message }) })
+                                .catch(error => { res.status(200).json({ message: "User successfully updated", user: result.Attributes, activity_error: error.message }) })
                         }
                     })
                 }

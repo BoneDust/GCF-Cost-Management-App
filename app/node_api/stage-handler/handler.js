@@ -82,11 +82,11 @@ app.post('/stages', (req, res) => {
                 const stage = req.body
                 if (stage.project_id !== undefined && !isNaN(stage.project_id) &&
                     stage.stage_name !== undefined && stage.description !== undefined &&
-                    stage.status !== undefined && stage.before_pic_url !== undefined &&
+                    stage.status !== undefined &&
                     stage.start_date !== undefined && !isNaN(stage.start_date) &&
                     stage.estimated_duration !== undefined) {
 
-                    const params = {
+                    var params = {
                         TableName: STAGES_TABLE,
                         Item: {
                             //might meed to add the other missimg attributes as mulls because updateItem might mulfumctiom
@@ -95,11 +95,13 @@ app.post('/stages', (req, res) => {
                             stage_name: stage.stage_name,
                             description: stage.description,
                             status: stage.status,
-                            before_pic_url: stage.before_pic_url,
                             start_date: parseInt(stage.start_date),
                             estimated_duration: stage.estimated_duration
                         }
                     }
+
+                    if (stage.before_pic_url !== undefined)
+                        params.Item.before_pic_url = stage.before_pic_url
 
                     dynamoDb.put(params, (error) => {
                         if (error)
@@ -131,32 +133,52 @@ app.put('/stages/:stageId', (req, res) => {
         .then(isValid => {
             if (isValid) {
                 const stage = req.body
-                if (!isNaN(req.params.stageId) && stage.project_id !== undefined && !isNaN(stage.project_id) &&
-                    stage.stage_name !== undefined && stage.description !== undefined && stage.status !== undefined &&
-                    stage.before_pic_url !== undefined && stage.after_pic_url !== undefined &&
-                    stage.start_date !== undefined && !isNaN(stage.start_date) &&
-                    stage.end_date !== undefined && !isNaN(stage.end_date) &&
-                    stage.estimated_duration !== undefined) {
+                if (!isNaN(req.params.stageId) && stage.project_id !== undefined && !isNaN(stage.project_id)) {
 
-                    const params = {
+                    var params = {
                         TableName: STAGES_TABLE,
                         Key: {
                             stageId: parseInt(req.params.stageId)
                         },
                         ExpressionAttributeNames: { "#status": "status" },
                         ExpressionAttributeValues: {
-                            ":project_id": parseInt(stage.project_id),
-                            ":stage_name": stage.stage_name,
-                            ":description": stage.description,
-                            ":status": stage.status,
-                            ":before_pic_url": stage.before_pic_url,
-                            ":after_pic_url": stage.after_pic_url,
-                            ":start_date": parseInt(stage.start_date),
-                            ":end_date": parseInt(stage.end_date),
-                            ":estimated_duration": stage.estimated_duration
+                            ":project_id": parseInt(stage.project_id)
                         },
-                        UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, #status = :status, before_pic_url = :before_pic_url, after_pic_url = :after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration",
+                        UpdateExpression: "SET project_id = :project_id",
                         ReturnValues: "ALL_NEW"
+                    }
+
+                    if (stage.stage_name !== undefined) {
+                        params.ExpressionAttributeValues[":stage_name"] = stage.stage_name
+                        params.UpdateExpression = params.UpdateExpression + ", stage_name = :stage_name"
+                    }
+                    if (stage.description !== undefined) {
+                        params.ExpressionAttributeValues[":description"] = stage.description
+                        params.UpdateExpression = params.UpdateExpression + ",  description = :description"
+                    }
+                    if (stage.status !== undefined) {
+                        params.ExpressionAttributeValues[":status"] = stage.status
+                        params.UpdateExpression = params.UpdateExpression + ", #status = :status"
+                    }
+                    if (stage.before_pic_url !== undefined) {
+                        params.ExpressionAttributeValues[":before_pic_url"] = stage.before_pic_url
+                        params.UpdateExpression = params.UpdateExpression + ",  before_pic_url = :before_pic_url"
+                    }
+                    if (stage.after_pic_url !== undefined) {
+                        params.ExpressionAttributeValues[":after_pic_url"] = stage.after_pic_url
+                        params.UpdateExpression = params.UpdateExpression + ", after_pic_url = :after_pic_url"
+                    }
+                    if (stage.start_date !== undefined && !isNaN(stage.start_date)) {
+                        params.ExpressionAttributeValues[":start_date"] = parseInt(stage.start_date)
+                        params.UpdateExpression = params.UpdateExpression + ", start_date = :start_date"
+                    }
+                    if (stage.end_date !== undefined && !isNaN(stage.end_date)) {
+                        params.ExpressionAttributeValues[":end_date"] = parseInt(stage.end_date)
+                        params.UpdateExpression = params.UpdateExpression + ", end_date = :end_date"
+                    }
+                    if (stage.estimated_duration !== undefined) {
+                        params.ExpressionAttributeValues[":estimated_duration"] = stage.estimated_duration
+                        params.UpdateExpression = params.UpdateExpression + ", estimated_duration = :estimated_duration"
                     }
 
                     dynamoDb.update(params, (error, result) => {
