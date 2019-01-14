@@ -33,8 +33,12 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         ),
         centerTitle: true,
       ),
-      body: Container(
-        child: HorizontalBarLabelChart.withSampleData(),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: HorizontalBarLabelChart.withSampleData(),
+          ),
+        ],
       ),
     );
   }

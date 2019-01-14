@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:cm_mobile/bloc/auth_bloc.dart';
- import 'package:cm_mobile/model/auth_state.dart';
+import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/model/user_login.dart';
 import 'package:cm_mobile/service/api_auth_service.dart';
@@ -107,7 +107,8 @@ class _AuthScreen extends State<AuthScreen> {
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               _isLoading = true;
-                              appDataContainerState.setAuthState(AuthenticationState.loading());
+                              appDataContainerState
+                                  .setAuthState(AuthenticationState.loading());
                               authBloc.authenticateUser(UserLogin());
                             } else
                               setState(() {
@@ -135,8 +136,6 @@ class _AuthScreen extends State<AuthScreen> {
       ],
     );
   }
-
-
 
   Widget _buildTextFormField(
       String labelText, TextEditingController controller, Function validator) {

@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 class AddEditClientScreen extends StatefulWidget {
   final bool isEditing;
   final Client client;
-  const AddEditClientScreen({Key key, this.isEditing = false, this.client}) : super(key: key);
+  const AddEditClientScreen({Key key, this.isEditing = false, this.client})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -29,17 +30,16 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
     clientBlocs = GenericBloc<Client>();
 
     if (widget.isEditing) {
-
       clientBlocs.outUpdatedItem
-          .listen((client) => onClientReceived(client)).onError(handleError);
+          .listen((client) => onClientReceived(client))
+          .onError(handleError);
 
       fillFormsWithUserData();
     } else {
-
       clientBlocs.outCreateItem
-          .listen((client) => onClientReceived(client)).onError(handleError);
+          .listen((client) => onClientReceived(client))
+          .onError(handleError);
     }
-
 
     super.initState();
   }
@@ -58,14 +58,14 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
                         widget.isEditing ? "SAVE" : "CREATE",
                       ),
                       shape: CircleBorder(),
-                      onPressed:   widget.isEditing ? updateClient : _create
-                  )
+                      onPressed: widget.isEditing ? updateClient : _create)
                 ],
                 elevation: 5,
                 forceElevated: true,
                 pinned: true,
                 flexibleSpace: new FlexibleSpaceBar(
-                  title: Text(widget.isEditing ? "edit client" : "create a client"),
+                  title: Text(
+                      widget.isEditing ? "edit client" : "create a client"),
                 ),
               ),
               SliverPadding(
@@ -77,8 +77,10 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
             ],
           ),
         ),
-        _isLoading ? LoadingIndicator(text: widget.isEditing ? "saving client" : "creating client") : Column()
-
+        _isLoading
+            ? LoadingIndicator(
+                text: widget.isEditing ? "saving client" : "creating client")
+            : Column()
       ],
     );
   }
@@ -90,20 +92,20 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
 
     Navigator.of(context).pop(client);
   }
+
   void onClientAdded(Client client) {
     setState(() {
       _isLoading = false;
     });
 
-    if (client != null)
-      Navigator.of(context).pop(client);
+    if (client != null) Navigator.of(context).pop(client);
   }
 
   Client createClient() => Client(
-    name: nameController.text,
-  );
+        name: nameController.text,
+      );
 
-  Widget _formFields(){
+  Widget _formFields() {
     return Column(
       children: <Widget>[
         Padding(
@@ -111,20 +113,26 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
         ),
         new ListTile(
           title: TextFormField(
+            validator: (val) => val.isEmpty ? 'Please enter client name' : null,
             controller: nameController,
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10.0), labelText: 'full name'),
           ),
         ),
-         ListTile(
+        ListTile(
           title: TextFormField(
+            validator: (val) =>
+                val.isEmpty ? 'Please enter contact name' : null,
             controller: _contactPersonController,
             decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(10.0), labelText: 'contact person'),
+                contentPadding: EdgeInsets.all(10.0),
+                labelText: 'contact person'),
           ),
         ),
         ListTile(
           title: TextFormField(
+            validator: (val) =>
+                val.isEmpty ? 'Please enter contact number' : null,
             controller: _phoneNumberController,
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10.0), labelText: 'number'),
@@ -133,6 +141,7 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
       ],
     );
   }
+
   void _create() {
     setState(() {
       _isLoading = true;
@@ -159,7 +168,6 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
     Client updatedClient = getUpdatedUser();
     clientBlocs.update(updatedClient, updatedClient.id);
   }
-
 
   handleError(error) {
     setState(() {
