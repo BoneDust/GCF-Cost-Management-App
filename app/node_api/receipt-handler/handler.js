@@ -7,11 +7,61 @@ const activityLogger = require('./../activity_logger')
 const app = express()
 
 const RECEIPTS_TABLE = process.env.RECEIPTS_TABLE
+const PROJECTS_TABLE = process.env.PROJECTS_TABLE
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 var receiptCount = 0
 
 app.use(bodyParser.json()) // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
+
+//get receipts by userID
+app.get('/receipts/receiptsByUser/:user_id', (req, res) => {
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                if (!isNaN(req.params.user_id)) {
+                    const params = {
+                        TableName: PROJECTS_TABLE,
+                        FilterExpression: "user_id = :user_id",
+                        ExpressionAttributeValues: {
+                            ":user_id": parseInt(req.params.user_id)
+                        }
+                    }
+
+                    dynamoDb.scan(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else {
+                            const projects = result.Items
+                            var receipts = new Array()
+                            for (var project in projects) {
+                                const params = {
+                                    TableName: RECEIPTS_TABLE,
+                                    FilterExpression: "project_id = :project_id",
+                                    ExpressionAttributeValues: {
+                                        ":project_id": projects[project].projectId
+                                    }
+                                }
+                                dynamoDb.scan(params, (error, result) => {
+                                    if (error)
+                                        res.status(error.statusCode || 503).json({ error: error.message })
+                                    else
+                                        receipts = receipts.concat(result.Items)
+                                })
+                            }
+                            res.status(200).json({ receipts: receipts, size: receipts.length })
+                        }
+                    })
+                }
+                else
+                    res.status(400).json({ error: "User id provided provided is not a number" })
+            }
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
+
 
 //endpoint function that returns all receipts by projectID
 app.get('/receipts/receiptsByProject/:project_id', (req, res) => {
