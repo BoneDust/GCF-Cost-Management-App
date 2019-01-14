@@ -89,7 +89,7 @@ module.exports = {
                 }
                 else {
                     const projectName = await details.getProjectName(project_id)
-                    options.form.description = type + " " + itemId + " was " + action + " by " + options.form.performer + " to project '" + projectName + "'."
+                    options.form.description = type + " " + itemId + " was " + action + " by " + options.form.performer + " in project '" + projectName + "'."
                 }
             }
             catch (error) {
