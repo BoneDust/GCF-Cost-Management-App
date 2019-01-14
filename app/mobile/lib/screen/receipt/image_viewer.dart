@@ -23,7 +23,6 @@ class _ReceiptImageViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return PhotoView(
       imageProvider: FileImage(image),
     );

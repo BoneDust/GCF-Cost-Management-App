@@ -6,11 +6,22 @@ import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
-class MenuProfileCard extends StatelessWidget {
+class MenuProfileCard extends StatefulWidget{
 
   final MenuScreenState parent;
 
-  const MenuProfileCard({Key key, this.parent}) : super(key: key);
+  MenuProfileCard({this.parent});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _MenuProfileCard();
+  }
+
+}
+class _MenuProfileCard extends State<MenuProfileCard> {
+
+  IconData icon = Typicons.moon;
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +36,24 @@ class MenuProfileCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              _buildRoundButton(Typicons.moon, "", (){
+              IconButton(
+                icon: Icon(icon),
+                onPressed: (){
+                  setState(() {
+                    if (icon == Typicons.moon)
+                      icon = Typicons.sun;
+                    else
+                      icon = Typicons.moon;
+                  });
+                },
 
-              }),
+              ),
               CircleAvatar(
                 minRadius: 80,
                 backgroundImage: AssetImage(ImageUtils.getAvatarPicture(context)),
               ),
               _buildRoundButton(Typicons.pencil, "edit", (){
-                parent.navigateAndDisplayEdit(context, user);
+                widget.parent.navigateAndDisplayEdit(context, user);
               }),
 
             ],

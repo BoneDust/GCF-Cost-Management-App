@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/receipt.dart';
@@ -75,12 +76,12 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
     description: descriptionController.text,
     totalCost: double.parse(totalCostController.text),
     purchaseDate: DateTime.now(),
-    picture: "sdf",
-    supplier: supplierController.text
+    picture: base64UrlEncode(_image.readAsBytesSync()),
+    supplier: supplierController.text,
   );
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1600, maxHeight: 1200);
     setState(() {
       _image = image;
       previewImage = GestureDetector(
@@ -98,6 +99,7 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
         ),
       );
     });
+    print(_image.statSync());
   }
 
   @override
