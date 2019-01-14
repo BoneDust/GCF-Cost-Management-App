@@ -29,7 +29,7 @@ module.exports = {
 
     getUsername: async function (userId) {
 
-        if (user !== undefined && !isNaN(userId)) {
+        if (userId !== undefined && !isNaN(userId)) {
             const params = {
                 TableName: USER_TABLE,
                 Key: {

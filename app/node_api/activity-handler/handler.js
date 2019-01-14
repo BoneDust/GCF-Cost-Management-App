@@ -204,7 +204,7 @@ app.post('/activities', function (req, res) {
                 })
             }
             else
-                res.status(400).json({ error: activity })//"Incomplete activity supplied. Supply project_id, title, and description", })
+                res.status(400).json({ error: "Incomplete activity supplied. Supply project_id, title, and description", })
         }
         else
             res.status(401).json({ error: "User not authorised to make this request." })
