@@ -13,6 +13,8 @@ class ClientDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -20,29 +22,15 @@ class ClientDetailsCard extends StatelessWidget {
           padding: EdgeInsets.only(left: 10),
           child: Text(
             "details",
-            style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+            style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),
           ),
         ),
-        Card(
-          elevation: 5,
-          child: Column(
-            children: [
-              ListTile(
-                title: Column(
-                  children: <Widget>[
-                    Text(client.contactNumber.toString()),
-                    Text(client.contactPerson)
-                  ],
-                ),
-                subtitle: Text("phone number"),
-                leading: Icon(Typicons.phone_outline),
-              ),
-              Divider(
-                color: Colors.black54,
-              ),
-            ],
-          ),
-        )
+        ListTile(
+          title:  Text(client.contactNumber.toString()) ,
+          subtitle: Text(client.contactPerson),
+          leading: Icon(Typicons.phone_outline),
+        ),
+
       ],
     );
   }

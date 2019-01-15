@@ -23,10 +23,12 @@ class _DetailsCardRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(padding: EdgeInsets.only(left: 10), child: Text("details", style: TextStyle(color: Colors.blueGrey, fontSize: 30),),),
+        Padding(padding: EdgeInsets.only(left: 10), child: Text("details", style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),),),
         _DetailsCard(project)
       ],
     );

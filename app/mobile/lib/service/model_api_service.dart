@@ -96,6 +96,31 @@ class ApiService<T> {
     return result;
   }
 
+  Future<List<T>> getByUser(int projectId) async {
+    List<T> result;
+
+    try {
+      await client.get(Uri.parse(url +"/"+ endPointMap[T] +"ByUser"+ "/" + projectId.toString()), headers: headers).then((response) {
+        var jsonResponse = json.decode(response.body);
+        print(jsonResponse);
+        if (response.statusCode == 200) {
+          print(jsonResponse[endPointMap[T]]);
+          result = (jsonResponse[endPointMap[T]] as List)
+              .map((i) => CustomJsonTools.createObject<T>(i))
+              .toList();
+          return result;
+        }
+        throw ("could not get " + endPointMap[T]);
+      });
+    } catch (e) {
+      print(e);
+      throw ("no internet connection");
+    }
+
+    return result;
+  }
+
+
   Future<T> create(T item) async {
     T result;
 
@@ -168,6 +193,7 @@ class ApiService<T> {
     }
     return deletedStatus;
   }
+
 
 }
 

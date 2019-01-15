@@ -5,4 +5,5 @@ abstract class Repository<T> {
   Future<bool> delete(int id);
   Future<T> update(T item, int id);
   Future<List<T>> getByProjectId(int projectId);
+  Future<List<T>> getByUser(int projectId);
 }

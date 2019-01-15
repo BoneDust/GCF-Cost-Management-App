@@ -8,6 +8,8 @@ class SnapShotCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -15,7 +17,7 @@ class SnapShotCard extends StatelessWidget {
           padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
           child: Text(
             "snapshot",
-            style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+            style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),
           ),
         ),
         _SnapShotCardDetail(stage: stage,)

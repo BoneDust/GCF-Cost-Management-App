@@ -44,4 +44,11 @@ class JsonFileUtil{
       return "";
     }
   }
+
+  static Future deleteFolder({String username}) async {
+    final path = await _localPath;
+
+    Directory('$path').delete(recursive: true);
+
+  }
 }

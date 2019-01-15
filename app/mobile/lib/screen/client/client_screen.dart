@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/model/client.dart';
+import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/screen/client/add_client_screen.dart';
 import 'package:cm_mobile/screen/client/client_details_card.dart';
+import 'package:cm_mobile/screen/project/project_tile.dart';
 import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -184,39 +186,39 @@ class ClientScreenState extends State<ClientScreen> {
 }
 
 class _ClientProjectsCard extends StatelessWidget {
-  GenericBloc<Client> clientsBloc;
+  GenericBloc<Project> projectsBloc;
 
   _ClientProjectsCard() {
-    clientsBloc = GenericBloc<Client>();
-    clientsBloc.getAll();
+    projectsBloc = GenericBloc<Project>();
+    projectsBloc.getAll();
   }
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return StreamBuilder(
-      stream: clientsBloc.outItems,
-      initialData: <Client>[],
-      builder: (BuildContext context, AsyncSnapshot<List<Client>> snapshot) {
+      stream: projectsBloc.outItems,
+      initialData: <Project>[],
+      builder: (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(left: 10),
+              padding: EdgeInsets.only(left: 10, bottom: 20),
               child: Text(
                 "projects",
-                style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+                style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),
               ),
             ),
-            Card(
-                elevation: 5,
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: snapshot.data.take(3).map((client) {
-                    return ListTile(
-                      title: Text(client.name),
-                    );
-                  }).toList(),
-                ))
+            ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: snapshot.data.take(3).map((client) {
+                return BasicProjectTile(
+                  project: client,
+                );
+              }).toList(),
+            )
           ],
         );
       },

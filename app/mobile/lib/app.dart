@@ -10,6 +10,7 @@ import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/client/add_client_screen.dart';
 import 'package:cm_mobile/widget/loading_widget.dart';
@@ -52,9 +53,7 @@ class _AppState extends State<_App> {
     '/statistics': (BuildContext context) => StatisticsScreen(),
   };
 
-
   AppDataContainerState dataContainerState;
-
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +84,13 @@ class _AppState extends State<_App> {
   Future getActivities(String username) async {
     ModelJsonFileUtil.getAll<Activity>(username).then((List<Activity> value) {
       dataContainerState.setActivity(value);
+    }).catchError((error) {});
+  }
 
-    }).catchError((error) {
-    });
+  Future getReceipts(String username) async {
+    ModelJsonFileUtil.getAll<Receipt>(username).then((List<Receipt> value) {
+      dataContainerState.setReceipt(value);
+    }).catchError((error) {});
   }
 
   Future getUser() async {
@@ -95,14 +98,13 @@ class _AppState extends State<_App> {
       if (user != null && user.name != null && user.name.isNotEmpty) {
         dataContainerState.user = user;
         AppData.user = user;
-        dataContainerState.setAuthState(AuthenticationState.authenticated());
+        AppData.isInitializing = false;
 
-        setState(() {
-          AppData.isInitializing = false;
-        });
+        dataContainerState.setAuthState(AuthenticationState.authenticated());
 
         getProjects(user.name);
         getActivities(user.name);
+        getReceipts(user.name);
       }
     });
   }
@@ -120,32 +122,43 @@ class _AppState extends State<_App> {
   }
 
   Widget _buildMaterialApp(Widget home) {
+    Color textIconColor =  dataContainerState.brightness == Brightness.light ? AppColors.lightTextIconsColor : AppColors.darkTextIconColor;
     return MaterialApp(
       title: Details.COMPANY_TITLE,
       routes: routes,
       theme: ThemeData(
-        primaryColorBrightness: Brightness.light,
+        primaryColorBrightness: dataContainerState.brightness,
+        accentColorBrightness: dataContainerState.brightness,
+
+        brightness: dataContainerState.brightness,
+
         fontFamily: 'OpenSans',
 
-//          // Define the default Brightness and Colors
-//          brightness: Brightness.light,
-
         primaryColorDark: AppColors.darkPrimaryColor,
-        primaryColorLight: AppColors.primaryColor,
-        primaryColor: AppColors.primaryColor,
+        primaryColorLight: AppColors.lightPrimaryColor,
+        primaryColor: dataContainerState.brightness == Brightness.light
+            ? AppColors.lightPrimaryColor
+            : AppColors.darkPrimaryColor,
         accentColor: AppColors.accentColor,
+
         primaryTextTheme: TextTheme(
-            title: TextStyle(color: AppColors.primaryText),
-            subhead: TextStyle(color: AppColors.primaryText),
-            body1: TextStyle(color: AppColors.primaryText)),
+            title: TextStyle(color: textIconColor),
+            subhead: TextStyle(color:textIconColor),
+            body1: TextStyle(color: textIconColor),
+          display1: TextStyle(color: textIconColor)
+        ),
 
         iconTheme: IconThemeData(
-          color: AppColors.textIconsColor,
+          color:  textIconColor
         ),
+
+        accentIconTheme: IconThemeData(color: textIconColor),
+
         buttonTheme: ButtonThemeData(
-          highlightColor: AppColors.accentColor,
+          highlightColor: textIconColor ,
+
         ),
-        primaryIconTheme: IconThemeData(color: AppColors.textIconsColor),
+        primaryIconTheme: IconThemeData(color:textIconColor ),
         textTheme: TextTheme(
           headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
@@ -155,17 +168,17 @@ class _AppState extends State<_App> {
       home: home,
     );
   }
-
 }
 
 class _AppBottomNavigator extends StatelessWidget {
-
   AppDataContainerState dataContainerState;
   StreamSubscription outActivityListener;
+  StreamSubscription<List<Receipt>> outReceiptListener;
 
   @override
   Widget build(BuildContext context) {
-    _init(context);
+    if (AppData.isInitializingData) _initAppData(context);
+
     _TabEntry tabEntry = getTabEntry(context);
     return DefaultTabController(
       length: 3,
@@ -203,28 +216,46 @@ class _AppBottomNavigator extends StatelessWidget {
     return tabEntry;
   }
 
-  void _init(BuildContext context) {
-    GenericBloc<Activity> activityBloc;
-    dataContainerState = AppDataContainer.of(context);
+  void _initAppData(BuildContext context) {
+    AppData.isInitializingData = false;
 
-    activityBloc = GenericBloc<Activity>();
-    outActivityListener =   activityBloc.outItems
+    dataContainerState = AppDataContainer.of(context);
+    User user = dataContainerState.user;
+
+    GenericBloc<Activity> activityBloc = GenericBloc<Activity>();
+    GenericBloc<Receipt> receiptBloc = GenericBloc<Receipt>();
+
+    outActivityListener = activityBloc.outItems
         .listen((activities) => onActivityReceived(activities));
     outActivityListener.onError(_handleProjectError);
 
-    User user = dataContainerState.user;
-    String filter = user.privilege == Privilege.ADMIN ? "" : "foreman_id=" + user.id.toString();
-    activityBloc.getAll(filter);
+    if (user.privilege == Privilege.ADMIN) {
+      outReceiptListener = receiptBloc.outItemsByUser
+          .listen((activities) => onReceiptReceived(activities));
+      outReceiptListener.onError(_handleProjectError);
+      receiptBloc.getAll();
+    } else {
+      outReceiptListener = receiptBloc.outItems
+          .listen((activities) => onReceiptReceived(activities));
+      outReceiptListener.onError(_handleProjectError);
+      receiptBloc.getByUser(user.id);
+    }
 
+    String filter = user.privilege == Privilege.ADMIN
+        ? ""
+        : "foreman_id=" + user.id.toString();
+    activityBloc.getAll(filter);
   }
 
   onActivityReceived(List<Activity> activities) {
     dataContainerState.setActivity(activities);
   }
 
-  _handleProjectError(error) {
-
+  onReceiptReceived(List<Receipt> receipts) {
+    dataContainerState.setReceipt(receipts);
   }
+
+  _handleProjectError(error) {}
 }
 
 class _TabEntry {

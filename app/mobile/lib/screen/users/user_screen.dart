@@ -190,6 +190,8 @@ class UserProjectsCard extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return StreamBuilder(
       stream: projectsBloc.outItems,
       initialData: <Project>[],
@@ -198,10 +200,10 @@ class UserProjectsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(left: 10),
+              padding: EdgeInsets.only(left: 10, bottom: 20),
               child: Text(
                 "projects",
-                style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+                style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),
               ),
             ),
             _buildProjectList(context, snapshot.data)
@@ -213,6 +215,7 @@ class UserProjectsCard extends StatelessWidget {
 
   _buildProjectList(BuildContext context, List<Project> projects) {
     List<Widget> _children = [];
+    ThemeData themeData = Theme.of(context);
 
     if (projects != null) {
       _children.addAll([
@@ -220,7 +223,7 @@ class UserProjectsCard extends StatelessWidget {
             ? Center(
           child: Text(
             "no projects yet",
-            style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+            style: TextStyle(fontSize: 20, color: themeData.primaryTextTheme.display1.color),
           ),
         )
             : Column(

@@ -117,6 +117,7 @@ class ProjectWidgetState extends State<ProjectWidget> {
   Widget buildBodyWithStreamer() {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
+    ThemeData themeData = Theme.of(context);
 
     return NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -150,13 +151,13 @@ class ProjectWidgetState extends State<ProjectWidget> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomLeft,
                         // Add one stop for each color. Stops should increase from 0 to 1
-                        stops: [0.1, 0.4, 0.5, 1],
+                        stops: [0.1, 0.3, 0.4, 1],
                         colors: [
                           // Colors are easy thanks to Flutter's Colors class.
-                          Colors.white10,
-                          Colors.white24,
-                          Colors.white30,
-                          Colors.white,
+                          themeData.primaryColor.withAlpha(100),
+                          themeData.primaryColor.withAlpha(60),
+                          themeData.primaryColor.withAlpha(23),
+                          themeData.primaryColor,
                         ],
                       )),
                     )

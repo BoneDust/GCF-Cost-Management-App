@@ -72,18 +72,20 @@ Color getColor(String name) {
 class _ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Positioned.fill(
       child: Container(
         margin: EdgeInsets.only(left: 20.0),
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: themeData.primaryColor,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(7.0),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                  color: Colors.blueGrey,
-                  blurRadius: 10.0,
-                  offset: Offset(2.0, 2.0))
+                  color: themeData.primaryTextTheme.display1.color ,
+                  blurRadius: 2.0,
+                  offset: Offset(1.0, 1.0))
             ]),
       ),
     );

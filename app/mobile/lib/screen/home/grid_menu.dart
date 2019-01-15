@@ -96,6 +96,8 @@ class GridHomeMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Card(
       elevation: 10,
       child: InkWell(
@@ -107,13 +109,13 @@ class GridHomeMenuItem extends StatelessWidget {
             Icon(
               menuItem.icon,
               size: 30,
-              color: Colors.blueGrey,
+              color: themeData.primaryTextTheme.display1.color,
             ),
             Padding(padding: EdgeInsets.only(top: 10)),
             Text(
               menuItem.title,
               style: TextStyle(
-                  fontWeight: FontWeight.w700, color: Colors.blueGrey),
+                  fontWeight: FontWeight.w700, color: themeData.primaryTextTheme.display1.color),
             )
           ],
         ),

@@ -171,6 +171,8 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
   }
 
   Widget _receiptFields() {
+    ThemeData themeData = Theme.of(context);
+
     return Padding(
         padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: Column(
@@ -200,7 +202,7 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
               children: <Widget>[
                 RaisedButton(
                     elevation: 10,
-                    color: Colors.blueGrey,
+                    color: themeData.primaryTextTheme.display1.color,
                     child: Text("submit", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.white),),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                     onPressed: () {

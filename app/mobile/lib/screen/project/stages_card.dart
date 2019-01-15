@@ -24,6 +24,8 @@ class _StagesWidget extends State<StagesWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -34,7 +36,7 @@ class _StagesWidget extends State<StagesWidget> {
               padding: EdgeInsets.only(left: 10),
               child: Text(
                 "stages",
-                style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+                style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),
               ),
             ),
             widget.project.stages != null && widget.project.stages.isNotEmpty
@@ -57,10 +59,12 @@ class _StagesWidget extends State<StagesWidget> {
   }
 
   Widget _buildAddButton(BuildContext context, [bool isLargeText = false]) {
+    ThemeData themeData = Theme.of(context);
+
     return FlatButton(
         child: Text("+ ADD STAGE",
             style:
-                TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w400, fontSize: isLargeText ? 20 : 14)),
+                TextStyle(color: themeData.primaryTextTheme.display1.color, fontWeight: FontWeight.w400, fontSize: isLargeText ? 20 : 14)),
         onPressed: () => _navigateAndDisplaySelection(context));
   }
 

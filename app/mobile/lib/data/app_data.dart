@@ -6,4 +6,5 @@ class AppData{
   static User user;
 
   static bool isInitializing = true;
+  static bool isInitializingData = true;
 }

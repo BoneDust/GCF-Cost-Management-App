@@ -11,7 +11,6 @@ class Stage extends ModelBase {
   String beforePicture;
   String afterPicture;
   DateTime startDate;
-  DateTime endDate;
   int estimatedDaysDuration;
 
   Stage(
@@ -22,9 +21,8 @@ class Stage extends ModelBase {
       this.status = "",
       this.beforePicture = " ",
       this.afterPicture = " ",
-      this.endDate,
       this.startDate,
-      this.estimatedDaysDuration = 2});
+      this.estimatedDaysDuration});
 
   @override
   bool operator ==(Object other) =>
@@ -42,7 +40,8 @@ class Stage extends ModelBase {
         status = json['status'],
         beforePicture = json['before_pic_url'],
         afterPicture = json['after_pic_url'],
-        estimatedDaysDuration = json['estimated_duration'];
+        estimatedDaysDuration = json['estimated_duration'],
+        startDate = DateTime.fromMillisecondsSinceEpoch(json['start_date']);
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -52,8 +51,7 @@ class Stage extends ModelBase {
         'status': status,
         'before_pic_url': beforePicture,
         'after_pic_url': afterPicture,
-        'start_date': startDate.millisecondsSinceEpoch,
-        'end_date': endDate.millisecondsSinceEpoch,
         'estimated_duration': estimatedDaysDuration,
+        'start_date': startDate.millisecondsSinceEpoch,
       };
 }

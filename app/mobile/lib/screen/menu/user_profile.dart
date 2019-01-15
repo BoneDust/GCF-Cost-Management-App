@@ -39,12 +39,17 @@ class _MenuProfileCard extends State<MenuProfileCard> {
               IconButton(
                 icon: Icon(icon),
                 onPressed: (){
-                  setState(() {
-                    if (icon == Typicons.moon)
-                      icon = Typicons.sun;
-                    else
-                      icon = Typicons.moon;
-                  });
+                  Brightness brightness;
+                  if (icon == Typicons.moon){
+                    icon = Typicons.sun;
+                    brightness = Brightness.dark;
+                  }
+                  else{
+                    icon = Typicons.moon;
+                    brightness = Brightness.light;
+
+                  }
+                  userContainerState.setBrightness(brightness);
                 },
 
               ),
@@ -72,6 +77,8 @@ class _MenuProfileCard extends State<MenuProfileCard> {
   }
 
   Widget _buildRoundButton(IconData icon, String title, Function function) {
+    ThemeData themeData = Theme.of(context);
+
     return Container(
       height: 80,
       width: 80,
@@ -80,7 +87,7 @@ class _MenuProfileCard extends State<MenuProfileCard> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(icon, color: Colors.blueGrey,),
+          Icon(icon, color: themeData.primaryTextTheme.display1.color,),
           Padding(padding: EdgeInsets.only(top: 7),),
           Text(title)
         ],

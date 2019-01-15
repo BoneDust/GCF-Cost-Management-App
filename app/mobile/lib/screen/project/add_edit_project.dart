@@ -92,7 +92,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                 child: Column(
                   children: <Widget>[
                     Theme(
-                      data: themeData.copyWith(primaryColor: Colors.blueGrey),
+                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
                       child: TextFormField(
                         validator: (val) =>
                             val.isEmpty ? 'Please enter the name' : null,
@@ -104,7 +104,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                       ),
                     ),
                     Theme(
-                      data: themeData.copyWith(primaryColor: Colors.blueGrey),
+                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
                       child: TextFormField(
                         validator: (val) => val.isEmpty
                             ? 'Please input the estimated project cost'
@@ -121,19 +121,19 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                       ),
                     ),
                     Theme(
-                      data: themeData.copyWith(primaryColor: Colors.blueGrey),
+                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
                       child: _foremanFormField(),
                     ),
                     Theme(
-                      data: themeData.copyWith(primaryColor: Colors.blueGrey),
+                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
                       child: _clientFormField(),
                     ),
                     Theme(
-                      data: themeData.copyWith(primaryColor: Colors.blueGrey),
+                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
                       child: _sizeSliderFormField(),
                     ),
                     Theme(
-                      data: themeData.copyWith(primaryColor: Colors.blueGrey),
+                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
                       child: DateTimePickerFormField(
                         format: dateFormat,
                         initialValue: startDate,
@@ -142,7 +142,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                       ),
                     ),
                     Theme(
-                      data: themeData.copyWith(primaryColor: Colors.blueGrey),
+                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
                       child: DateTimePickerFormField(
                         format: dateFormat,
                         initialValue: endDate,
@@ -162,6 +162,8 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   }
 
   Widget _sizeSliderFormField() {
+    ThemeData themeData = Theme.of(context);
+
     return FormField<User>(
       validator: (value) {
         if (value == null) {
@@ -192,7 +194,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
                       Expanded(
                         child: Slider(
                           label: "dsf",
-                          activeColor: Colors.blueGrey,
+                          activeColor: themeData.primaryTextTheme.display1.color,
                           min: 1.0,
                           max: 30.0,
                           onChanged: (newRating) {

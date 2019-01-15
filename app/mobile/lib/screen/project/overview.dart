@@ -19,6 +19,8 @@ class _FinancialOverviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -26,7 +28,8 @@ class _FinancialOverviewCard extends StatelessWidget {
           padding: EdgeInsets.only(left: 10),
           child: Text(
             "overview",
-            style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+            style: TextStyle(
+                color: themeData.primaryTextTheme.display1.color, fontSize: 30),
           ),
         ),
         Padding(
@@ -41,10 +44,13 @@ class _FinancialOverviewCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  _buildBoxWithText(project.expenditure.toString(),
+                      " has been spent", Colors.green, context),
                   _buildBoxWithText(
-                      project.expenditure.toString()," has been spent", Colors.green),
-                  _buildBoxWithText(
-                      project.estimatedCost.toString(), "estimated project cost", Colors.blueGrey)
+                      project.estimatedCost.toString(),
+                      "estimated project cost",
+                      themeData.primaryTextTheme.display1.color,
+                      context)
                 ],
               ),
               Padding(
@@ -58,7 +64,7 @@ class _FinancialOverviewCard extends StatelessWidget {
                 child: LinearProgressIndicator(
                   semanticsLabel: "sdfsd",
                   semanticsValue: "fsfsd",
-                  backgroundColor: Colors.blueGrey,
+                  backgroundColor: themeData.primaryTextTheme.display1.color,
                   value: 0.9,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                 ),
@@ -71,7 +77,10 @@ class _FinancialOverviewCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBoxWithText(String title, String subtitle, Color color) {
+  Widget _buildBoxWithText(
+      String title, String subtitle, Color color, BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Container(
       height: 100,
       width: 150,
@@ -83,7 +92,7 @@ class _FinancialOverviewCard extends StatelessWidget {
               spreadRadius: 1,
               offset: Offset(0.8, 0.5),
               blurRadius: 0.9),
-          BoxShadow(color: Colors.white)
+          BoxShadow(color: themeData.primaryColor)
         ],
       ),
       child: Column(

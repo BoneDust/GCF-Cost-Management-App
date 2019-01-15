@@ -22,14 +22,12 @@ class HomeState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin<HomeScreen> {
   @override
   bool get wantKeepAlive => true;
-  GenericBloc<Activity> activityBloc;
 
   @override
   void initState() {
     super.initState();
   }
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
 
   @override
   Widget build(BuildContext context) {

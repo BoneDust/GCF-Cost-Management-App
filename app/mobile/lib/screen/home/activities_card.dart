@@ -22,17 +22,11 @@ class ActivitiesCard extends StatefulWidget {
 class _ActivitiesCardState extends State<ActivitiesCard> {
 
   @override
-  void initState() {
-
-
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     List<Activity> activities = userContainerState.activities;
+    ThemeData themeData = Theme.of(context);
+
     return Card(
       elevation: 5,
       child: Column(
@@ -42,7 +36,7 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
             title: Text(
               "activities",
               style: TextStyle(
-                  color: Colors.blueGrey, fontWeight: FontWeight.w600),
+                  color:  themeData.primaryTextTheme.display1.color, fontWeight: FontWeight.w600),
             ),
             children: [
               ActivityList(

@@ -30,6 +30,11 @@ class GenericBloc<T> extends BlocBase{
   Stream<List<T>>get outItemsByProject => _outItemsByProjectController.stream;
   Sink<List<T>> get _inItemsByProject => _outItemsByProjectController.sink;
 
+
+  StreamController<List<T>> _outItemsByUserController = StreamController<List<T>>();
+  Stream<List<T>>get outItemsByUser => _outItemsByUserController.stream;
+  Sink<List<T>> get _inItemsByUser => _outItemsByUserController.sink;
+
   @override
   void dispose() {
     _getItemsController.close();
@@ -75,4 +80,10 @@ class GenericBloc<T> extends BlocBase{
       _inItemsByProject.add(item);
     }).catchError((error) =>  _getItemsController.addError(error));
   }
+  void getByUser(int projectId) {
+    repository.getByUser(projectId).then((item) {
+      _inItemsByUser.add(item);
+    }).catchError((error) =>  _outItemsByUserController.addError(error));
+  }
+
 }

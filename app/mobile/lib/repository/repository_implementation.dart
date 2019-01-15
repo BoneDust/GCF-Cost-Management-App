@@ -34,4 +34,10 @@ class RepositoryImplementation<T> implements Repository<T> {
     return apiService
         .getByProject(projectId);
   }
+
+  @override
+  Future<List<T>> getByUser(int projectId) {
+    return apiService
+        .getByUser(projectId);
+  }
 }

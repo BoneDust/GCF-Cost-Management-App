@@ -27,6 +27,8 @@ class _ActivityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -39,7 +41,7 @@ class _ActivityScreen extends StatelessWidget {
             style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 30,
-                color: Colors.blueGrey),
+                color: themeData.primaryTextTheme.display1.color),
           ),
         ),
         Padding(

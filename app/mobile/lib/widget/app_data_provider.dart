@@ -25,9 +25,12 @@ class AppDataContainerState extends State<AppDataContainer> {
   User user;
   String token;
   List<Activity> activities = [];
+  Brightness brightness = Brightness.light;
 
   AuthenticationState authState = AuthenticationState(
       isInitializing: true, isLoading: false, isAuthenticated: false);
+
+  List<Receipt> receipts = [];
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +38,12 @@ class AppDataContainerState extends State<AppDataContainer> {
       data: this,
       child: widget.child,
     );
+  }
+
+  setBrightness(Brightness brightness) {
+    setState(() {
+      this.brightness = brightness;
+    });
   }
 
   setUser(User user) {
@@ -47,6 +56,13 @@ class AppDataContainerState extends State<AppDataContainer> {
     setState(() {
       this.activities = activities;
     });  }
+
+  setReceipt(List<Receipt> receipts){
+    setState(() {
+      this.receipts = receipts;
+    });
+  }
+
 
   setAuthState(AuthenticationState authState) {
     setState(() {

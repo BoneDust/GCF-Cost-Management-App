@@ -111,7 +111,7 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
         Padding(
           padding: EdgeInsets.only(top: 10.0),
         ),
-        new ListTile(
+         ListTile(
           title: TextFormField(
             validator: (val) => val.isEmpty ? 'Please enter client name' : null,
             controller: nameController,

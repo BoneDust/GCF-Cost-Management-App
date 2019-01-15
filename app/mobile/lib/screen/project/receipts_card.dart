@@ -10,6 +10,8 @@ class ReceiptsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -19,7 +21,7 @@ class ReceiptsWidget extends StatelessWidget {
             "receipts(" +
                 (receipts != null ? receipts.length.toString() : "0") +
                 ")",
-            style: TextStyle(color: Colors.blueGrey, fontSize: 30),
+            style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),
           ),
         ),
         _buildReceiptList(context, receipts),
@@ -29,6 +31,7 @@ class ReceiptsWidget extends StatelessWidget {
 
   _buildReceiptList(BuildContext context, List<Receipt> receipts) {
     List<Widget> _children = [];
+    ThemeData themeData = Theme.of(context);
 
     if (receipts != null) {
       _children.addAll([
@@ -36,7 +39,7 @@ class ReceiptsWidget extends StatelessWidget {
             ? Center(
                 child: Text(
                   "no receipts yet",
-                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+                  style: TextStyle(fontSize: 20, color: themeData.primaryTextTheme.display1.color),
                 ),
               )
             : Column(

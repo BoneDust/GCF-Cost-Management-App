@@ -45,14 +45,11 @@ class ProjectsScreenState extends State<ProjectsScreen>
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Icon actionIcon = Icon(
-    Typicons.search_outline,
-    color: Colors.green,
-    size: 25,
-  );
+  Icon actionIcon;
+  Color _appBarBackgroundColor;
+
   Widget appBarTitle;
   bool _isSearching = false;
-  Color _appBarBackgroundColor = Colors.white;
   List<Project> filteredProjects;
 
   List<Project> _projects;
@@ -118,10 +115,20 @@ class ProjectsScreenState extends State<ProjectsScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    ThemeData themeData = Theme.of(context);
+
     appDataContainerState = AppDataContainer.of(context);
     user = appDataContainerState.user;
     privilege = user.privilege;
+    if (!_isSearching){
+      actionIcon = Icon(
+        Typicons.search_outline,
+        color: Colors.green,
+        size: 25,
+      );
+      _appBarBackgroundColor = themeData.primaryColor;
 
+    }
     return buildScaffold();
   }
 
@@ -188,12 +195,14 @@ class ProjectsScreenState extends State<ProjectsScreen>
   }
 
   void _toggleSearch() {
+    ThemeData themeData = Theme.of(context);
+
     setState(() {
       loadProjects();
       if (!_isSearching) {
         _appBarBackgroundColor = Colors.green;
       } else
-        _appBarBackgroundColor = Colors.white;
+        _appBarBackgroundColor = themeData.primaryColor;
 
       actionIcon = actionIcon.icon == Typicons.search_outline
           ? Icon(
@@ -228,7 +237,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
                 shape: BoxShape.circle,
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                      color: Colors.blueGrey,
+                      color: themeData.primaryTextTheme.display1.color,
                       blurRadius: 5.0,
                       offset: Offset(0.4, 0.0))
                 ]),
