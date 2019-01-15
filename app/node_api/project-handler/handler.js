@@ -254,8 +254,7 @@ app.delete('/projects/:projectId', (req, res) => {
                             activityLogger.logActivity(projectId, activityLogger.activityType.DELETE_PROJECT, req.headers.token, projectId)
                                 .then(() => {
                                     //batch delete stages and receipts
-                                    cascadeDelete.deleteStagesByProject(projectId)
-                                    res.status(200).json({ message: "Project successfully deleted", project: result.Attributes })
+                                    cascadeDelete.deleteStagesByProject(projectId).then(() => res.status(200).json({ message: "Project successfully deleted", project: result.Attributes }))
                                 })
                                 .catch(error => { res.status(200).json({ message: "Project successfully deleted", project: result.Attributes, activity_error: error.message }) })
                         }

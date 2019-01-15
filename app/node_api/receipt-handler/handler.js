@@ -33,23 +33,28 @@ app.get('/receipts/receiptsByUser/:user_id', (req, res) => {
                             res.status(error.statusCode || 503).json({ error: error.message })
                         else {
                             const projects = result.Items
-                            var receipts = new Array()
-                            for (var project in projects) {
-                                const params = {
-                                    TableName: RECEIPTS_TABLE,
-                                    FilterExpression: "project_id = :project_id",
-                                    ExpressionAttributeValues: {
-                                        ":project_id": projects[project].projectId
-                                    }
-                                }
-                                dynamoDb.scan(params, (error, result) => {
-                                    if (error)
-                                        res.status(error.statusCode || 503).json({ error: error.message })
-                                    else
-                                        receipts = receipts.concat(result.Items)
-                                })
+                            const params = {
+                                TableName: RECEIPTS_TABLE
                             }
-                            res.status(200).json({ receipts: receipts, size: receipts.length })
+
+                            dynamoDb.scan(params, (error, result) => {
+                                if (error)
+                                    res.status(error.statusCode || 503).json({ error: error.message })
+                                else {
+
+                                    var filteredReceipts = result.Items.filter((item) => {
+                                        var isFound = false
+                                        for (var project in projects) {
+                                            if (item.project_id === projects[project].projectId) {
+                                                isFound = true
+                                                break
+                                            }
+                                        }
+                                        return (isFound)
+                                    })
+                                }
+                                res.status(200).json({ receipts: filteredReceipts, size: filteredReceipts.length })
+                            })
                         }
                     })
                 }

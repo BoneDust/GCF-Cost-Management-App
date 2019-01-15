@@ -148,7 +148,7 @@ app.post('/users/login', (req, res) => {
                     .then(() => {
 
                         const details = {
-                            id: result.Items[0].userId,
+                            userId: result.Items[0].userId,
                             name: result.Items[0].name,
                             surname: result.Items[0].surname,
                             email: result.Items[0].email,
