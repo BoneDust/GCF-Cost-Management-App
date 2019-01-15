@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/data/app_colors.dart';
 import 'package:cm_mobile/data/app_data.dart';
 import 'package:cm_mobile/data/dummy_data.dart';
 import 'package:cm_mobile/data/mode_cache.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/model/activity.dart';
 import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
@@ -50,7 +52,10 @@ class _AppState extends State<_App> {
     '/statistics': (BuildContext context) => StatisticsScreen(),
   };
 
+
   AppDataContainerState dataContainerState;
+
+
   @override
   Widget build(BuildContext context) {
     dataContainerState = AppDataContainer.of(context);
@@ -77,6 +82,14 @@ class _AppState extends State<_App> {
     });
   }
 
+  Future getActivities(String username) async {
+    ModelJsonFileUtil.getAll<Activity>(username).then((List<Activity> value) {
+      dataContainerState.setActivity(value);
+
+    }).catchError((error) {
+    });
+  }
+
   Future getUser() async {
     ModelJsonFileUtil.get<User>().then((user) async {
       if (user != null && user.name != null && user.name.isNotEmpty) {
@@ -88,7 +101,8 @@ class _AppState extends State<_App> {
           AppData.isInitializing = false;
         });
 
-        // getProjects(user.name);
+        getProjects(user.name);
+        getActivities(user.name);
       }
     });
   }
@@ -141,11 +155,17 @@ class _AppState extends State<_App> {
       home: home,
     );
   }
+
 }
 
 class _AppBottomNavigator extends StatelessWidget {
+
+  AppDataContainerState dataContainerState;
+  StreamSubscription outActivityListener;
+
   @override
   Widget build(BuildContext context) {
+    _init(context);
     _TabEntry tabEntry = getTabEntry(context);
     return DefaultTabController(
       length: 3,
@@ -181,6 +201,29 @@ class _AppBottomNavigator extends StatelessWidget {
     }
 
     return tabEntry;
+  }
+
+  void _init(BuildContext context) {
+    GenericBloc<Activity> activityBloc;
+    dataContainerState = AppDataContainer.of(context);
+
+    activityBloc = GenericBloc<Activity>();
+    outActivityListener =   activityBloc.outItems
+        .listen((activities) => onActivityReceived(activities));
+    outActivityListener.onError(_handleProjectError);
+
+    User user = dataContainerState.user;
+    String filter = user.privilege == Privilege.ADMIN ? "" : "foreman_id=" + user.id.toString();
+    activityBloc.getAll(filter);
+
+  }
+
+  onActivityReceived(List<Activity> activities) {
+    dataContainerState.setActivity(activities);
+  }
+
+  _handleProjectError(error) {
+
   }
 }
 

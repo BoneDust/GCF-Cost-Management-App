@@ -24,6 +24,8 @@ class AppDataContainer extends StatefulWidget {
 class AppDataContainerState extends State<AppDataContainer> {
   User user;
   String token;
+  List<Activity> activities = [];
+
   AuthenticationState authState = AuthenticationState(
       isInitializing: true, isLoading: false, isAuthenticated: false);
 
@@ -40,6 +42,11 @@ class AppDataContainerState extends State<AppDataContainer> {
       this.user = user;
     });
   }
+
+  setActivity(List<Activity> activities){
+    setState(() {
+      this.activities = activities;
+    });  }
 
   setAuthState(AuthenticationState authState) {
     setState(() {

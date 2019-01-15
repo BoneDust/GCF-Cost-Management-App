@@ -9,5 +9,5 @@ class ModelCache{
  static List<Project> projects = [];
  static List<Stage> stages;
  static List<User> users;
- static List<Activity> activities;
+ static List<Activity> activities = [];
 }
