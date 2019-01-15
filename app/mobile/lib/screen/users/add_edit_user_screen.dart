@@ -13,7 +13,8 @@ class AddEditUserScreen extends StatefulWidget {
   final bool isEditing;
   final User user;
 
-  const AddEditUserScreen({Key key, this.isEditing = false, this.user}) : super(key: key);
+  const AddEditUserScreen({Key key, this.isEditing = false, this.user})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -50,27 +51,25 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
     userBlocs = GenericBloc<User>();
 
     if (widget.isEditing) {
-
       userBlocs.outUpdatedItem
-          .listen((user) => onUserReceived(user)).onError(handleError);
+          .listen((user) => onUserReceived(user))
+          .onError(handleError);
 
       fillFormsWithUserData();
     } else {
-
       userBlocs.outCreateItem
-          .listen((user) => onUserReceived(user)).onError(handleError);
+          .listen((user) => onUserReceived(user))
+          .onError(handleError);
     }
 
-
-    previewImage =  Container(
+    previewImage = Container(
       decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
       child: IconButton(
         icon: Icon(
           Icons.add_a_photo,
           color: Colors.white,
         ),
-        onPressed: () {
-        },
+        onPressed: () {},
       ),
     );
 
@@ -91,8 +90,7 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
                         widget.isEditing ? "SAVE" : "CREATE",
                       ),
                       shape: CircleBorder(),
-                      onPressed:   widget.isEditing ? updateUser : _createUser
-                  )
+                      onPressed: widget.isEditing ? updateUser : _createUser)
                 ],
                 elevation: 5,
                 forceElevated: true,
@@ -110,7 +108,10 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
             ],
           ),
         ),
-        _isLoading ? LoadingIndicator(text: widget.isEditing ? "saving user" : "creating user") : Column()
+        _isLoading
+            ? LoadingIndicator(
+                text: widget.isEditing ? "saving user" : "creating user")
+            : Column()
       ],
     );
   }
@@ -185,7 +186,6 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
     return user;
   }
 
-
   handleError(error) {
     setState(() {
       _isLoading = false;
@@ -221,7 +221,9 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
           padding: EdgeInsets.only(top: 10.0),
         ),
         ListTile(
-          leading: CircleAvatar(child: previewImage ,),
+          leading: CircleAvatar(
+            child: previewImage,
+          ),
           title: Column(
             children: <Widget>[
               ListTile(
@@ -235,7 +237,8 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
                 title: TextFormField(
                   controller: surnameController,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10.0), labelText: 'surname'),
+                      contentPadding: EdgeInsets.all(10.0),
+                      labelText: 'surname'),
                 ),
               ),
             ],
@@ -265,9 +268,7 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
             obscureText: _obscureText,
           ),
         ),
-        ListTile(
-          title:  _dropDownFormField()
-        ),
+        ListTile(title: _dropDownFormField()),
         SizedBox(
           height: 10.0,
         )
@@ -291,13 +292,13 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
           children: <Widget>[
             InputDecorator(
               decoration: const InputDecoration(
-                contentPadding: EdgeInsets.all(0.0),
-                labelText: 'foreman',
+                contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+                labelText: 'privilege',
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<Privilege>(
                   isExpanded: true,
-                  hint: Text("select foreman"),
+                  hint: Text("select privilege"),
                   value: _privilege,
                   onChanged: (Privilege newValue) {
                     state.didChange(newValue);

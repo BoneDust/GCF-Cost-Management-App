@@ -15,6 +15,15 @@ class UserTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: Key(user.name),
+      onDismissed: (DismissDirection direction) {
+        if (direction == DismissDirection.endToStart) {
+          print('End to start');
+        } else if (direction == DismissDirection.startToEnd) {
+          print('start to End');
+        } else {
+          print('unknown');
+        }
+      },
       background: Container(color: Colors.red),
       child: Container(
         child: Column(
