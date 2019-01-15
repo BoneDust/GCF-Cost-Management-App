@@ -6,7 +6,7 @@ import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/client/clients_screen.dart';
 import 'package:cm_mobile/screen/users/users_screen.dart';
-import 'package:cm_mobile/screen/project/loading_widget.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/services.dart';

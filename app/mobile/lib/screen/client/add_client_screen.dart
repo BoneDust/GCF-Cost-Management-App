@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/model/client.dart';
-import 'package:cm_mobile/screen/project/loading_widget.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class AddEditClientScreen extends StatefulWidget {

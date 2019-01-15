@@ -22,14 +22,15 @@ class ApiService<T> {
     'Content-Type': 'application/json'
   };
 
-  Future<List<T>> getAll() async {
+  Future<List<T>> getAll([String filter]) async {
+    String filteredUrl = filter == null ? url : url +"?" + filter;
     List<T> result;
     try {
-      await client.get(Uri.parse(url), headers: headers).then((response) {
+      await client.get(Uri.parse(filteredUrl), headers: headers).then((response) {
         var jsonResponse = json.decode(response.body);
         print(jsonResponse);
         if (response.statusCode == 200) {
-          JsonFileUtil.writeJsonText(response.body, endPointMap[T] );
+          JsonFileUtil.writeJsonText( response.body, AppData.user.name, endPointMap[T] );
 
           print(jsonResponse[endPointMap[T]]);
 

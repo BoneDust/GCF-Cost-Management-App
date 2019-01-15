@@ -1,9 +1,13 @@
 import 'package:cm_mobile/bloc/bloc_provider.dart';
 import 'package:cm_mobile/bloc/generic_bloc.dart';
+import 'package:cm_mobile/data/app_data.dart';
+import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/activity.dart';
+import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/activity/activities.dart';
 import 'package:cm_mobile/screen/activity/activity.dart';
 import 'package:cm_mobile/screen/activity/activity_list.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
 class ActivitiesCard extends StatefulWidget {
@@ -18,8 +22,11 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
 
   @override
   void initState() {
+
     activityBloc = GenericBloc<Activity>();
-    activityBloc.getAll();
+    User user = AppData.user;
+    String filter = user.privilege == Privilege.ADMIN ? "" : "foreman_id=" + user.id.toString();
+    activityBloc.getAll(filter);
     super.initState();
   }
 

@@ -28,7 +28,7 @@ class _MenuProfileCard extends State<MenuProfileCard> {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
 
-    return Padding(
+    return user != null ? Padding(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: <Widget>[
@@ -50,7 +50,6 @@ class _MenuProfileCard extends State<MenuProfileCard> {
               ),
               CircleAvatar(
                 minRadius: 80,
-                backgroundImage: AssetImage(ImageUtils.getAvatarPicture(context)),
               ),
               _buildRoundButton(Typicons.pencil, "edit", (){
                 widget.parent.navigateAndDisplayEdit(context, user);
@@ -69,7 +68,7 @@ class _MenuProfileCard extends State<MenuProfileCard> {
           )
         ],
       ),
-    );
+    ): Column();
   }
 
   Widget _buildRoundButton(IconData icon, String title, Function function) {

@@ -9,7 +9,7 @@ import 'package:cm_mobile/screen/project/project_tile.dart';
 import 'package:cm_mobile/screen/project/projects_screen.dart';
 import 'package:cm_mobile/screen/users/add_edit_user_screen.dart';
 import 'package:cm_mobile/screen/users/user_details_card.dart';
-import 'package:cm_mobile/screen/project/loading_widget.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class UserScreen extends StatefulWidget {

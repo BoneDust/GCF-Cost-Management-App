@@ -40,8 +40,8 @@ class GenericBloc<T> extends BlocBase{
     _outItemsByProjectController.close();
   }
 
-  void getAll() {
-    repository.getAll().then((item) {
+  void getAll([String filter]) {
+    repository.getAll(filter).then((item) {
       inItems.add(item);
     }).catchError((error) => _getItemsController.addError(error));
   }

@@ -5,7 +5,7 @@ import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/users/profile_image_viewer.dart';
-import 'package:cm_mobile/screen/project/loading_widget.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 

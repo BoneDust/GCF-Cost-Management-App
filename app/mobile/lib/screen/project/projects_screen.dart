@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cm_mobile/bloc/generic_bloc.dart';
+import 'package:cm_mobile/data/app_data.dart';
 import 'package:cm_mobile/data/mode_cache.dart';
 import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
@@ -8,7 +9,7 @@ import 'package:cm_mobile/model/filter/ProjectFilter.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/project/add_edit_project.dart';
-import 'package:cm_mobile/screen/project/loading_widget.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:cm_mobile/screen/project/project.dart';
 import 'package:cm_mobile/screen/project/project_tile.dart';
 import 'package:cm_mobile/util/filter/filter_tool.dart';
@@ -88,7 +89,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
 
     outProjectListener.onError(_handleProjectError);
 
-    projectsBloc.getAll();
+    loadProjects();
 
     tabController = TabController(vsync: this, length: 3, initialIndex: 1);
     tabController.addListener(() {
@@ -188,7 +189,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
 
   void _toggleSearch() {
     setState(() {
-      projectsBloc.getAll();
+      loadProjects();
       if (!_isSearching) {
         _appBarBackgroundColor = Colors.green;
       } else
@@ -304,7 +305,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
 
   Future<void> _loadProjects(BuildContext context) async {
     _refreshCompleter = Completer<Null>();
-    projectsBloc.getAll();
+    loadProjects();
     await _refreshCompleter.future;
   }
 
@@ -341,7 +342,7 @@ class ProjectsScreenState extends State<ProjectsScreen>
     });
     if (_refreshCompleter != null && !_refreshCompleter.isCompleted)
       _refreshCompleter.complete(null);
-    print("error");
+    print("error : could not load project");
 
   }
 
@@ -355,5 +356,12 @@ class ProjectsScreenState extends State<ProjectsScreen>
     });
     if (_refreshCompleter != null && !_refreshCompleter.isCompleted)
       _refreshCompleter.complete(null);
+  }
+
+  void loadProjects() {
+    if (AppData.user.privilege == Privilege.ADMIN)
+      projectsBloc.getAll();
+    else
+      projectsBloc.getAll( "foreman_id=" + AppData.user.id.toString());
   }
 }

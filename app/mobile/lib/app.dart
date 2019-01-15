@@ -2,11 +2,15 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:cm_mobile/data/app_colors.dart';
+import 'package:cm_mobile/data/app_data.dart';
+import 'package:cm_mobile/data/dummy_data.dart';
 import 'package:cm_mobile/data/mode_cache.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
+import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/client/add_client_screen.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:cm_mobile/screen/project/projects_screen.dart';
 import 'package:cm_mobile/screen/receipt/all_receipts.dart';
 import 'package:cm_mobile/screen/stage/add_edit_stage.dart';
@@ -18,34 +22,21 @@ import 'package:flutter/material.dart';
 import 'data/details.dart';
 import 'screen/index.dart';
 
-class App extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _App();
-  }
-}
-
-class _App extends State<App> {
-  _App(){
-    ModelJsonFileUtil.getAll<Project>().then(onValue).catchError(onError);
-  }
+class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AppDataContainer(child: _MaterialApp());
-  }
-
-  void onValue(List<Project> value) {
-    ModelCache.projects = value;
-  }
-
-  onError(error) {
-    ModelCache.projects = [];
-
+    return AppDataContainer(child: _App());
   }
 }
 
+class _App extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _AppState();
+  }
+}
 
-class _MaterialApp extends StatelessWidget {
+class _AppState extends State<_App> {
   final routes = <String, WidgetBuilder>{
     '/auth': (BuildContext context) => AuthScreen(),
     '/add_stage': (BuildContext context) => AddEditStageScreen(),
@@ -59,11 +50,62 @@ class _MaterialApp extends StatelessWidget {
     '/statistics': (BuildContext context) => StatisticsScreen(),
   };
 
+  AppDataContainerState dataContainerState;
   @override
   Widget build(BuildContext context) {
+    dataContainerState = AppDataContainer.of(context);
 
-    AppDataContainerState dataContainerState = AppDataContainer.of(context);
+    if (AppData.isInitializing == true) {
+      getAuthToken();
+    }
 
+    return _buildMaterialApp(AppData.isInitializing
+        ? Material(
+            color: Colors.white,
+            child: LoadingIndicator(),
+          )
+        : dataContainerState.authState.isAuthenticated
+            ? dataContainerState.user != null ? _AppBottomNavigator() : Column()
+            : AuthScreen());
+  }
+
+  Future getProjects(String username) async {
+    ModelJsonFileUtil.getAll<Project>(username).then((List<Project> value) {
+      ModelCache.projects = value;
+    }).catchError((error) {
+      ModelCache.projects = [];
+    });
+  }
+
+  Future getUser() async {
+    ModelJsonFileUtil.get<User>().then((user) async {
+      if (user != null && user.name != null && user.name.isNotEmpty) {
+        dataContainerState.user = user;
+        AppData.user = user;
+        dataContainerState.setAuthState(AuthenticationState.authenticated());
+
+        setState(() {
+          AppData.isInitializing = false;
+        });
+
+        // getProjects(user.name);
+      }
+    });
+  }
+
+  void getAuthToken() async {
+    ModelJsonFileUtil.get<String>(fileName: "auth_token").then((authToken) {
+      if (authToken != null && authToken.isNotEmpty) {
+        AppData.authToken = authToken;
+        getUser();
+      } else
+        setState(() {
+          AppData.isInitializing = false;
+        });
+    });
+  }
+
+  Widget _buildMaterialApp(Widget home) {
     return MaterialApp(
       title: Details.COMPANY_TITLE,
       routes: routes,
@@ -96,14 +138,10 @@ class _MaterialApp extends StatelessWidget {
           body1: TextStyle(fontSize: 14.0),
         ),
       ),
-      home: dataContainerState.authState.isAuthenticated
-          ? _AppBottomNavigator()
-          : AuthScreen(),
+      home: home,
     );
   }
 }
-
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class _AppBottomNavigator extends StatelessWidget {
   @override
@@ -112,7 +150,6 @@ class _AppBottomNavigator extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          key: _scaffoldKey,
           body: TabBarView(
               children: tabEntry.children,
               physics: NeverScrollableScrollPhysics()),

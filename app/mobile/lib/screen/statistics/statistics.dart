@@ -33,13 +33,31 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: HorizontalBarLabelChart.withSampleData(),
-          ),
-        ],
-      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          // These are the slivers that show up in the "outer" scroll view.
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              child: SliverAppBar(
+                title: const Text('Books'), // This is the title in the app bar.
+                pinned: true,
+              ),
+            ),
+          ];
+        },
+        body: CustomScrollView(
+          key: PageStorageKey<String>("ScrollView"),
+          slivers: <Widget>[
+   
+            HorizontalBarLabelChart.withSampleData()
+          ],
+        )
     );
   }
 }

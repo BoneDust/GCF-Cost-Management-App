@@ -15,8 +15,8 @@ class RepositoryImplementation<T> implements Repository<T> {
   }
 
   @override
-  Future<List<T>> getAll() {
-    return apiService.getAll();
+  Future<List<T>> getAll([String filter]) {
+    return apiService.getAll(filter);
   }
 
   @override

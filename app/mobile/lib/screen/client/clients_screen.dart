@@ -5,7 +5,7 @@ import 'package:cm_mobile/screen/client/add_client_screen.dart';
 import 'package:cm_mobile/screen/client/client_screen.dart';
 import 'package:cm_mobile/screen/client/client_tile.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
-import 'package:cm_mobile/screen/project/loading_widget.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class ClientsScreen extends StatefulWidget {

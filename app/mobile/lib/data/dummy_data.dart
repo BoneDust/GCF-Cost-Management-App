@@ -90,7 +90,7 @@ class DummyData {
   }
 
   static User adminUser =
-      User(name: "Dale", surname: "McLead", privilege: Privilege.ADMIN, id: 1,);
+      User(name: "Dale", surname: "McLead", privilege: Privilege.ADMIN, id: 1, );
   static User foremanUser = getForemanUser;
   static List<Project> projectList = List.generate(100, (index) => getProject());
 

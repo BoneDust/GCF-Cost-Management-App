@@ -2,13 +2,16 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:cm_mobile/bloc/auth_bloc.dart';
+import 'package:cm_mobile/data/app_data.dart';
 import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/menu/user_profile.dart';
 import 'package:cm_mobile/screen/users/add_edit_user_screen.dart';
 import 'package:cm_mobile/service/api_auth_service.dart';
+import 'package:cm_mobile/util/save_json_file.dart';
 import 'package:cm_mobile/widget/app_data_provider.dart';
+import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -50,7 +53,7 @@ class MenuScreenState extends State<MenuScreen> {
             children: menuScreenWidget,
           ),
         ),
-        _isLoading ? _loadingIndicator() : Column()
+        _isLoading ? LoadingIndicator() : Column()
       ],
     );
   }
@@ -85,6 +88,11 @@ class MenuScreenState extends State<MenuScreen> {
     setState(() {
       _isLoading = false;
     });
+
+    JsonFileUtil.removeFile(fileName: "auth_token");
+    JsonFileUtil.removeFile(fileName: "user");
+    AppData.user = null;
+    AppDataContainer.of(context).user = null;
     AppDataContainer.of(context)
         .setAuthState(result);
   }
@@ -116,24 +124,4 @@ class MenuScreenState extends State<MenuScreen> {
     }
   }
 
-}
-
-Widget _loadingIndicator() {
-  return Stack(
-    children: <Widget>[
-      Container(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-          child: Container(
-            decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
-          ),
-        ),
-      ),
-      Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.green,
-        ),
-      ),
-    ],
-  );
 }

@@ -8,25 +8,39 @@ class JsonFileUtil{
     return directory.path;
   }
 
-  static Future<File> _getLocalFile(String fileName) async {
+  static Future<File> _getLocalFile(String userName, String fileName) async {
     final path = await _localPath;
-    return File('$path/$fileName');
+    var pathString = userName == null ? '$path/$fileName' : '$path/$userName/$fileName';
+    return File(pathString);
   }
 
- static Future<File> writeJsonText(String text, String fileName) async {
-    final file = await _getLocalFile(fileName);
+ static Future<File> writeJsonText(String text,String userName, String fileName) async {
+
+   if (userName != null && userName.isNotEmpty){
+     final path = await _localPath;
+     await Directory('$path/$userName').create(recursive: true);
+   }
+
+   final file = await _getLocalFile(userName, fileName);
     return file.writeAsString('$text');
   }
 
-  static Future<String> readFromFile(String fileName) async {
-    try {
-      final file = await _getLocalFile(fileName);
+  static void removeFile({String userName, String fileName}) async {
+    final path = await _localPath;
 
-      // Read the file
+    if (fileName != null && fileName.isNotEmpty){
+        Directory('$path/$fileName').deleteSync(recursive: true);
+    }
+  }
+
+  static Future<String> readFromFile(String userName, String fileName) async {
+    try {
+      final file = await _getLocalFile(userName, fileName);
+
       return await file.readAsString();
 
     } catch (e) {
-      // If we encounter an error, return 0
+      print(e);
       return "";
     }
   }

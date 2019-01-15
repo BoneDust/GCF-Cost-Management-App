@@ -11,8 +11,26 @@ import 'package:cm_mobile/util/custom_json_converter.dart';
 import 'package:cm_mobile/util/save_json_file.dart';
 
 class ModelJsonFileUtil {
-  static Future<List<T>> getAll<T>() async {
-    String contents =  await JsonFileUtil.readFromFile(endPointMap[T]);
+  static Future<T> get<T>({String userName, String fileName}) async {
+    String fullFileName = fileName == null ? ModelsMap[T] : fileName;
+    String contents =  await JsonFileUtil.readFromFile(userName, fullFileName);
+    T result;
+    if (fileName != null)
+      return contents as T;
+
+    try {
+      var decoded = json.decode(contents);
+      result = CustomJsonTools.createObject<T>(decoded[ModelsMap[T]]);
+      return result;
+    }
+
+    catch(error){
+      print(error);
+    }
+    return result;
+  }
+  static Future<List<T>> getAll<T>(String userName) async {
+    String contents =  await JsonFileUtil.readFromFile(userName, endPointMap[T]);
     List<T> result = [];
 
     try {
@@ -25,7 +43,6 @@ class ModelJsonFileUtil {
     catch(error){
       print(error);
     }
-
     return result;
   }
 
