@@ -14,6 +14,29 @@ var receiptCount = 0
 app.use(bodyParser.json()) // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 
+app.get('/receipts', (req, res) => {
+    verification.isValidAdmin(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                const params = {
+                    TableName: RECEIPTS_TABLE,
+                }
+
+                dynamoDb.scan(params, (error, result) => {
+                    if (error)
+                        res.status(error.statusCode || 503).json({ error: error.message })
+                    else
+                        res.status(200).json({ receipts: result.Items, size: result.Items.length })
+                })
+            }
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+
+})
+
+
 //get receipts by userID
 app.get('/receipts/receiptsByUser/:user_id', (req, res) => {
     verification.isValidUser(req.headers.token)
