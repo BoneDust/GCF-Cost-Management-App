@@ -40,8 +40,14 @@ provider:
         - { "Fn::GetAtt": ["ActivitiesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["TokensDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["TrashDynamoDBTable", "Arn" ] }
+    - Effect : Allow
+      Action:
+        - s3:*
+      Resource:
+        - { "Fn::Join": ["", ["arn:aws:s3:::gcfpictures/*" ] ] }
   
   environment:
+    S3BUCKET : 'gcfpictures-${self:provider.stage}'
     USERS_TABLE: ${self:custom.userTableName}
     CLIENTS_TABLE: ${self:custom.clientTableName}
     PROJECTS_TABLE: ${self:custom.projectTableName}
@@ -54,6 +60,15 @@ provider:
 
 
 functions:
+
+  picturesFunction:
+    handler: picture-handler/handler.handler
+    events:
+      - http:
+          path: pictures
+          method: post
+          cors: true
+
   usersFunction:
     handler: user-handler/handler.handler
     events:
