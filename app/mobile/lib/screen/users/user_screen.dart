@@ -10,6 +10,7 @@ import 'package:cm_mobile/screen/project/project_tile.dart';
 import 'package:cm_mobile/screen/project/projects_screen.dart';
 import 'package:cm_mobile/screen/users/add_edit_user_screen.dart';
 import 'package:cm_mobile/screen/users/user_details_card.dart';
+import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:cm_mobile/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -69,7 +70,7 @@ class _UserScreen extends State<UserScreen> {
                     background:  CachedNetworkImage(
                       imageUrl: user.image,
                       placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
-                      errorWidget:  Icon(Icons.error),
+                      errorWidget:  Icon(Typicons.user, size: 50,),
                       fit: BoxFit.cover,
                     ),
                   ),

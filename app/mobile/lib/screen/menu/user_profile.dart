@@ -61,7 +61,7 @@ class _MenuProfileCard extends State<MenuProfileCard> {
                 child:  CachedNetworkImage(
                   imageUrl: user.image,
                   placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
-                  errorWidget:  Icon(Icons.error),
+                  errorWidget:  Icon(Typicons.user_outline, size: 60, color: Colors.green,),
                   fit: BoxFit.cover,
                 ),
               ),

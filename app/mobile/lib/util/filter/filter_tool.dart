@@ -7,7 +7,7 @@ import 'package:cm_mobile/model/user.dart';
 class FilterTool{
   static List<Project> filterProjects(List<Project> projects, ProjectFilter projectFilter){
     if (projectFilter.active)
-      projects = projects.where((project) => project.status == "Incomplete").toList();
+      projects = projects.where((project) => project.status == "active").toList();
     if (projectFilter.done)
       projects = projects.where((project) => project.status == "done").toList();
     return projects;
