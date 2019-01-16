@@ -269,6 +269,7 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
           ListTile(
             title: TextFormField(
               validator: (val) => val.isEmpty ? 'email cannot be empty' : null,
+              autovalidate: _autoValidate,
               controller: _emailController,
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(10.0), labelText: 'email'),
@@ -287,6 +288,7 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
                 ),
               ),
               validator: (val) => val.length < 6 ? 'Password too short.' : null,
+              autovalidate: _autoValidate,
               onSaved: (val) => _password = val,
               obscureText: _obscureText,
             ),
@@ -307,6 +309,7 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
           return "Select privilege";
         }
       },
+      autovalidate: _autoValidate,
       onSaved: (value) {},
       builder: (
         FormFieldState<Privilege> state,

@@ -12,7 +12,8 @@ class AddEditStageScreen extends StatefulWidget {
 
   final int projectId;
 
-  const AddEditStageScreen({Key key, this.isEditing, this.projectId}) : super(key: key);
+  const AddEditStageScreen({Key key, this.isEditing, this.projectId})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -40,7 +41,8 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
   void initState() {
     stageBloc = GenericBloc<Stage>();
     stageBloc.outCreateItem
-        .listen((client) => onStageComplete(client)).onError(handleError);
+        .listen((client) => onStageComplete(client))
+        .onError(handleError);
 
     super.initState();
   }
@@ -82,7 +84,6 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
           ),
         ),
         _isLoading ? LoadingIndicator() : Column()
-
       ],
     );
   }
@@ -92,20 +93,18 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
       _isLoading = false;
     });
 
-    if (stage != null)
-      Navigator.of(context).pop(stage);
+    if (stage != null) Navigator.of(context).pop(stage);
   }
 
   Stage createStage() => Stage(
-    name: nameController.text,
-    description: _descriptionController.text,
-    projectId: widget.projectId,
-    startDate: _isStartImmediately ? DateTime.now() : startDate,
-    status: _isStartImmediately ? "active" : "pending",
-    estimatedDaysDuration: _estimatedDays.toInt()
-  );
+      name: nameController.text,
+      description: _descriptionController.text,
+      projectId: widget.projectId,
+      startDate: _isStartImmediately ? DateTime.now() : startDate,
+      status: _isStartImmediately ? "active" : "pending",
+      estimatedDaysDuration: _estimatedDays.toInt());
 
-  Widget _formFields(ThemeData themeData){
+  Widget _formFields(ThemeData themeData) {
     return Column(
       children: <Widget>[
         Padding(
@@ -113,6 +112,7 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
         ),
         new ListTile(
           title: TextFormField(
+            validator: (val) => val.isEmpty ? 'please input name' : null,
             controller: nameController,
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10.0), labelText: 'name'),
@@ -120,33 +120,36 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
         ),
         ListTile(
           title: TextFormField(
+            validator: (val) => val.isEmpty ? 'please enter descreption' : null,
             controller: _descriptionController,
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10.0), labelText: 'description'),
           ),
         ),
         Theme(
-          data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
+          data: themeData.copyWith(
+              primaryColor: themeData.primaryTextTheme.display1.color),
           child: _estimatedSliderFormField(),
         ),
-
         ListTile(
           title: Text("start immidiately"),
-          trailing:  Switch(onChanged: (bool value) {
-            setState(() {
-              _isStartImmediately = !_isStartImmediately;
-            });
-          }, value: _isStartImmediately),
+          trailing: Switch(
+              onChanged: (bool value) {
+                setState(() {
+                  _isStartImmediately = !_isStartImmediately;
+                });
+              },
+              value: _isStartImmediately),
         ),
-        !_isStartImmediately ?
-        ListTile(
-          title: DateTimePickerFormField(
-            format: dateFormat,
-            decoration: InputDecoration(labelText: 'start date'),
-            onChanged: (dt) => setState(() => startDate = dt),
-          ),
-        ) : Column(),
-
+        !_isStartImmediately
+            ? ListTile(
+                title: DateTimePickerFormField(
+                  format: dateFormat,
+                  decoration: InputDecoration(labelText: 'start date'),
+                  onChanged: (dt) => setState(() => startDate = dt),
+                ),
+              )
+            : Column(),
       ],
     );
   }
@@ -162,47 +165,47 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
       },
       onSaved: (value) {},
       builder: (
-          FormFieldState<int> state,
-          ) {
-        return  Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: "estimated duration(days)",
-                    contentPadding: EdgeInsets.all(10.0),
-                    isDense: true,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        child: Slider(
-                          label: "dsf",
-                          activeColor: themeData.primaryTextTheme.display1.color,
-                          min: 1.0,
-                          max: 31.0,
-                          onChanged: (newRating) {
-                            setState(() => _estimatedDays = newRating);
-                          },
-                          value: _estimatedDays,
-                        ),
+        FormFieldState<int> state,
+      ) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new InputDecorator(
+                decoration: const InputDecoration(
+                  labelText: "estimated duration(days)",
+                  contentPadding: EdgeInsets.all(10.0),
+                  isDense: true,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Slider(
+                        label: "dsf",
+                        activeColor: themeData.primaryTextTheme.display1.color,
+                        min: 1.0,
+                        max: 31.0,
+                        onChanged: (newRating) {
+                          setState(() => _estimatedDays = newRating);
+                        },
+                        value: _estimatedDays,
                       ),
-                      Text(
-                        _estimatedDays.toInt().toString(),
-                        style: TextStyle(fontSize: 31),
-                      )
-                    ],
-                  )),
-              SizedBox(height: 5.0),
-              Text(
-                state.hasError ? state.errorText : '',
-                style:
-                TextStyle(color: Colors.redAccent.shade700, fontSize: 12.0),
-              ),
-            ],
-          );
+                    ),
+                    Text(
+                      _estimatedDays.toInt().toString(),
+                      style: TextStyle(fontSize: 31),
+                    )
+                  ],
+                )),
+            SizedBox(height: 5.0),
+            Text(
+              state.hasError ? state.errorText : '',
+              style:
+                  TextStyle(color: Colors.redAccent.shade700, fontSize: 12.0),
+            ),
+          ],
+        );
       },
     );
   }
@@ -235,9 +238,7 @@ class _AddEditStageScreenState extends State<AddEditStageScreen> {
         });
   }
 
-  _updateStage() {
-
-  }
+  _updateStage() {}
 
   _createStage() {
     setState(() {

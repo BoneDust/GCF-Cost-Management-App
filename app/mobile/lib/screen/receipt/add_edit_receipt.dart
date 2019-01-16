@@ -77,13 +77,13 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
   }
 
   Receipt createReceiptObject() => Receipt(
-    projectId: _project.id,
-    description: descriptionController.text,
-    totalCost: double.parse(totalCostController.text),
-    purchaseDate: DateTime.now(),
-    picture: " ",
-    supplier: supplierController.text,
-  );
+        projectId: _project.id,
+        description: descriptionController.text,
+        totalCost: double.parse(totalCostController.text),
+        purchaseDate: DateTime.now(),
+        picture: " ",
+        supplier: supplierController.text,
+      );
 
   Future getImage(FormFieldState state) async {
     var image = await ImagePicker.pickImage(
@@ -160,6 +160,7 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
           _titleColor = themeData.primaryTextTheme.display1.color;
         }
       },
+      autovalidate: _autoValidate,
       onSaved: (value) {},
       builder: (
         FormFieldState<File> state,
@@ -218,18 +219,21 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
           TextFormField(
             validator: (val) =>
                 val.isEmpty ? 'reciept amount cannot be empty' : null,
+            autovalidate: _autoValidate,
             keyboardType: TextInputType.number,
             controller: totalCostController,
             decoration: InputDecoration(labelText: "amount", prefix: Text("R")),
           ),
           TextFormField(
             validator: (val) => val.isEmpty ? 'please include supplier' : null,
+            autovalidate: _autoValidate,
             controller: supplierController,
             decoration: InputDecoration(labelText: "supplier"),
           ),
           TextFormField(
             validator: (val) =>
                 val.isEmpty ? 'please describe what the reciept is for' : null,
+            autovalidate: _autoValidate,
             controller: descriptionController,
             maxLines: null,
             keyboardType: TextInputType.multiline,
@@ -273,6 +277,7 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
           return "select project";
         }
       },
+      autovalidate: _autoValidate,
       onSaved: (value) {},
       builder: (
         FormFieldState<Project> state,

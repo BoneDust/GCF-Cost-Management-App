@@ -16,8 +16,11 @@ class AddEditProjectScreen extends StatefulWidget {
   final bool isEditing;
   final Project project;
 
-  const AddEditProjectScreen({Key key, this.isEditing = false, this.project,})
-      : super(key: key);
+  const AddEditProjectScreen({
+    Key key,
+    this.isEditing = false,
+    this.project,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -37,6 +40,9 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   TextEditingController estimatedCostController = TextEditingController();
   TextEditingController teamSizeController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+
   bool _isLoading = false;
 
   User _selectedForeman;
@@ -47,20 +53,24 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
 
   String _status;
 
+  FormFieldState<User> formFieldStateForeman;
+
+  FormFieldState<Client> formFieldStateClient;
+
   @override
   void initState() {
     projectsBloc = GenericBloc<Project>();
 
     if (widget.isEditing) {
-
       projectsBloc.outUpdatedItem
-          .listen((project) => onProjectReceived(project)).onError(handleError);
+          .listen((project) => onProjectReceived(project))
+          .onError(handleError);
 
       fillFormsWithProjectData();
     } else {
-
       projectsBloc.outCreateItem
-          .listen((project) => onProjectReceived(project)).onError(handleError);
+          .listen((project) => onProjectReceived(project))
+          .onError(handleError);
     }
 
     super.initState();
@@ -69,154 +79,191 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    return Stack(
-      children: <Widget>[
-        Scaffold(
-          appBar: AppBar(
-            title: Text(widget.isEditing ? "edit project" : "create a project"),
-            actions: <Widget>[
-              FlatButton(
+    return Form(
+      key: _formKey,
+      child: Stack(
+        children: <Widget>[
+          Scaffold(
+            appBar: AppBar(
+              title:
+                  Text(widget.isEditing ? "edit project" : "create a project"),
+              actions: <Widget>[
+                FlatButton(
                   child: Text(
                     widget.isEditing ? "SAVE" : "CREATE",
                   ),
                   shape: CircleBorder(),
-                  onPressed: widget.isEditing ? updateProject : _createProject)
-            ],
-          ),
-          body: ListView(
-            physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: Column(
-                  children: <Widget>[
-                    Theme(
-                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
-                      child: TextFormField(
-                        validator: (val) =>
-                            val.isEmpty ? 'Please enter the name' : null,
-                        controller: nameController,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          labelText: "name",
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      _createProject();
+                    } else
+                      setState(() {
+                        _autoValidate = true;
+                      });
+                  },
+                )
+              ],
+            ),
+            body: ListView(
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: Column(
+                    children: <Widget>[
+                      Theme(
+                        data: themeData.copyWith(
+                            primaryColor:
+                                themeData.primaryTextTheme.display1.color),
+                        child: TextFormField(
+                          validator: (val) =>
+                              val.isEmpty ? 'Please enter the name' : null,
+                          autovalidate: _autoValidate,
+                          controller: nameController,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            labelText: "name",
+                          ),
                         ),
                       ),
-                    ),
-                    Theme(
-                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
-                      child: TextFormField(
-                        validator: (val) => val.isEmpty
-                            ? 'Please input the estimated project cost'
-                            : null,
-                        controller: estimatedCostController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          WhitelistingTextInputFormatter.digitsOnly,
-                        ],
-                        decoration: InputDecoration(
-                          labelText: "estimated cost",
-                          prefix: Text("R"),
+                      Theme(
+                        data: themeData.copyWith(
+                            primaryColor:
+                                themeData.primaryTextTheme.display1.color),
+                        child: TextFormField(
+                          validator: (val) => val.isEmpty
+                              ? 'Please input the estimated project cost'
+                              : null,
+                          autovalidate: _autoValidate,
+                          controller: estimatedCostController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter.digitsOnly,
+                          ],
+                          decoration: InputDecoration(
+                            labelText: "estimated cost",
+                            prefix: Text("R"),
+                          ),
                         ),
                       ),
-                    ),
-                    Theme(
-                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
-                      child: _foremanFormField(),
-                    ),
-                    Theme(
-                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
-                      child: _clientFormField(),
-                    ),
-                    Theme(
-                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
-                      child: _sizeSliderFormField(),
-                    ),
-                    Theme(
-                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
-                      child: DateTimePickerFormField(
-                        format: dateFormat,
-                        initialValue: startDate,
-                        decoration: InputDecoration(labelText: 'start date'),
-                        onChanged: (dt) => setState(() => startDate = dt),
+                      Theme(
+                        data: themeData.copyWith(
+                            primaryColor:
+                                themeData.primaryTextTheme.display1.color),
+                        child: _foremanFormField(),
                       ),
-                    ),
-                    Theme(
-                      data: themeData.copyWith(primaryColor: themeData.primaryTextTheme.display1.color),
-                      child: DateTimePickerFormField(
-                        format: dateFormat,
-                        initialValue: endDate,
-                        decoration: InputDecoration(labelText: 'end date'),
-                        onChanged: (dt) => setState(() => endDate = dt),
+                      Theme(
+                        data: themeData.copyWith(
+                            primaryColor:
+                                themeData.primaryTextTheme.display1.color),
+                        child: _clientFormField(),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                      Theme(
+                        data: themeData.copyWith(
+                            primaryColor:
+                                themeData.primaryTextTheme.display1.color),
+                        child: _sizeSliderFormField(),
+                      ),
+                      Theme(
+                        data: themeData.copyWith(
+                            primaryColor:
+                                themeData.primaryTextTheme.display1.color),
+                        child: DateTimePickerFormField(
+                          validator: (val) => val.toString().contains('null')
+                              ? 'please input start date'
+                              : null,
+                          autovalidate: _autoValidate,
+                          format: dateFormat,
+                          initialValue: startDate,
+                          decoration: InputDecoration(labelText: 'start date'),
+                          onChanged: (dt) => setState(() => startDate = dt),
+                        ),
+                      ),
+                      Theme(
+                        data: themeData.copyWith(
+                            primaryColor:
+                                themeData.primaryTextTheme.display1.color),
+                        child: DateTimePickerFormField(
+                          validator: (val) => val.toString().contains('null')
+                              ? 'please input end date'
+                              : null,
+                          autovalidate: _autoValidate,
+                          format: dateFormat,
+                          initialValue: endDate,
+                          decoration: InputDecoration(labelText: 'end date'),
+                          onChanged: (dt) => setState(() => endDate = dt),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-        _isLoading ? LoadingIndicator(text: widget.isEditing ? "saving project" : "creating project") : Column()
-      ],
+          _isLoading
+              ? LoadingIndicator(
+                  text:
+                      widget.isEditing ? "saving project" : "creating project")
+              : Column()
+        ],
+      ),
     );
   }
 
   Widget _sizeSliderFormField() {
     ThemeData themeData = Theme.of(context);
 
-    return FormField<User>(
+    return FormField<int>(
       validator: (value) {
         if (value == null) {
-          return "select foreman";
+          return "select team size";
         }
       },
+      autovalidate: _autoValidate,
       onSaved: (value) {},
       builder: (
-        FormFieldState<User> state,
+        FormFieldState<int> state,
       ) {
-        return GestureDetector(
-          onTap: () {
-            _showUsersSelectMenu();
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: "team size",
-                    contentPadding: EdgeInsets.all(10.0),
-                    isDense: true,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        child: Slider(
-                          label: "dsf",
-                          activeColor: themeData.primaryTextTheme.display1.color,
-                          min: 1.0,
-                          max: 30.0,
-                          onChanged: (newRating) {
-                            setState(() => _sizeValue = newRating);
-                          },
-                          value: _sizeValue,
-                        ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new InputDecorator(
+                decoration: const InputDecoration(
+                  labelText: "team size",
+                  contentPadding: EdgeInsets.all(10.0),
+                  isDense: true,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Slider(
+                        label: "dsf",
+                        activeColor: themeData.primaryTextTheme.display1.color,
+                        min: 1.0,
+                        max: 30.0,
+                        onChanged: (newRating) {
+                          state.didChange(_sizeValue.toInt());
+                          setState(() => _sizeValue = newRating);
+                        },
+                        value: _sizeValue,
                       ),
-                      Text(
-                        _sizeValue.toInt().toString(),
-                        style: TextStyle(fontSize: 20),
-                      )
-                    ],
-                  )),
-              SizedBox(height: 5.0),
-              Text(
-                state.hasError ? state.errorText : '',
-                style:
-                    TextStyle(color: Colors.redAccent.shade700, fontSize: 12.0),
-              ),
-            ],
-          ),
+                    ),
+                    Text(
+                      _sizeValue.toInt().toString(),
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                )),
+            SizedBox(height: 5.0),
+            Text(
+              state.hasError ? state.errorText : '',
+              style:
+                  TextStyle(color: Colors.redAccent.shade700, fontSize: 12.0),
+            ),
+          ],
         );
       },
     );
@@ -229,10 +276,12 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
           return "select foreman";
         }
       },
+      autovalidate: _autoValidate,
       onSaved: (value) {},
       builder: (
         FormFieldState<User> state,
       ) {
+        formFieldStateForeman = state;
         return GestureDetector(
           onTap: () {
             _showUsersSelectMenu();
@@ -278,10 +327,13 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
           return "select client";
         }
       },
+      autovalidate: _autoValidate,
       onSaved: (value) {},
       builder: (
         FormFieldState<Client> state,
       ) {
+        formFieldStateClient = state;
+
         return GestureDetector(
           onTap: () {
             _showClientSelectMenu();
@@ -322,7 +374,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
     setState(() {
       _isLoading = false;
     });
-    if (widget.isEditing){
+    if (widget.isEditing) {
       project.foreman = widget.project.foreman;
       project.receipts = widget.project.receipts;
       project.client = widget.project.client;
@@ -357,6 +409,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   ) {
     Navigator.of(context).pop();
     setState(() {
+      formFieldStateForeman.didChange(user);
       _selectedForeman = user;
     });
   }
@@ -375,16 +428,20 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
   ) {
     Navigator.of(context).pop();
     setState(() {
+      formFieldStateClient.didChange(client);
       _selectedClient = client;
     });
   }
 
-
   void _createProject() {
-    setState(() {
-      _isLoading = true;
-    });
-    projectsBloc.create(createProject());
+    if (widget.isEditing) {
+      updateProject();
+    } else {
+      setState(() {
+        _isLoading = true;
+      });
+      projectsBloc.create(createProject());
+    }
   }
 
   void fillFormsWithProjectData() {
