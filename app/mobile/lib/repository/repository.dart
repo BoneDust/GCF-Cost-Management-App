@@ -1,3 +1,5 @@
+import 'dart:io';
+
 abstract class Repository<T> {
   Future<T> getById(int id);
   Future<List<T>> getAll([String filter]);
@@ -6,4 +8,5 @@ abstract class Repository<T> {
   Future<T> update(T item, int id);
   Future<List<T>> getByProjectId(int projectId);
   Future<List<T>> getByUser(int projectId);
+  Future<T> createWithPicture(T item, File image);
 }

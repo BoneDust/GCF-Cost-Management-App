@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/screen/receipt/receipt.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ class ReceiptTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -24,9 +27,13 @@ class ReceiptTile extends StatelessWidget {
               height: 50,
               width: 50,
               decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: AssetImage("assets/images.jpeg"), fit: BoxFit.cover)),
+                  shape: BoxShape.circle,),
+              child: CachedNetworkImage(
+                imageUrl: receipt.picture,
+                placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
+                errorWidget:  Icon(Icons.error),
+                fit: BoxFit.cover,
+              ),
             ),
           )
           ,

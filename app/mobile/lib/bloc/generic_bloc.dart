@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cm_mobile/bloc/base_bloc.dart';
+import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/repository/repository.dart';
 import 'package:cm_mobile/repository/repository_implementation.dart';
 import 'dart:async';
@@ -85,5 +88,10 @@ class GenericBloc<T> extends BlocBase{
       _inItemsByUser.add(item);
     }).catchError((error) =>  _outItemsByUserController.addError(error));
   }
+
+  void createWithPicture(T item, File image) {
+    repository.createWithPicture(item, image).then((item) {
+      inCreateItem.add(item);
+    }).catchError((error) =>  _createItemController.addError(error));  }
 
 }

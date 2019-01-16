@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cm_mobile/repository/repository.dart';
 import 'package:cm_mobile/service/model_api_service.dart';
 
@@ -40,4 +42,10 @@ class RepositoryImplementation<T> implements Repository<T> {
     return apiService
         .getByUser(projectId);
   }
+
+  @override
+  Future<T> createWithPicture(T item, File image) {
+    return  apiService.createWithPicture(item, image);
+  }
+
 }

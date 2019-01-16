@@ -1,5 +1,7 @@
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:path/path.dart';
 
 class ReceiptScreen extends StatelessWidget {
   final Receipt receipt;
@@ -8,6 +10,8 @@ class ReceiptScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Material(
       child: CustomScrollView(
         slivers: <Widget>[
@@ -15,8 +19,10 @@ class ReceiptScreen extends StatelessWidget {
             floating: true,
             expandedHeight: 200.0,
             flexibleSpace:   FlexibleSpaceBar(
-              background: Image(
-                image: AssetImage("assets/images.jpeg"),
+              background: CachedNetworkImage(
+                imageUrl: receipt.picture,
+                placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
+                errorWidget:  Icon(Icons.error),
                 fit: BoxFit.cover,
               ),
             ),

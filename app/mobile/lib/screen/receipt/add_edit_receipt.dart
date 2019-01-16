@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/model/project.dart';
 import 'package:cm_mobile/model/receipt.dart';
 import 'package:cm_mobile/screen/project/projects_screen.dart';
 import 'package:cm_mobile/screen/receipt/image_viewer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -76,7 +76,7 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
     description: descriptionController.text,
     totalCost: double.parse(totalCostController.text),
     purchaseDate: DateTime.now(),
-    picture: base64UrlEncode(_image.readAsBytesSync()),
+    picture: " ",
     supplier: supplierController.text,
   );
 
@@ -332,7 +332,7 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
     setState(() {
       _isLoading = true;
     });
-    receiptBloc.create(createReceiptObject());
+    receiptBloc.createWithPicture(createReceiptObject(), _image);
   }
 
 }

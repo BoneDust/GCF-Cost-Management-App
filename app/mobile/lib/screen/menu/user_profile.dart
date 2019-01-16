@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/menu/menu.dart';
@@ -27,6 +28,7 @@ class _MenuProfileCard extends State<MenuProfileCard> {
   Widget build(BuildContext context) {
     AppDataContainerState userContainerState = AppDataContainer.of(context);
     User user = userContainerState.user;
+    ThemeData themeData = Theme.of(context);
 
     return user != null ? Padding(
       padding: EdgeInsets.symmetric(vertical: 20),
@@ -55,6 +57,12 @@ class _MenuProfileCard extends State<MenuProfileCard> {
               ),
               CircleAvatar(
                 minRadius: 80,
+                child:  CachedNetworkImage(
+                  imageUrl: user.image,
+                  placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
+                  errorWidget:  Icon(Icons.error),
+                  fit: BoxFit.cover,
+                ),
               ),
               _buildRoundButton(Typicons.pencil, "edit", (){
                 widget.parent.navigateAndDisplayEdit(context, user);

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/users/user_screen.dart';
@@ -13,6 +14,8 @@ class UserTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Dismissible(
       key: Key(user.name),
       onDismissed: (DismissDirection direction) {
@@ -53,10 +56,13 @@ class UserTile extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: AssetImage("assets/images.jpeg"),
-                        fit: BoxFit.cover)),
+                    shape: BoxShape.circle,),
+                child: CachedNetworkImage(
+                  imageUrl: user.image,
+                  placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
+                  errorWidget:  Icon(Icons.error),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Padding(
