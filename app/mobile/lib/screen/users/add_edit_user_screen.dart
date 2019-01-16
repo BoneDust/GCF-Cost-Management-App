@@ -40,6 +40,9 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
 
   TextEditingController _emailController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
@@ -86,11 +89,19 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
               new SliverAppBar(
                 actions: <Widget>[
                   FlatButton(
-                      child: Text(
-                        widget.isEditing ? "SAVE" : "CREATE",
-                      ),
-                      shape: CircleBorder(),
-                      onPressed: widget.isEditing ? updateUser : _createUser)
+                    child: Text(
+                      widget.isEditing ? "SAVE" : "CREATE",
+                    ),
+                    shape: CircleBorder(),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        _createUser();
+                      } else
+                        setState(() {
+                          _autoValidate = true;
+                        });
+                    },
+                  ),
                 ],
                 elevation: 5,
                 forceElevated: true,
@@ -159,10 +170,14 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
   }
 
   void _createUser() {
-    setState(() {
-      _isLoading = true;
-    });
-    userBlocs.create(createUser());
+    if (widget.isEditing) {
+      updateUser();
+    } else {
+      setState(() {
+        _isLoading = true;
+      });
+      userBlocs.create(createUser());
+    }
   }
 
   void fillFormsWithUserData() {
@@ -215,64 +230,73 @@ class _AddEditUserScreenState extends State<AddEditUserScreen> {
   }
 
   Widget _formFields() {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 10.0),
-        ),
-        ListTile(
-          leading: CircleAvatar(
-            child: previewImage,
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 10.0),
           ),
-          title: Column(
-            children: <Widget>[
-              ListTile(
-                title: TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10.0), labelText: 'name'),
-                ),
-              ),
-              ListTile(
-                title: TextFormField(
-                  controller: surnameController,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10.0),
-                      labelText: 'surname'),
-                ),
-              ),
-            ],
-          ),
-        ),
-        ListTile(
-          title: TextFormField(
-            controller: _emailController,
-            decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(10.0), labelText: 'email'),
-          ),
-        ),
-        ListTile(
-          title: TextFormField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(10.0),
-              labelText: 'password',
-              suffixIcon: IconButton(
-                icon: Icon(Icons.remove_red_eye),
-                onPressed: () {
-                  _toggle();
-                },
-              ),
+          ListTile(
+            leading: CircleAvatar(
+              child: previewImage,
             ),
-            validator: (val) => val.length < 6 ? 'Password too short.' : null,
-            onSaved: (val) => _password = val,
-            obscureText: _obscureText,
+            title: Column(
+              children: <Widget>[
+                ListTile(
+                  title: TextFormField(
+                    validator: (val) =>
+                        val.isEmpty ? 'name cannot be empty' : null,
+                    controller: nameController,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(10.0),
+                        labelText: 'name'),
+                  ),
+                ),
+                ListTile(
+                  title: TextFormField(
+                    validator: (val) =>
+                        val.isEmpty ? 'surname cannot be empty' : null,
+                    controller: surnameController,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(10.0),
+                        labelText: 'surname'),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        ListTile(title: _dropDownFormField()),
-        SizedBox(
-          height: 10.0,
-        )
-      ],
+          ListTile(
+            title: TextFormField(
+              validator: (val) => val.isEmpty ? 'email cannot be empty' : null,
+              controller: _emailController,
+              decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(10.0), labelText: 'email'),
+            ),
+          ),
+          ListTile(
+            title: TextFormField(
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(10.0),
+                labelText: 'password',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.remove_red_eye),
+                  onPressed: () {
+                    _toggle();
+                  },
+                ),
+              ),
+              validator: (val) => val.length < 6 ? 'Password too short.' : null,
+              onSaved: (val) => _password = val,
+              obscureText: _obscureText,
+            ),
+          ),
+          ListTile(title: _dropDownFormField()),
+          SizedBox(
+            height: 10.0,
+          )
+        ],
+      ),
     );
   }
 

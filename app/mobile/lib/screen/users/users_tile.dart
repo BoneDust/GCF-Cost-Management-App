@@ -43,12 +43,6 @@ class UserTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(PrivilegeType[user.privilege]),
-                    // SizedBox(
-                    //   height: 20.0,
-                    // ),
-                    // Divider(
-                    //   color: Colors.grey[300],
-                    // ),
                   ],
                 ),
               ),

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -16,7 +14,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
   @override
   bool get wantKeepAlive => true;
 
-  int _selectedItem;
+  // int _selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +39,11 @@ class _StatisticsScreenState extends State<StatisticsScreen>
         children: <Widget>[
           Expanded(
             child: Card(
-              child: LineAnimationZoomChart.withSampleData(),
+              child: WeeklySpendChart.withSampleData(),
             ),
           ),
           new _StatisticCard(
-            title: "Current weight",
+            title: "in total",
             value: 20,
           ),
           new Row(
@@ -53,7 +51,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
             children: <Widget>[
               new Expanded(
                 child: new _StatisticCard(
-                  title: "Last week",
+                  title: "in progress",
                   value: 10,
                   textSizeFactor: 0.8,
                   processNumberSymbol: true,
@@ -61,7 +59,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
               ),
               new Expanded(
                 child: new _StatisticCard(
-                  title: "Last month",
+                  title: "completed",
                   value: 10,
                   textSizeFactor: 0.8,
                   processNumberSymbol: true,
@@ -84,82 +82,63 @@ class _StatisticsScreenState extends State<StatisticsScreen>
 //   }
 // }
 
-class LineAnimationZoomChart extends StatelessWidget {
+class WeeklySpendChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  LineAnimationZoomChart(this.seriesList, {this.animate});
+  WeeklySpendChart(this.seriesList, {this.animate});
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory LineAnimationZoomChart.withSampleData() {
-    return new LineAnimationZoomChart(
+  factory WeeklySpendChart.withSampleData() {
+    return new WeeklySpendChart(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
     );
   }
 
-  // EXCLUDE_FROM_GALLERY_DOCS_START
-  // This section is excluded from being copied to the gallery.
-  // It is used for creating random series data to demonstrate animation in
-  // the example app only.
-  factory LineAnimationZoomChart.withRandomData() {
-    return new LineAnimationZoomChart(_createRandomData());
-  }
-
-  /// Create random data.
-  static List<charts.Series<LinearSales, num>> _createRandomData() {
-    final random = new Random();
-
-    final data = <LinearSales>[];
-
-    for (var i = 0; i < 100; i++) {
-      data.add(new LinearSales(i, random.nextInt(100)));
-    }
-
-    return [
-      new charts.Series<LinearSales, int>(
-        id: 'Sales',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        data: data,
-      )
-    ];
-  }
-  // EXCLUDE_FROM_GALLERY_DOCS_END
-
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(seriesList, animate: animate, behaviors: [
-      new charts.PanAndZoomBehavior(),
-    ]);
+    return new charts.TimeSeriesChart(
+      seriesList,
+      animate: animate,
+      // Optionally pass in a [DateTimeFactory] used by the chart. The factory
+      // should create the same type of [DateTime] as the data provided. If none
+      // specified, the default creates local date time.
+      dateTimeFactory: const charts.LocalDateTimeFactory(),
+    );
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, int>> _createSampleData() {
+  static List<charts.Series<TimeSeriesSpend, DateTime>> _createSampleData() {
     final data = [
-      new LinearSales(0, 5),
-      new LinearSales(1, 25),
-      new LinearSales(2, 100),
-      new LinearSales(3, 75),
+      new TimeSeriesSpend(new DateTime(2017, 9, 19), 5),
+      new TimeSeriesSpend(new DateTime(2017, 9, 26), 10),
+      new TimeSeriesSpend(new DateTime(2017, 10, 3), 42),
+      new TimeSeriesSpend(new DateTime(2017, 10, 10), 37),
+      new TimeSeriesSpend(new DateTime(2017, 10, 17), 51),
+      new TimeSeriesSpend(new DateTime(2017, 10, 24), 100),
+      new TimeSeriesSpend(new DateTime(2017, 10, 31), 75),
     ];
 
     return [
-      new charts.Series<LinearSales, int>(
-        id: 'Sales',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
+      new charts.Series<TimeSeriesSpend, DateTime>(
+        id: 'Spend',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (TimeSeriesSpend spend, _) => spend.time,
+        measureFn: (TimeSeriesSpend spend, _) => spend.spend,
         data: data,
       )
     ];
   }
 }
 
-class LinearSales {
-  final int year;
-  final int sales;
+/// Sample time series data type.
+class TimeSeriesSpend {
+  final DateTime time;
+  final int spend;
 
-  LinearSales(this.year, this.sales);
+  TimeSeriesSpend(this.time, this.spend);
 }
 
 class _StatisticCardWrapper extends StatelessWidget {
@@ -199,7 +178,7 @@ class _StatisticCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Color numberColor =
         (processNumberSymbol && value > 0) ? Colors.red : Colors.green;
-    String numberSymbol = processNumberSymbol && value > 0 ? "+" : "";
+    String numberSymbol = processNumberSymbol && value > 0 ? "" : "";
     return new _StatisticCardWrapper(
       child: new Column(
         children: <Widget>[
@@ -216,7 +195,7 @@ class _StatisticCard extends StatelessWidget {
                 ),
                 new Padding(
                     padding: new EdgeInsets.only(left: 5.0),
-                    child: new Text("kg")),
+                    child: new Text("projects")),
               ],
               mainAxisAlignment: MainAxisAlignment.center,
             ),
