@@ -25,6 +25,8 @@ class AppDataContainerState extends State<AppDataContainer> {
   User user;
   String token;
   List<Activity> activities = [];
+  List<Project> projects = [];
+
   Brightness brightness = Brightness.dark;
 
   AuthenticationState authState = AuthenticationState(
@@ -68,6 +70,12 @@ class AppDataContainerState extends State<AppDataContainer> {
     setState(() {
 
       this.authState = authState;
+    });
+  }
+
+  setProjects(List<Project> projects) {
+    setState(() {
+      this.projects = projects;
     });
   }
 }

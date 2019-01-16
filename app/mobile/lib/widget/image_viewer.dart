@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
-class ReceiptImageViewer extends StatelessWidget {
+class ImageViewer extends StatelessWidget {
   final File image;
 
-  const ReceiptImageViewer({Key key, this.image}) : super(key: key);
+  const ImageViewer({Key key, this.image}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

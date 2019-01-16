@@ -1,4 +1,8 @@
+import 'package:cm_mobile/model/filter/ProjectFilter.dart';
+import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/util/filter/filter_tool.dart';
 import 'package:cm_mobile/util/typicon_icons_icons.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -14,11 +18,13 @@ class _StatisticsScreenState extends State<StatisticsScreen>
   @override
   bool get wantKeepAlive => true;
 
-  // int _selectedItem;
+  List<Project> _projects;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
+    _projects = userContainerState.projects;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,15 +50,15 @@ class _StatisticsScreenState extends State<StatisticsScreen>
           ),
           new _StatisticCard(
             title: "in total",
-            value: 20,
+            value: _projects.length,
           ),
           new Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               new Expanded(
                 child: new _StatisticCard(
-                  title: "in progress",
-                  value: 10,
+                  title: "active",
+                  value: FilterTool.filterProjects(_projects, ProjectFilter.byActive()).length,
                   textSizeFactor: 0.8,
                   processNumberSymbol: true,
                 ),
@@ -60,7 +66,7 @@ class _StatisticsScreenState extends State<StatisticsScreen>
               new Expanded(
                 child: new _StatisticCard(
                   title: "completed",
-                  value: 10,
+                  value:  FilterTool.filterProjects(_projects, ProjectFilter.byDone()).length,
                   textSizeFactor: 0.8,
                   processNumberSymbol: true,
                 ),
@@ -128,6 +134,7 @@ class WeeklySpendChart extends StatelessWidget {
         domainFn: (TimeSeriesSpend spend, _) => spend.time,
         measureFn: (TimeSeriesSpend spend, _) => spend.spend,
         data: data,
+        displayName: "Weekly expenditure"
       )
     ];
   }

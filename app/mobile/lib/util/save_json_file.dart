@@ -1,5 +1,8 @@
+import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:cm_mobile/model/receipt.dart';
 import 'package:path_provider/path_provider.dart';
 
 class JsonFileUtil{
@@ -49,6 +52,10 @@ class JsonFileUtil{
     final path = await _localPath;
 
     Directory('$path').delete(recursive: true);
+
+  }
+
+  static Future addReceiptToOfflineCache(Receipt receipt, String userName) async {
 
   }
 }

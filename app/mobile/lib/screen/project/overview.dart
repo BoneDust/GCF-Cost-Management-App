@@ -44,13 +44,16 @@ class _FinancialOverviewCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  _buildBoxWithText(project.expenditure.toString(),
-                      " has been spent", Colors.green, context),
                   _buildBoxWithText(
-                      project.estimatedCost.toString(),
+                      "R " + project.expenditure.toInt().toString(),
+                      " has been spent",
+                      Colors.green,
+                      context),
+                  _buildBoxWithText(
+                      "R " + project.estimatedCost.toInt().toString(),
                       "estimated project cost",
-                      themeData.primaryTextTheme.display1.color,
-                      context)
+                      Colors.green,
+                      context),
                 ],
               ),
               Padding(
@@ -65,7 +68,7 @@ class _FinancialOverviewCard extends StatelessWidget {
                   semanticsLabel: "sdfsd",
                   semanticsValue: "fsfsd",
                   backgroundColor: themeData.primaryTextTheme.display1.color,
-                  value: 0.9,
+                  value: ((project.expenditure /project.estimatedCost) * 100) /100 ,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                 ),
               ),

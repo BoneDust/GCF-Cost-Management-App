@@ -357,7 +357,8 @@ class ProjectsScreenState extends State<ProjectsScreen>
 
   onProjectsReceived(List<Project> projects) {
     _projects = projects;
-
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
+    userContainerState.setProjects(_projects);
     setState(() {
       _isLoadingProjects = false;
       filterProjects(false);

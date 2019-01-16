@@ -76,6 +76,7 @@ class _AppState extends State<_App> {
   Future getProjects(String username) async {
     ModelJsonFileUtil.getAll<Project>(username).then((List<Project> value) {
       ModelCache.projects = value;
+      dataContainerState.projects = value;
     }).catchError((error) {
       ModelCache.projects = [];
     });
