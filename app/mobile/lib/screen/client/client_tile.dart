@@ -31,7 +31,6 @@ class ClientTile extends StatelessWidget {
             ),
             Divider(
               height: 1.0,
-              indent: 82,
               color: Colors.grey[300],
             ),
           ],

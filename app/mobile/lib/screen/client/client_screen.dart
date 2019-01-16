@@ -49,6 +49,8 @@ class ClientScreenState extends State<ClientScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Stack(
       children: <Widget>[
         WillPopScope(
@@ -66,9 +68,22 @@ class ClientScreenState extends State<ClientScreen> {
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text(client.name),
                       centerTitle: false,
-                      background: Image(
-                        image: AssetImage("assets/images.jpeg"),
-                        fit: BoxFit.cover,
+                      background:                     Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              // Where the linear gradient begins and ends
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomLeft,
+                              // Add one stop for each color. Stops should increase from 0 to 1
+                              stops: [0.1, 0.3, 0.4, 1],
+                              colors: [
+                                // Colors are easy thanks to Flutter's Colors class.
+                                themeData.primaryColor.withAlpha(100),
+                                themeData.primaryColor.withAlpha(60),
+                                themeData.primaryColor.withAlpha(23),
+                                themeData.primaryColor,
+                              ],
+                            )),
                       ),
                     ),
                   )

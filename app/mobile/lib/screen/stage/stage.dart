@@ -35,6 +35,7 @@ class _StageScreen extends StatelessWidget {
           SnapShotCard(
             stage: stage,
           ),
+          Padding(padding: EdgeInsets.only(bottom: 20),),
           StageDetails(stage: stage,),
         ],
       );

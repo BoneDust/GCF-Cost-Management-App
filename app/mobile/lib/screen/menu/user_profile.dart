@@ -30,7 +30,9 @@ class _MenuProfileCard extends State<MenuProfileCard> {
     User user = userContainerState.user;
     ThemeData themeData = Theme.of(context);
 
+    icon = userContainerState.brightness == Brightness.dark ? Typicons.sun : Typicons.moon;
     return user != null ? Padding(
+
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: <Widget>[
@@ -49,7 +51,6 @@ class _MenuProfileCard extends State<MenuProfileCard> {
                   else{
                     icon = Typicons.moon;
                     brightness = Brightness.light;
-
                   }
                   userContainerState.setBrightness(brightness);
                 },
@@ -64,9 +65,12 @@ class _MenuProfileCard extends State<MenuProfileCard> {
                   fit: BoxFit.cover,
                 ),
               ),
-              _buildRoundButton(Typicons.pencil, "edit", (){
-                widget.parent.navigateAndDisplayEdit(context, user);
-              }),
+              IconButton(
+                icon: Icon(Typicons.pencil),
+                onPressed: user.privilege == Privilege.ADMIN ?  (){
+                  widget.parent.navigateAndDisplayEdit(context, user);
+                } : null,
+              ),
 
             ],
           ),
@@ -84,24 +88,6 @@ class _MenuProfileCard extends State<MenuProfileCard> {
     ): Column();
   }
 
-  Widget _buildRoundButton(IconData icon, String title, Function function) {
-    ThemeData themeData = Theme.of(context);
-
-    return Container(
-      height: 80,
-      width: 80,
-      child: FlatButton(onPressed: function, child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Icon(icon, color: themeData.primaryTextTheme.display1.color,),
-          Padding(padding: EdgeInsets.only(top: 7),),
-          Text(title)
-        ],
-      ), shape: CircleBorder()),
-    );
-  }
 
 
 }

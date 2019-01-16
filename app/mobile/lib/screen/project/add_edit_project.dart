@@ -336,7 +336,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
       startDate: startDate,
       endDate: endDate,
       foreman: _selectedForeman,
-      status: "Incomplete",
+      status: "active",
       estimatedCost: double.parse(estimatedCostController.text),
       expenditure: 0.0,
       clientId: _selectedClient.id,
@@ -396,6 +396,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
     estimatedCostController.text = widget.project.estimatedCost.toString();
     _selectedForeman = widget.project.foreman;
     _selectedClient = widget.project.client;
+
   }
 
   void updateProject() {

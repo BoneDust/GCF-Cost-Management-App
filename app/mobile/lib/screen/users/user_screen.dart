@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cm_mobile/bloc/generic_bloc.dart';
 import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/enums/privilege_enum.dart';
@@ -48,6 +49,8 @@ class _UserScreen extends State<UserScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     return Stack(
       children: <Widget>[
 
@@ -63,8 +66,10 @@ class _UserScreen extends State<UserScreen> {
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(user.name + " " + user.surname),
                     centerTitle: false,
-                    background: Image(
-                      image: AssetImage("assets/images.jpeg"),
+                    background:  CachedNetworkImage(
+                      imageUrl: user.image,
+                      placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
+                      errorWidget:  Icon(Icons.error),
                       fit: BoxFit.cover,
                     ),
                   ),

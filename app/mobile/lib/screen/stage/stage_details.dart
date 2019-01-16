@@ -21,15 +21,14 @@ class StageDetails extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(left: 10),
-          child: Text(
-            stage.description,
-            style: TextStyle( fontSize: 17),
+          child: ListTile(
+            title: Text(stage.description),
+            subtitle: Text("description"),
           ),
         ),
         ListTile(
           title: Text(stage.startDate.toIso8601String()),
           subtitle: Text("started Date"),
-          leading: Icon(Icons.date_range),
         ),
       ],
     );

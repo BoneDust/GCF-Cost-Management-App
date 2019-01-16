@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cm_mobile/model/stage.dart';
 import 'package:flutter/material.dart';
 
@@ -37,21 +38,25 @@ class _SnapShotCardDetail extends StatelessWidget {
       alignment: WrapAlignment.spaceBetween,
       spacing: 12,
       children: <Widget>[
-        _getImage(stage.beforePicture, "before"),
-        _getImage(stage.afterPicture, "after")
+        _getImage(stage.beforePicture, "before", context),
+        _getImage(stage.afterPicture, "after", context)
       ],
     );
   }
 
-  Widget _getImage(String pictureUrl, String title) {
+  Widget _getImage(String pictureUrl, String title, BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
     Widget pictureWidget;
     if (pictureUrl == null || pictureUrl.isEmpty)
       pictureWidget = Center(
         child: IconButton(icon: Icon(Icons.add_a_photo), onPressed: () {}),
       );
     else
-      pictureWidget = Image(
-        image: AssetImage("assets/images.jpeg"),
+      pictureWidget = CachedNetworkImage(
+        imageUrl: pictureUrl,
+        placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
+        errorWidget:  Icon(Icons.error),
         fit: BoxFit.cover,
       );
     return StageImage(

@@ -25,7 +25,7 @@ class AppDataContainerState extends State<AppDataContainer> {
   User user;
   String token;
   List<Activity> activities = [];
-  Brightness brightness = Brightness.light;
+  Brightness brightness = Brightness.dark;
 
   AuthenticationState authState = AuthenticationState(
       isInitializing: true, isLoading: false, isAuthenticated: false);

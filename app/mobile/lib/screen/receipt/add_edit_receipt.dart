@@ -241,13 +241,12 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
             children: <Widget>[
               RaisedButton(
                 elevation: 10,
-                color: themeData.primaryTextTheme.display1.color,
+                color: themeData.primaryColor,
                 child: Text(
                   "submit",
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 17,
-                      color: Colors.white),
+                      fontSize: 17),
                 ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6)),

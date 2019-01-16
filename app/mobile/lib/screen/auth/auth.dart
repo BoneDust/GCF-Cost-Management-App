@@ -76,6 +76,7 @@ class _AuthScreen extends State<AuthScreen> {
                       Theme(
                           data: themeData.copyWith(
                             hintColor: Colors.white,
+                            primaryColor: Colors.green
                           ),
                           child: Column(
                             children: <Widget>[
@@ -99,6 +100,7 @@ class _AuthScreen extends State<AuthScreen> {
                         width: double.infinity,
                         height: 55,
                         child: RaisedButton(
+                          textColor: Colors.black,
                           child: Text('sign in'),
                           color: Colors.white,
                           elevation: 10.0,

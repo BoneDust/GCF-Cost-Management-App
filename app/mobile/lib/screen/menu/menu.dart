@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:cm_mobile/bloc/auth_bloc.dart';
 import 'package:cm_mobile/data/app_data.dart';
-import 'package:cm_mobile/enums/model_status.dart';
 import 'package:cm_mobile/model/auth_state.dart';
 import 'package:cm_mobile/model/user.dart';
 import 'package:cm_mobile/screen/menu/user_profile.dart';
@@ -49,7 +48,9 @@ class MenuScreenState extends State<MenuScreen> {
           appBar: AppBar(
             title: Text("Menu"),
           ),
-          body: Column(
+          body: ListView(
+            physics: BouncingScrollPhysics(),
+            shrinkWrap: true,
             children: menuScreenWidget,
           ),
         ),
@@ -63,22 +64,27 @@ class MenuScreenState extends State<MenuScreen> {
       MenuProfileCard(parent: this,),
     ];
 
-    menuScreenWidget.add(RaisedButton(
-        elevation: 10,
-        color: Colors.white,
-        child: Text(
-          "sign out",
-          style: TextStyle(
-              color: Colors.red, fontWeight: FontWeight.w600, fontSize: 17),
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        onPressed: () {
-          setState(() {
-            _isLoading = true;
-          });
-          User user = AppDataContainer.of(context).user;
-          authBloc.logout(user);
-        }));
+    menuScreenWidget.add(Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        RaisedButton(
+            elevation: 10,
+            color: Colors.white,
+            child: Text(
+              "sign out",
+              style: TextStyle(
+                  color: Colors.red, fontWeight: FontWeight.w600, fontSize: 17),
+            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            onPressed: () {
+              setState(() {
+                _isLoading = true;
+              });
+              User user = AppDataContainer.of(context).user;
+              authBloc.logout(user);
+            })
+      ],
+    ));
 
     return menuScreenWidget;
   }
