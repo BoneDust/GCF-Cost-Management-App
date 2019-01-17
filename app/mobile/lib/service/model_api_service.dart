@@ -240,9 +240,9 @@ class ApiService<T> {
         });
         return create(item);
       }
-      throw("could not create");
+      return create(item);
     } catch (e) {
-      throw ("no internet connection");
+      return create(item);
     }
   }
 }

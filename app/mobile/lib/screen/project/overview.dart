@@ -23,7 +23,7 @@ class _FinancialOverviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
 
-    if (project.receipts == null){
+    if (project.receipts != null){
       for (Receipt receipt in project.receipts ) {
         totalExpenditure += receipt.totalCost.toInt();
       }

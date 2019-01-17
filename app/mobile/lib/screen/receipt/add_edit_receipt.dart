@@ -76,7 +76,7 @@ class _AddReceiptState extends State<AddEditReceiptScreen> {
     description: descriptionController.text,
     totalCost: double.parse(totalCostController.text),
     purchaseDate: DateTime.now(),
-    picture: base64UrlEncode(_image.readAsBytesSync()),
+    picture: " ",
     supplier: supplierController.text,
   );
 
