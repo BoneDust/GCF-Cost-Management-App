@@ -13,6 +13,32 @@ class UserTile extends StatelessWidget {
 
   const UserTile({@required this.user, this.function, this.parent});
 
+  _showWarningDialouge(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure you want to delete ${user.name}'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('YES'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text('NO'),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context, true);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
@@ -21,9 +47,8 @@ class UserTile extends StatelessWidget {
       key: Key(user.name),
       onDismissed: (DismissDirection direction) {
         if (direction == DismissDirection.endToStart) {
-          print('End to start');
         } else if (direction == DismissDirection.startToEnd) {
-          print('start to End');
+          _showWarningDialouge(context);
         } else {
           print('unknown');
         }
@@ -51,11 +76,14 @@ class UserTile extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle,),
+                  shape: BoxShape.circle,
+                ),
                 child: CachedNetworkImage(
                   imageUrl: user.image,
-                  placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
-                  errorWidget:  Icon(Typicons.user),
+                  placeholder: Text("loading picture...",
+                      style: TextStyle(
+                          color: themeData.primaryTextTheme.display1.color)),
+                  errorWidget: Icon(Typicons.user),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -25,6 +25,9 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
   TextEditingController _contactPersonController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+
   @override
   void initState() {
     clientBlocs = GenericBloc<Client>();
@@ -46,42 +49,52 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Scaffold(
-          body: CustomScrollView(
-            slivers: <Widget>[
-              new SliverAppBar(
-                actions: <Widget>[
-                  FlatButton(
-                      child: Text(
-                        widget.isEditing ? "SAVE" : "CREATE",
-                      ),
-                      shape: CircleBorder(),
-                      onPressed: widget.isEditing ? updateClient : _create)
-                ],
-                elevation: 5,
-                forceElevated: true,
-                pinned: true,
-                flexibleSpace: new FlexibleSpaceBar(
-                  title: Text(
-                      widget.isEditing ? "edit client" : "create a client"),
+    return Form(
+      key: _formKey,
+      child: Stack(
+        children: <Widget>[
+          Scaffold(
+            body: CustomScrollView(
+              slivers: <Widget>[
+                new SliverAppBar(
+                  actions: <Widget>[
+                    FlatButton(
+                        child: Text(
+                          widget.isEditing ? "SAVE" : "CREATE",
+                        ),
+                        shape: CircleBorder(),
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            _create;
+                          } else
+                            setState(() {
+                              _autoValidate = true;
+                            });
+                        }),
+                  ],
+                  elevation: 5,
+                  forceElevated: true,
+                  pinned: true,
+                  flexibleSpace: new FlexibleSpaceBar(
+                    title: Text(
+                        widget.isEditing ? "edit client" : "create a client"),
+                  ),
                 ),
-              ),
-              SliverPadding(
-                padding: EdgeInsets.all(5.0),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([_formFields()]),
-                ),
-              )
-            ],
+                SliverPadding(
+                  padding: EdgeInsets.all(5.0),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([_formFields()]),
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-        _isLoading
-            ? LoadingIndicator(
-                text: widget.isEditing ? "saving client" : "creating client")
-            : Column()
-      ],
+          _isLoading
+              ? LoadingIndicator(
+                  text: widget.isEditing ? "saving client" : "creating client")
+              : Column()
+        ],
+      ),
     );
   }
 
@@ -111,7 +124,7 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
         Padding(
           padding: EdgeInsets.only(top: 10.0),
         ),
-         ListTile(
+        ListTile(
           title: TextFormField(
             validator: (val) => val.isEmpty ? 'Please enter client name' : null,
             controller: nameController,
@@ -143,10 +156,14 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
   }
 
   void _create() {
-    setState(() {
-      _isLoading = true;
-    });
-    clientBlocs.create(createClient());
+    if (widget.isEditing) {
+      updateClient();
+    } else {
+      setState(() {
+        _isLoading = true;
+      });
+      clientBlocs.create(createClient());
+    }
   }
 
   Client getUpdatedUser() {
