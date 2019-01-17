@@ -18,7 +18,7 @@ class Receipt extends ModelBase {
       this.supplier,
       this.description = "",
       this.totalCost = 0,
-      this.picture = "",
+      this.picture = " ",
       this.purchaseDate});
 
   @override

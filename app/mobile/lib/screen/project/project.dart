@@ -52,6 +52,9 @@ class ProjectWidgetState extends State<ProjectWidget> {
   StreamSubscription outClientListener;
   StreamSubscription outStagesListener;
   StreamSubscription outReceiptsListener;
+  StreamSubscription outCreateListener;
+
+
 
   @override
   void initState() {
@@ -66,6 +69,10 @@ class ProjectWidgetState extends State<ProjectWidget> {
       _exitProjectScreen();
     });
     outProjectDeletedListener.onError(onDeleteError);
+
+    outCreateListener = projectBloc.outUpdatedItem
+        .listen((project) => onProjectReceived(project));
+
     outUserListener = userBloc.outItem.listen((user) {
       setState(() {
         project.foreman = user;
@@ -221,7 +228,9 @@ class ProjectWidgetState extends State<ProjectWidget> {
                 value: "Edit",
               ),
               PopupMenuItem<String>(child: Text("Remove"), value: "Remove"),
-            ]);
+              PopupMenuItem<String>(child: Text("Set Done"), value: "Set Done"),
+
+        ]);
   }
 
   void onItemClicked(String value, BuildContext context) {
@@ -231,6 +240,9 @@ class ProjectWidgetState extends State<ProjectWidget> {
         break;
       case "Remove":
         _removeProject();
+        break;
+      case "Set Done":
+        _setProjectDone();
     }
   }
 
@@ -275,7 +287,6 @@ class ProjectWidgetState extends State<ProjectWidget> {
                     },
                     child: Text("no")),
                 FlatButton(
-
                     onPressed: () {
                       Navigator.pop(context);
                       remove();
@@ -301,6 +312,7 @@ class ProjectWidgetState extends State<ProjectWidget> {
     outClientListener.cancel();
     outStagesListener.cancel();
     outReceiptsListener.cancel();
+    outCreateListener.cancel();
     super.dispose();
   }
 
@@ -371,4 +383,20 @@ class ProjectWidgetState extends State<ProjectWidget> {
           );
         });
   }
+
+  void _setProjectDone() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    project.status = "done";
+    projectBloc.update(project, project.id);
+  }
+
+  void onProjectReceived(Project project) {
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
 }

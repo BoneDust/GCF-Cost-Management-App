@@ -9,7 +9,7 @@ class FilterTool{
     if (projectFilter.active)
       projects = projects.where((project) => project.status == "active").toList();
     if (projectFilter.done)
-      projects = projects.where((project) => project.status == "completed").toList();
+      projects = projects.where((project) => project.status == "done").toList();
     return projects;
   }
 

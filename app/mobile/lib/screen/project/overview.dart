@@ -1,4 +1,5 @@
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/model/receipt.dart';
 import 'package:flutter/material.dart';
 
 class FinancialOverviewCard extends StatelessWidget {
@@ -16,12 +17,20 @@ class _FinancialOverviewCard extends StatelessWidget {
   final Project project;
 
   _FinancialOverviewCard(this.project);
+  int totalExpenditure = 0;
 
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
 
-    return Column(
+    if (project.receipts == null){
+      for (Receipt receipt in project.receipts ) {
+        totalExpenditure += receipt.totalCost.toInt();
+      }
+    }
+
+
+      return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
@@ -68,11 +77,11 @@ class _FinancialOverviewCard extends StatelessWidget {
                   semanticsLabel: "sdfsd",
                   semanticsValue: "fsfsd",
                   backgroundColor: themeData.primaryTextTheme.display1.color,
-                  value: ((project.expenditure /project.estimatedCost) * 100) /100 ,
+                  value: ((totalExpenditure /project.estimatedCost) * 100) /100 ,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                 ),
               ),
-              Center(child: Text("project is within budget"))
+              Center(child: Text(totalExpenditure < project.estimatedCost ? "project is within budget" : "project over budget"))
             ],
           ),
         )
