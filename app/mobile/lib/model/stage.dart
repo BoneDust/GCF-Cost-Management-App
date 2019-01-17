@@ -19,7 +19,7 @@ class Stage extends ModelBase {
       this.name = "",
       this.description = "",
       this.status = "",
-      this.beforePicture = "",
+      this.beforePicture = " ",
       this.afterPicture = " ",
       this.startDate,
       this.estimatedDaysDuration});

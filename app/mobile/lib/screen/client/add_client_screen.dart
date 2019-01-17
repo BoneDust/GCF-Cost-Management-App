@@ -65,7 +65,7 @@ class _AddEditClientScreenState extends State<AddEditClientScreen> {
                         shape: CircleBorder(),
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            _create;
+                            _create();
                           } else
                             setState(() {
                               _autoValidate = true;

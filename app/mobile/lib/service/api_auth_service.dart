@@ -15,13 +15,13 @@ class AuthApiService {
     User user;
 
     String _url =
-        "https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/users/login";
+       AppData.baseUrl +  "users/login";
 
     Map<String, String> headers = Map();
 //    headers.putIfAbsent("email", () => "shheu");
 //    headers.putIfAbsent("password", () => "dfgsdfsd");
-    headers.putIfAbsent("email", () => "admin@user.com");
-    headers.putIfAbsent("password", () => "asdfeqewf353539999**-");
+    headers.putIfAbsent("email", () => "admin@gcfprojects.co.za");
+    headers.putIfAbsent("password", () => "admin");
     try {
       await client
           .post(Uri.parse(_url), headers: headers)

@@ -221,6 +221,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
         }
       },
       autovalidate: _autoValidate,
+      initialValue: widget.isEditing ? _sizeValue.toInt() : null,
       onSaved: (value) {},
       builder: (
         FormFieldState<int> state,
@@ -276,7 +277,9 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
           return "select foreman";
         }
       },
+
       autovalidate: _autoValidate,
+      initialValue: widget.isEditing ? widget.project.foreman : null,
       onSaved: (value) {},
       builder: (
         FormFieldState<User> state,
@@ -327,6 +330,7 @@ class _AddEditProjectScreenState extends State<AddEditProjectScreen> {
           return "select client";
         }
       },
+      initialValue: widget.isEditing ? widget.project.client  : null,
       autovalidate: _autoValidate,
       onSaved: (value) {},
       builder: (

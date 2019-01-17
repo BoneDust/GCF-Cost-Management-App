@@ -27,6 +27,9 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
     List<Activity> activities = userContainerState.activities;
     ThemeData themeData = Theme.of(context);
 
+    activities.sort((a, b) => b.creationDate.millisecondsSinceEpoch
+        .compareTo(a.creationDate.millisecondsSinceEpoch));
+
     return Card(
       elevation: 5,
       child: Column(

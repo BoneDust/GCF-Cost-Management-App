@@ -106,6 +106,11 @@ class MenuScreenState extends State<MenuScreen> {
 
   handleError(error) {
     Navigator.pop(context);
+    JsonFileUtil.removeFile(fileName: "auth_token");
+    JsonFileUtil.removeFile(fileName: "user");
+    User user = AppDataContainer.of(context).user;
+    JsonFileUtil.deleteFolder(username : user.name);
+    AppData.user = null;
 
     setState(() {
       _isLoading = false;

@@ -123,43 +123,34 @@ class _AppState extends State<_App> {
   }
 
   Widget _buildMaterialApp(Widget home) {
-    Color textIconColor =  dataContainerState.brightness == Brightness.light ? AppColors.lightTextIconsColor : AppColors.darkTextIconColor;
+    Color textIconColor = dataContainerState.brightness == Brightness.light
+        ? AppColors.lightTextIconsColor
+        : AppColors.darkTextIconColor;
     return MaterialApp(
       title: Details.COMPANY_TITLE,
       routes: routes,
       theme: ThemeData(
         primaryColorBrightness: dataContainerState.brightness,
         accentColorBrightness: dataContainerState.brightness,
-
         brightness: dataContainerState.brightness,
-
         fontFamily: 'OpenSans',
-
         primaryColorDark: AppColors.darkPrimaryColor,
         primaryColorLight: AppColors.lightPrimaryColor,
         primaryColor: dataContainerState.brightness == Brightness.light
             ? AppColors.lightPrimaryColor
             : AppColors.darkPrimaryColor,
         accentColor: AppColors.accentColor,
-
         primaryTextTheme: TextTheme(
             title: TextStyle(color: textIconColor),
-            subhead: TextStyle(color:textIconColor),
+            subhead: TextStyle(color: textIconColor),
             body1: TextStyle(color: textIconColor),
-          display1: TextStyle(color: textIconColor)
-        ),
-
-        iconTheme: IconThemeData(
-          color:  textIconColor
-        ),
-
+            display1: TextStyle(color: textIconColor)),
+        iconTheme: IconThemeData(color: textIconColor),
         accentIconTheme: IconThemeData(color: textIconColor),
-
         buttonTheme: ButtonThemeData(
-          highlightColor: textIconColor ,
-
+          highlightColor: textIconColor,
         ),
-        primaryIconTheme: IconThemeData(color:textIconColor ),
+        primaryIconTheme: IconThemeData(color: textIconColor),
         textTheme: TextTheme(
           headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),

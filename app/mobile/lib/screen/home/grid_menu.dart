@@ -14,13 +14,16 @@ class SliverGridMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
+
     List<GridItemEntry> menuEntries = getMenuEntries(context);
+    print(queryData.size.width);
     return SliverGrid(
       gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200.0,
+        maxCrossAxisExtent: queryData.size.width < 700 ? queryData.size.width / 2 : queryData.size.width / 3 ,
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 10.0,
-        childAspectRatio: 2.0,
+        childAspectRatio: queryData.size.width < 700 ? 2.0 : 3.0,
       ),
       delegate:  SliverChildBuilderDelegate(
         (BuildContext context, int index) {
