@@ -22,7 +22,7 @@ class ReceiptScreen extends StatelessWidget {
               background: CachedNetworkImage(
                 imageUrl: receipt.picture,
                 placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
-                errorWidget:  Icon(Icons.error),
+                errorWidget:  Image.asset("assets/images.jpeg"),
                 fit: BoxFit.cover,
               ),
             ),
