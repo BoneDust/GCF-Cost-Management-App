@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cm_mobile/model/receipt.dart';
+import 'package:cm_mobile/widget/image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:path/path.dart';
@@ -19,11 +22,24 @@ class ReceiptScreen extends StatelessWidget {
             floating: true,
             expandedHeight: 200.0,
             flexibleSpace:   FlexibleSpaceBar(
-              background: CachedNetworkImage(
-                imageUrl: receipt.picture,
-                placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
-                errorWidget:  Image.asset("assets/images.jpeg"),
-                fit: BoxFit.cover,
+              background: receipt.picture != null && receipt.picture.trim().isNotEmpty ? CachedNetworkImage(
+              imageUrl: receipt.picture,
+              placeholder:  Text("loading picture...", style: TextStyle(color: themeData.primaryTextTheme.display1.color)),
+              errorWidget:  Image.asset("assets/images.jpeg"),
+              fit: BoxFit.cover,
+            ) :  GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ImageViewer(
+                            imageProvider: AssetImage("assets/images.jpeg"),
+                          )));
+                },
+                child: Image(
+                  image: Image.asset("assets/images.jpeg").image,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),

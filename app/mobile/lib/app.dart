@@ -127,6 +127,7 @@ class _AppState extends State<_App> {
         ? AppColors.lightTextIconsColor
         : AppColors.darkTextIconColor;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: Details.COMPANY_TITLE,
       routes: routes,
       theme: ThemeData(

@@ -20,8 +20,8 @@ class AuthApiService {
     Map<String, String> headers = Map();
 //    headers.putIfAbsent("email", () => "shheu");
 //    headers.putIfAbsent("password", () => "dfgsdfsd");
-    headers.putIfAbsent("email", () => "admin@gcfprojects.co.za");
-    headers.putIfAbsent("password", () => "admin");
+    headers.putIfAbsent("email", () => userLogin.username);
+    headers.putIfAbsent("password", () => userLogin.password);
     try {
       await client
           .post(Uri.parse(_url), headers: headers)

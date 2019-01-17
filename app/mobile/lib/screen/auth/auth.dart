@@ -111,7 +111,10 @@ class _AuthScreen extends State<AuthScreen> {
                               _isLoading = true;
                               appDataContainerState
                                   .setAuthState(AuthenticationState.loading());
-                              authBloc.authenticateUser(UserLogin());
+                              UserLogin userLogin = UserLogin();
+                              userLogin.password = _passwordController.text;
+                              userLogin.username = _usernameController.text;
+                              authBloc.authenticateUser(userLogin);
                             } else
                               setState(() {
                                 _autoValidate = true;
