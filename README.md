@@ -8,8 +8,9 @@ ___
 Android and iOS Cost Management Solution Client
 ___
 
-## [Continous Integration](./docs/ci/README.md)
-Continous integration and deployment process
+## [Documentation]
+[api](./app/node_api/README.md)
+[mobile app](./docs/api/README.md)
 ___
 
 ## Architecture

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the Stage.fromJson constructor from the Class Stage class from the stage library, for the Dart programming language.">
+  <title>Stage.fromJson constructor - Stage class - stage library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">cm_mobile</a></li>
+    <li><a href="model_stage/model_stage-library.html">stage</a></li>
+    <li><a href="model_stage/Stage-class.html">Stage</a></li>
+    <li class="self-crumb">Stage.fromJson constructor</li>
+  </ol>
+  <div class="self-name">Stage.fromJson</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5>Stage class</h5>
+    <ol>
+      <li class="section-title"><a href="model_stage/Stage-class.html#constructors">Constructors</a></li>
+      <li><a href="model_stage/Stage/Stage.html">Stage</a></li>
+      <li><a href="model_stage/Stage/Stage.fromJson.html">fromJson</a></li>
+    
+      <li class="section-title">
+        <a href="model_stage/Stage-class.html#instance-properties">Properties</a>
+      </li>
+      <li><a href="model_stage/Stage/afterPicture.html">afterPicture</a></li>
+      <li><a href="model_stage/Stage/beforePicture.html">beforePicture</a></li>
+      <li><a href="model_stage/Stage/description.html">description</a></li>
+      <li><a href="model_stage/Stage/estimatedDaysDuration.html">estimatedDaysDuration</a></li>
+      <li><a href="model_stage/Stage/hashCode.html">hashCode</a></li>
+      <li><a href="model_stage/Stage/id.html">id</a></li>
+      <li><a href="model_stage/Stage/name.html">name</a></li>
+      <li><a href="model_stage/Stage/projectId.html">projectId</a></li>
+      <li><a href="model_stage/Stage/startDate.html">startDate</a></li>
+      <li><a href="model_stage/Stage/status.html">status</a></li>
+      <li class="inherited"><a href="model_model_base/ModelBase/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title"><a href="model_stage/Stage-class.html#instance-methods">Methods</a></li>
+      <li><a href="model_stage/Stage/toJson.html">toJson</a></li>
+      <li class="inherited"><a href="model_model_base/ModelBase/noSuchMethod.html">noSuchMethod</a></li>
+      <li class="inherited"><a href="model_model_base/ModelBase/toString.html">toString</a></li>
+    
+      <li class="section-title"><a href="model_stage/Stage-class.html#operators">Operators</a></li>
+      <li><a href="model_stage/Stage/operator_equals.html">operator ==</a></li>
+    
+    
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-left-->
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+    <h1>Stage.fromJson constructor</h1>
+
+    <section class="multi-line-signature">
+      
+      <span class="name ">Stage.fromJson</span>(<wbr><span class="parameter" id="fromJson-param-json"><span class="type-annotation">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">json</span></span>)
+    </section>
+
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span> </h2>
+      <pre class="language-dart"><code class="language-dart">Stage.fromJson(Map&lt;String, dynamic&gt; json)
+    : id = json[&#39;id&#39;],
+      projectId = json[&#39;project_id&#39;],
+      name = json[&#39;stage_name&#39;],
+      description = json[&#39;description&#39;],
+      status = json[&#39;status&#39;],
+      beforePicture = json[&#39;before_pic_url&#39;],
+      afterPicture = json[&#39;after_pic_url&#39;],
+      estimatedDaysDuration = json[&#39;estimated_duration&#39;],
+      startDate = DateTime.fromMillisecondsSinceEpoch(json[&#39;start_date&#39;]);</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    cm_mobile 1.0.0+1
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>
