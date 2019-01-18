@@ -8,7 +8,9 @@ ___
 
 ## Run Application [detailed](https://flutter.io/docs/get-started/test-drive?tab=terminal)
 
-
 ``run android or ios simulator``  
 ``$ flutter run``
+___
+
+[Full code documentation](../docs/mobile/index.html)
 ___
