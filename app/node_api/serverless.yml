@@ -5,6 +5,7 @@ service: gcf-api # NOTE: update this with your service name
 # frameworkVersion: "=X.X.X"
 
 custom:
+  pictureBucket: 'gcf-pictures-${self:provider.stage}'
   userTableName: 'user-Table-${self:provider.stage}'
   clientTableName: 'client-Table-${self:provider.stage}'
   projectTableName: 'project-Table-${self:provider.stage}'
@@ -13,7 +14,7 @@ custom:
   stageTableName: 'stage-Table-${self:provider.stage}'
   tokenTableName: 'token-Table-${self:provider.stage}'
   trashTableName: 'trash-Table-${self:provider.stage}'
-  activityUrl: 'https://m2xilo8zvg.execute-api.us-east-1.amazonaws.com/dev/activities'
+  activityUrl: 'https://iggpamghta.execute-api.us-east-1.amazonaws.com/dev/activities'
 
 provider:
   name: aws
@@ -40,14 +41,14 @@ provider:
         - { "Fn::GetAtt": ["ActivitiesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["TokensDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["TrashDynamoDBTable", "Arn" ] }
-    - Effect : Allow
+    - Effect: Allow
       Action:
         - s3:*
       Resource:
-        - { "Fn::Join": ["", ["arn:aws:s3:::gcfpictures/*" ] ] }
+        - { "Fn::GetAtt": ["S3Bucket", "Arn" ]} 
   
   environment:
-    S3BUCKET : 'gcfpictures-${self:provider.stage}'
+    S3_PICTURE_BUCKET: ${self:custom.pictureBucket}
     USERS_TABLE: ${self:custom.userTableName}
     CLIENTS_TABLE: ${self:custom.clientTableName}
     PROJECTS_TABLE: ${self:custom.projectTableName}
@@ -254,6 +255,32 @@ functions:
 
 resources:
   Resources:
+
+
+
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.pictureBucket}
+       # AccessControl: PublicRead
+      
+        
+    S3BucketPolicy:
+      Type: 'AWS::S3::BucketPolicy'
+      DependsOn: S3Bucket
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:*'
+              Resource:  { "Fn::GetAtt": ["S3Bucket", "Arn" ] } #arn:aws:s3:::${self:custom.pictureBucket}*
+        Bucket:
+          Ref: S3Bucket
+
+
     UsersDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
