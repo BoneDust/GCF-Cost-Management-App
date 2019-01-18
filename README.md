@@ -8,7 +8,7 @@ ___
 Android and iOS Cost Management Solution Client
 ___
 
-## [Documentation]
+## Documentation
 [api](./app/node_api/README.md)
 [mobile app](./docs/api/README.md)
 ___
