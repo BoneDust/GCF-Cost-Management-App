@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="API docs for the navigateAndDisplayClient method from the ClientsScreenState class, for the Dart programming language.">
+  <title>navigateAndDisplayClient method - ClientsScreenState class - clients_screen library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">cm_mobile</a></li>
+    <li><a href="screen_client_clients_screen/screen_client_clients_screen-library.html">clients_screen</a></li>
+    <li><a href="screen_client_clients_screen/ClientsScreenState-class.html">ClientsScreenState</a></li>
+    <li class="self-crumb">navigateAndDisplayClient method</li>
+  </ol>
+  <div class="self-name">navigateAndDisplayClient</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <h5>ClientsScreenState class</h5>
+    <ol>
+      <li class="section-title"><a href="screen_client_clients_screen/ClientsScreenState-class.html#constructors">Constructors</a></li>
+      <li><a href="screen_client_clients_screen/ClientsScreenState/ClientsScreenState.html">ClientsScreenState</a></li>
+    
+      <li class="section-title">
+        <a href="screen_client_clients_screen/ClientsScreenState-class.html#instance-properties">Properties</a>
+      </li>
+      <li><a href="screen_client_clients_screen/ClientsScreenState/clientsBloc.html">clientsBloc</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/context.html">context</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/hashCode.html">hashCode</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/mounted.html">mounted</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/runtimeType.html">runtimeType</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/widget.html">widget</a></li>
+    
+      <li class="section-title"><a href="screen_client_clients_screen/ClientsScreenState-class.html#instance-methods">Methods</a></li>
+      <li><a href="screen_client_clients_screen/ClientsScreenState/build.html">build</a></li>
+      <li><a href="screen_client_clients_screen/ClientsScreenState/filterClients.html">filterClients</a></li>
+      <li><a href="screen_client_clients_screen/ClientsScreenState/initState.html">initState</a></li>
+      <li><a href="screen_client_clients_screen/ClientsScreenState/navigateAndDisplayClient.html">navigateAndDisplayClient</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/deactivate.html">deactivate</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/debugFillProperties.html">debugFillProperties</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/didChangeDependencies.html">didChangeDependencies</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/didUpdateWidget.html">didUpdateWidget</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/dispose.html">dispose</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/noSuchMethod.html">noSuchMethod</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/reassemble.html">reassemble</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/setState.html">setState</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/toDiagnosticsNode.html">toDiagnosticsNode</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/toString.html">toString</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/toStringShort.html">toStringShort</a></li>
+    
+      <li class="section-title inherited"><a href="screen_client_clients_screen/ClientsScreenState-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="screen_client_clients_screen/ClientsScreenState/operator_equals.html">operator ==</a></li>
+    
+    
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div class="col-xs-12 col-sm-9 col-md-8 main-content">
+    <h1>navigateAndDisplayClient method</h1>
+
+    <section class="multi-line-signature">
+      <span class="returntype">Future</span>
+      <span class="name ">navigateAndDisplayClient</span>
+(<wbr><span class="parameter" id="navigateAndDisplayClient-param-context"><span class="type-annotation">BuildContext</span> <span class="parameter-name">context</span>, </span> <span class="parameter" id="navigateAndDisplayClient-param-client"><span class="type-annotation"><a href="model_client/Client-class.html">Client</a></span> <span class="parameter-name">client</span></span>)
+      
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span> </h2>
+      <pre class="language-dart"><code class="language-dart">navigateAndDisplayClient(BuildContext context, Client client) async {
+  final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =&gt; ClientScreen(client : client)));
+
+  if (result is ModelStatus &amp;&amp; result.status != ModelStatusType.UNCHANGED) {
+    if (result.status == ModelStatusType.UPDATED) {
+      int index = _clients.indexOf(client);
+      setState(() {
+        _clients[index] = result.model;
+      });
+    } else {
+      _clients.remove(client);
+      filterClients(true);
+
+      _scaffoldKey.currentState.removeCurrentSnackBar();
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(&quot;client successfully deleted&quot;),
+          backgroundColor: Colors.green));
+    }
+  }
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    cm_mobile 1.0.0+1
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>
