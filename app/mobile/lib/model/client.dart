@@ -1,19 +1,28 @@
 import 'dart:core';
 
+import 'package:cm_mobile/model/model_base.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class Client {
+@JsonSerializable()
+class Client extends ModelBase {
   int id;
   String name;
-  Project projects;
   String contactPerson;
   String contactNumber;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Client && runtimeType == other.runtimeType && id == other.id;
+  Client({this.id, this.name, this.contactPerson, this.contactNumber});
 
-  @override
-  int get hashCode => id.hashCode;
+  Client.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        contactPerson = json['contact_person'].toString(),
+        contactNumber = json['contact_number'],
+        id = json['clientId'];
+
+  Map<String, dynamic> toJson() => {
+        'clientId': id,
+        'name': name,
+        'contact_person': contactPerson,
+        'contact_number': contactNumber,
+      };
 }

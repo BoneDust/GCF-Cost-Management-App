@@ -1,66 +1,86 @@
 import 'package:cm_mobile/enums/privilege_enum.dart';
-import 'package:cm_mobile/screen/receipt/receipts_list.dart';
-import 'package:cm_mobile/widget/user_provider.dart';
+import 'package:cm_mobile/screen/client/clients_screen.dart';
+import 'package:cm_mobile/screen/home/home.dart';
+import 'package:cm_mobile/screen/users/users_screen.dart';
+import 'package:cm_mobile/util/typicon_icons_icons.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class SliverGridMenu extends StatelessWidget {
-  List<GridItemEntry> menuEntries;
+
+  final HomeState parent;
+
+  const SliverGridMenu({Key key, @ required this.parent}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    menuEntries = getMenuEntries(context);
-    return SliverPadding(
-      padding: EdgeInsets.all(10.0),
-      sliver: SliverGrid(
-        gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200.0,
-          mainAxisSpacing: 10.0,
-          crossAxisSpacing: 10.0,
-          childAspectRatio: 2.0,
-        ),
-        delegate: new SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return new GridHomeMenuItem(menuEntries[index]);
-          },
-          childCount: menuEntries.length,
-        ),
+    MediaQueryData queryData = MediaQuery.of(context);
+
+    List<GridItemEntry> menuEntries = getMenuEntries(context);
+    print(queryData.size.width);
+    return SliverGrid(
+      gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: queryData.size.width < 700 ? queryData.size.width / 2 : queryData.size.width / 3 ,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
+        childAspectRatio: queryData.size.width < 700 ? 2.0 : 3.0,
+      ),
+      delegate:  SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return  GridHomeMenuItem(menuEntries[index]);
+        },
+        childCount: menuEntries.length,
       ),
     );
   }
 
   List<GridItemEntry> getMenuEntries(BuildContext context) {
-    UserContainerState userContainerState = UserContainer.of(context);
-    Privilege previlige = userContainerState.user.privileges;
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
+    Privilege privilege = userContainerState.user.privilege;
 
     TabController tabController = DefaultTabController.of(context);
+    List<GridItemEntry> entries = [];
 
-    List<GridItemEntry> entries = [
+    entries.addAll([
       GridItemEntry(
-          icon: Icons.assignment,
+          icon: Typicons.doc_add,
+          function: () {
+            parent.navigateAndDisplayReceipt();
+          },
+          title: "add receipt"),
+      GridItemEntry(
+          icon: Typicons.clipboard,
           function: () => tabController.animateTo(1),
-          title: "Projects"),
+          title: "projects"),
       GridItemEntry(
-          icon: Icons.receipt,
-          function: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ReceiptsList(
-                receipts: [],
-                appBarTitle: "Recent Receipts",
-              ))),
-          title: "Recent Receipts"),
-      GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
+          icon: Typicons.doc_text,
+          function: () => Navigator.of(context).pushNamed("/all_receipts"),
+          title: "receipts"),
+      // GridItemEntry(icon: Icons.note, function: () {}, title: "Notes"),
+    ]);
 
-    ];
-
-    if (previlige == Privilege.ADMIN)
+    if (privilege == Privilege.ADMIN)
       entries.addAll([
-        GridItemEntry(icon: Icons.people, function: () {}, title: "Users"),
         GridItemEntry(
-            icon: Icons.trending_up, function: () {}, title: "Statistics"),
+            icon: Typicons.users_outline,
+            function: () =>   Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => UsersScreen(title: "users",))),
+            title: "users"),
+        GridItemEntry(
+            icon: Typicons.vcard,
+            function: () =>   Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ClientsScreen(title: "clients" ))),
+            title: "clients"),
+        GridItemEntry(
+            icon: Typicons.chart_bar_outline,
+            function: () => tabController.animateTo(2),
+            title: "statistics"),
       ]);
 
     return entries;
   }
+
+
 }
 
 class GridItemEntry {
@@ -79,30 +99,30 @@ class GridHomeMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    ThemeData themeData = Theme.of(context);
+
+    return Card(
+      elevation: 10,
+      child: InkWell(
         onTap: menuItem.function,
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: Colors.blue),
-          height: 200,
-          width: 200,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  menuItem.icon,
-                  size: 40,
-                  color: Colors.white,
-                ),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                Text(
-                  menuItem.title,
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              menuItem.icon,
+              size: 30,
+              color: themeData.primaryTextTheme.display1.color,
             ),
-          ),
-        ));
+            Padding(padding: EdgeInsets.only(top: 10)),
+            Text(
+              menuItem.title,
+              style: TextStyle(
+                  fontWeight: FontWeight.w700, color: themeData.primaryTextTheme.display1.color),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

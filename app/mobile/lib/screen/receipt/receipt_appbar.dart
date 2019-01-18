@@ -27,15 +27,15 @@ class ReceiptAppBar extends StatelessWidget {
                 Container(
                   child: showGoBack
                       ? IconButton(
-                    icon: const Icon(Icons.chevron_left),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    padding: EdgeInsets.zero,
-                  )
+                          icon: const Icon(Icons.chevron_left),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          padding: EdgeInsets.zero,
+                        )
                       : Container(
-                    height: 50.0,
-                  ),
+                          height: 50.0,
+                        ),
                 ),
                 Expanded(
                   child: Text(

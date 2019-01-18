@@ -1,2 +1,2 @@
 export 'receipt.dart';
-export 'create_receipt.dart';
+export 'add_edit_receipt.dart';

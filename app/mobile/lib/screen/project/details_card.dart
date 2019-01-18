@@ -1,10 +1,14 @@
+import 'package:cm_mobile/enums/privilege_enum.dart';
 import 'package:cm_mobile/model/project.dart';
+import 'package:cm_mobile/model/user.dart';
+import 'package:cm_mobile/util/typicon_icons_icons.dart';
+import 'package:cm_mobile/widget/app_data_provider.dart';
 import 'package:flutter/material.dart';
 
-class DetailsCard extends StatelessWidget{
-  Project project;
+class ProjectDetailsCard extends StatelessWidget {
+  final Project project;
 
-  DetailsCard(this.project);
+  ProjectDetailsCard(this.project);
 
   @override
   Widget build(BuildContext context) {
@@ -12,71 +16,74 @@ class DetailsCard extends StatelessWidget{
   }
 }
 
-class _DetailsCardRoot  extends StatelessWidget{
-
-  Project project;
+class _DetailsCardRoot extends StatelessWidget {
+  final Project project;
 
   _DetailsCardRoot(this.project);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-        child:  Column(
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(top: 10.0, left: 10.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Details")
-                  ]),
-            ),
-            _DetailsCard(project),
-          ],
-        )
+    ThemeData themeData = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(padding: EdgeInsets.only(left: 10), child: Text("details", style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),),),
+        _DetailsCard(project)
+      ],
     );
   }
 }
 
 class _DetailsCard extends StatelessWidget {
-
-  final Project project ;
+  final Project project;
 
   _DetailsCard(this.project);
 
   @override
   Widget build(BuildContext context) {
+    AppDataContainerState userContainerState = AppDataContainer.of(context);
+    User user = userContainerState.user;
+
+    List<Widget> detailsList = [];
+    if (project.foreman != null){
+      if (user.privilege == Privilege.ADMIN)
+        detailsList.addAll([
+          ListTile(
+            title: Text(project.foreman.name + " " + project.foreman.surname),
+            subtitle: Text("Foreman"),
+            leading: Icon(Typicons.user_outline),
+          ),
+          Divider(
+            color: Colors.black54,
+          )
+        ]);
+    }
+
+    if (project.client != null){
+      detailsList.addAll([
+        ListTile(
+          title: Text(project.client.name),
+          subtitle: Text("company"),
+          leading: Icon(Typicons.vcard),
+        ),
+        Divider(
+          color: Colors.black54,
+        ),
+      ]);
+    }
+
+    detailsList.addAll([
+      ListTile(
+        title: Text(project.teamSize.toString()),
+        subtitle: Text("team size"),
+        leading: Icon(Typicons.users_outline),
+      ),
+      SizedBox(height: 20,)
+    ]);
 
     return Column(
-      children: <Widget>[
-        ListTile(
-          title: Text(project.name),
-          subtitle: Text("Name"),
-          leading: Icon(Icons.assignment),
-        ),
-        Divider(color: Colors.black54,),
-        ListTile(
-          title: Text(project.clientId.toString()),
-          subtitle: Text("Company"),
-          leading: Icon(Icons.business_center),
-        ),
-        Divider(color: Colors.black54,),
-        ListTile(
-          title: Text(project.startDate.toString()),
-          subtitle: Text("Start Date"),
-          leading: Icon(Icons.date_range),
-
-        ),
-        Divider(color: Colors.black54,),
-        ListTile(
-          title: Text(project.endDate.toIso8601String()),
-          subtitle: Text("End Date"),
-          leading: Icon(Icons.date_range),
-
-        )
-      ],
+      children: detailsList,
     );
   }
 }

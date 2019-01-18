@@ -1,7 +1,4 @@
-import 'dart:collection';
-
 import 'package:cm_mobile/model/receipt.dart';
-import 'package:cm_mobile/model/stage.dart';
 import 'package:cm_mobile/screen/receipt/receipt_tile.dart';
 import 'package:cm_mobile/screen/receipt/receipts_list.dart';
 import 'package:flutter/material.dart';
@@ -9,75 +6,77 @@ import 'package:flutter/material.dart';
 class ReceiptsWidget extends StatelessWidget {
   final List<Receipt> receipts;
 
-  ReceiptsWidget(this.receipts);
-
-
-  @override
-  Widget build(BuildContext context) {
-    return receipts == null || receipts.isEmpty
-        ? Column()
-        : _ReceiptsWidgetRoot(receipts);
-  }
-}
-
-class _ReceiptsWidgetRoot extends StatelessWidget {
-  final List<Receipt> receipts;
-
-  TextStyle baseTextStyle;
-  TextStyle headerStyle;
-  TextStyle subheadingStyle;
-
-  _ReceiptsWidgetRoot(this.receipts) {
-    baseTextStyle = const TextStyle();
-    headerStyle =
-        baseTextStyle.copyWith(fontSize: 18.0);
-    subheadingStyle = baseTextStyle.copyWith(
-      color: Colors.white,
-      fontSize: 12.0,);
-  }
+  ReceiptsWidget({this.receipts,});
 
   @override
   Widget build(BuildContext context) {
-   var topThreeReceipts = receipts.take(3).toList();
+    ThemeData themeData = Theme.of(context);
 
-    return Card(
-        shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-        child:  Column(
-          children: <Widget>[
-            GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                      ReceiptsList(receipts: receipts, appBarTitle: "Receipts",)
-                  ));
-                },
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        new Text("Uploaded Receipts", style: headerStyle),
-                        new Row(
-                          children: <Widget>[
-                            Text(receipts.length.toString(), style: headerStyle.copyWith(color: Colors.grey)),
-                            Icon(
-                              Icons.chevron_right,
-                              color: Colors.grey,
-                              size: 25.0,
-                            ),
-                          ],
-                        )
-                      ]),
-                )
-            ),
-            Column(
-              children: topThreeReceipts.map((receipt){
-                return ReceiptTile(receipt);
-              }).toList(),
-            )
-          ],
-        )
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text(
+            "receipts(" +
+                (receipts != null ? receipts.length.toString() : "0") +
+                ")",
+            style: TextStyle(color: themeData.primaryTextTheme.display1.color, fontSize: 30),
+          ),
+        ),
+        _buildReceiptList(context, receipts),
+      ],
+    );
+  }
+
+  _buildReceiptList(BuildContext context, List<Receipt> receipts) {
+    List<Widget> _children = [];
+    ThemeData themeData = Theme.of(context);
+
+    if (receipts != null) {
+      _children.addAll([
+        receipts.isEmpty
+            ? Center(
+                child: Text(
+                  "no receipts yet",
+                  style: TextStyle(fontSize: 20, color: themeData.primaryTextTheme.display1.color),
+                ),
+              )
+            : Column(
+                children: <Widget>[
+                  Column(
+                    children: receipts.take(3).map((receipt) {
+                      return ReceiptTile(receipt);
+                    }).toList(),
+                  )
+                ],
+              ),
+      ]);
+
+      if (receipts.length > 3)
+        _children.add(Center(
+          child: FlatButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ReceiptsList(
+                          receipts: receipts,
+                          appBarTitle: "Receipts",
+                        )));
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.keyboard_arrow_down),
+                  Text("more receipts")
+                ],
+              )),
+        ));
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: _children,
     );
   }
 }
-
