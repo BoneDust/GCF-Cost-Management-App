@@ -5,12 +5,16 @@ service: gcf-api # NOTE: update this with your service name
 # frameworkVersion: "=X.X.X"
 
 custom:
+  pictureBucket: 'gcf-pictures-${self:provider.stage}'
   userTableName: 'user-Table-${self:provider.stage}'
   clientTableName: 'client-Table-${self:provider.stage}'
   projectTableName: 'project-Table-${self:provider.stage}'
-  notificationTableName: 'notification-Table-${self:provider.stage}'
+  activityTableName: 'activity-Table-${self:provider.stage}'
   receiptTableName: 'receipt-Table-${self:provider.stage}'
   stageTableName: 'stage-Table-${self:provider.stage}'
+  tokenTableName: 'token-Table-${self:provider.stage}'
+  trashTableName: 'trash-Table-${self:provider.stage}'
+  activityUrl: 'https://iggpamghta.execute-api.us-east-1.amazonaws.com/dev/activities'
 
 provider:
   name: aws
@@ -34,19 +38,38 @@ provider:
         - { "Fn::GetAtt": ["ProjectsDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["StagesDynamoDBTable", "Arn" ] }
         - { "Fn::GetAtt": ["ReceiptsDynamoDBTable", "Arn" ] }
-        - { "Fn::GetAtt": ["NotificationsDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["ActivitiesDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["TokensDynamoDBTable", "Arn" ] }
+        - { "Fn::GetAtt": ["TrashDynamoDBTable", "Arn" ] }
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource:
+        - { "Fn::GetAtt": ["S3Bucket", "Arn" ]} 
   
   environment:
+    S3_PICTURE_BUCKET: ${self:custom.pictureBucket}
     USERS_TABLE: ${self:custom.userTableName}
     CLIENTS_TABLE: ${self:custom.clientTableName}
     PROJECTS_TABLE: ${self:custom.projectTableName}
-    NOTIFICATIONS_TABLE: ${self:custom.notificationTableName}
+    ACTIVITIES_TABLE: ${self:custom.activityTableName}
     RECEIPTS_TABLE: ${self:custom.receiptTableName}
     STAGES_TABLE: ${self:custom.stageTableName}
-
+    TOKENS_TABLE: ${self:custom.tokenTableName}
+    TRASH_TABLE: ${self:custom.trashTableName}
+    ACTIVITY_URL: ${self:custom.activityUrl}
 
 
 functions:
+
+  picturesFunction:
+    handler: picture-handler/handler.handler
+    events:
+      - http:
+          path: pictures
+          method: post
+          cors: true
+
   usersFunction:
     handler: user-handler/handler.handler
     events:
@@ -56,7 +79,7 @@ functions:
           cors: true
 
       - http:
-          path: users/{userid}
+          path: users/{userId}
           method: get
           cors: true
 
@@ -65,6 +88,11 @@ functions:
           method: post
           cors: true
           
+      - http:
+          path: users/logout 
+          method: post
+          cors: true
+      
       - http:
           path: users
           method: post
@@ -84,12 +112,12 @@ functions:
     handler: stage-handler/handler.handler
     events:
       - http:
-          path: stages
+          path: stages/stagesByProject/{project_id}
           method: get
           cors: true
 
       - http:
-          path: stages/{stageid}
+          path: stages/{stageId}
           method: get
           cors: true
           
@@ -99,15 +127,15 @@ functions:
           cors: true
       
       - http:
-          path: stages/{stageid}
+          path: stages/{stageId}
           method: put
           cors: true
       
       - http:
-          path: stages/{stageid}
+          path: stages/{stageId}
           method: delete
           cors: true
-        
+
   receiptsFunction:
     handler: receipt-handler/handler.handler
     events:
@@ -115,9 +143,18 @@ functions:
           path: receipts
           method: get
           cors: true
+      - http:
+          path: receipts/receiptsByUser/{user_id}
+          method: get
+          cors: true
 
       - http:
-          path: receipts/{receiptid}
+          path: receipts/receiptsByProject/{project_id}
+          method: get
+          cors: true
+
+      - http:
+          path: receipts/{receiptId}
           method: get
           cors: true
           
@@ -127,17 +164,123 @@ functions:
           cors: true
       
       - http:
-          path: stages/{stageid}
+          path: receipts/{receiptId}
           method: put
           cors: true
       
       - http:
-          path: receipts/{receiptid}
+          path: receipts/{receiptId}
           method: delete
           cors: true
 
+  projectsFunction:
+    handler: project-handler/handler.handler
+    events:
+      - http:
+          path: projects
+          method: get
+          cors: true
+
+      - http:
+          path: projects/{projectId}
+          method: get
+          cors: true
+            
+      - http:
+          path: projects
+          method: post
+          cors: true
+      
+      - http:
+          path: projects/{projectId}
+          method: put
+          cors: true
+        
+      - http:
+          path: projects/{projectId}
+          method: delete
+          cors: true
+
+  clientsFunction:
+    handler: client-handler/handler.handler
+    events:
+      - http:
+          path: clients
+          method: get
+          cors: true
+
+      - http:
+          path: clients/{clientId}
+          method: get
+          cors: true
+            
+      - http:
+          path: clients
+          method: post
+          cors: true
+      
+      - http:
+          path: clients/{clientId}
+          method: put
+          cors: true
+        
+      - http:
+          path: clients/{clientId}
+          method: delete
+          cors: true
+
+  activitiesFunction:
+    handler: activity-handler/handler.handler
+    events:
+      - http:
+          path: activities/activitiesByProject/{project_id}
+          method: get
+          cors: true
+
+      - http:
+          path: activities/{activityId}
+          method: get
+          cors: true
+          
+      - http:
+          path: activities
+          method: get
+          cors: true
+
+      - http:
+          path: activities
+          method: post
+          cors: true
+
+
 resources:
   Resources:
+
+
+
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.pictureBucket}
+       # AccessControl: PublicRead
+      
+        
+    S3BucketPolicy:
+      Type: 'AWS::S3::BucketPolicy'
+      DependsOn: S3Bucket
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:*'
+              Resource:  { "Fn::GetAtt": ["S3Bucket", "Arn" ] } #arn:aws:s3:::${self:custom.pictureBucket}*
+        Bucket:
+          Ref: S3Bucket
+
+
     UsersDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
@@ -222,7 +365,7 @@ resources:
           WriteCapacityUnits: 2
         TableName: ${self:custom.receiptTableName}
 
-    ProjetsDynamoDBTable:
+    ProjectsDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
@@ -238,18 +381,51 @@ resources:
           WriteCapacityUnits: 2
         TableName: ${self:custom.projectTableName}
 
-    NotificationsDynamoDBTable:
-        Type: 'AWS::DynamoDB::Table'
-        Properties:
-          AttributeDefinitions:
-            -
-              AttributeName: notificationId
-              AttributeType: N
-          KeySchema:
-            -
-              AttributeName: notificationId
-              KeyType: HASH
-          ProvisionedThroughput:
-            ReadCapacityUnits: 2
-            WriteCapacityUnits: 2
-          TableName: ${self:custom.notificationTableName}
+    ActivitiesDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: activityId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: activityId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
+        TableName: ${self:custom.activityTableName}
+
+    TokensDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: token
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: token
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tokenTableName}
+
+    TrashDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: trashId
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: trashId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
+        TableName: ${self:custom.trashTableName}
+

@@ -1,224 +1,247 @@
-const express = require('express');
-const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
-const uuid = require('uuid');//will be used to create the jwt token boon
-const AWS = require('aws-sdk');
-const app = express();
+const express = require('express')
+const serverless = require('serverless-http')
+const bodyParser = require('body-parser')
+const AWS = require('aws-sdk')
+const verification = require('./../verification')
+const activityLogger = require('./../activity_logger')
+const app = express()
 
-const STAGES_TABLE = process.env.STAGES_TABLE;
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-var stageCount = 0;
+const STAGES_TABLE = process.env.STAGES_TABLE
+const dynamoDb = new AWS.DynamoDB.DocumentClient()
+var stageCount = 0
 
-app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
+app.use(bodyParser.json()) // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 
-//endpoint function that returns all stages
-app.get('/stages', (req, res) => {
-    const params = {
-        TableName: STAGES_TABLE,
-    };
+//endpoint function that returns all stages by project id
+app.get('/stages/stagesByProject/:project_id', (req, res) => {
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                if (isNaN(req.params.project_id) === false) {
+                    const params = {
+                        TableName: STAGES_TABLE,
+                        FilterExpression: "project_id = :project_id",
+                        ExpressionAttributeValues: {
+                            ":project_id": parseInt(req.params.project_id)
+                        }
+                    }
 
-    // fetch all stages from the database might change later due to pagination
-    dynamoDb.scan(params, (error, result) => {
-        if (error) {
-            const errorStatusCode = error.statusCode || 503;
-            const response = {
-                error: error.message,
-            };
-            res.status(errorStatusCode).json(response);
-            return;
-        }
-        const response = {
-            stage: result.Items,
-            message: "A list  of all stages",
-        };
-        res.json(response);
-    });
-
-});
+                    dynamoDb.scan(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else
+                            res.status(200).json({ stages: result.Items, size: result.Count || 0 })
+                    })
+                }
+                else
+                    res.status(400).json({ error: "Project id provided provided is not a number" })
+            }
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
 
 //endpoint function that returns a stage by stageID
 app.get('/stages/:stageId', (req, res) => {
-    if (isNaN(req.params.stageId) === false) {
-        const params = {
-            TableName: STAGES_TABLE,
-            Key: {
-                stageId: parseInt(req.params.stageId)
-            },
-        };
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                if (!isNaN(req.params.stageId)) {
+                    const params = {
+                        TableName: STAGES_TABLE,
+                        Key: {
+                            stageId: parseInt(req.params.stageId)
+                        }
+                    }
 
-        dynamoDb.get(params, (error, result) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-                return;
+                    dynamoDb.get(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else if (result.Item)
+                            res.status(200).json({ stage: result.Item, size: 1 });
+                        else
+                            res.status(404).response({ error: "Stage with id " + req.params.stageId + " not found" })
+                    })
+                }
+                else
+                    res.status(400).json({ error: "Stage id provided is not a number" })
             }
-            if (result.Count > 0) {
-                const stage = result.Item;
-                const responseStatusCode = 200;
-                const response = {
-                    stage: stage,
-                    message: "Stage retrieved successfully",
-                };
-                res.status(responseStatusCode).json(response);
-                return;
-            }
-        });
-    }
-    const errorStatusCode = 404;
-    const response = {
-        error: "StageId " + req.params.stageId + " not found",
-    };
-    res.status(errorStatusCode).json(response);
-});
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
 
 //endpoint function that create a new stage
 app.post('/stages', (req, res) => {
-    const stage = req.body;
-    if (stage.project_id && stage.stage_name && stage.description && stage.status && stage.before_pic_url && stage.start_date && estimated_duration) {
-        const params = {
-            TableName: STAGES_TABLE,
-            Item: {
-                stageId: stageCount + 1,
-                project_id: stage.project_id,
-                stage_name: stage.stage_name,
-                description: stage.description,
-                status: stage.status,
-                before_pict_url: stage.before_pict_url,
-                after_pic_url: "",
-                start_date: stage.start_date,
-                end_date: "",
-                estimated_duration: stage.estimated_duration,
-            },
-        };
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                const stage = req.body
+                if (stage.project_id !== undefined && !isNaN(stage.project_id) &&
+                    stage.stage_name !== undefined && stage.description !== undefined &&
+                    stage.status !== undefined &&
+                    stage.start_date !== undefined && !isNaN(stage.start_date) &&
+                    stage.estimated_duration !== undefined) {
 
-        dynamoDb.put(params, (error) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-                return;
+                    var params = {
+                        TableName: STAGES_TABLE,
+                        Item: {
+                            //might meed to add the other missimg attributes as mulls because updateItem might mulfumctiom
+                            stageId: stageCount + 1,
+                            project_id: parseInt(stage.project_id),
+                            stage_name: stage.stage_name,
+                            description: stage.description,
+                            status: stage.status,
+                            start_date: parseInt(stage.start_date),
+                            estimated_duration: stage.estimated_duration
+                        }
+                    }
+
+                    if (stage.before_pic_url !== undefined)
+                        params.Item.before_pic_url = stage.before_pic_url
+
+                    dynamoDb.put(params, (error) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else {
+                            stageCount = stageCount + 1
+
+                            activityLogger.logActivity(parseInt(stage.project_id), activityLogger.activityType.CREATE_STAGE, req.headers.token, stageCount)
+                                .then(() => res.status(201).json({ message: "Stage successfully created", stage: params.Item }))
+                                .catch(error => { res.status(201).json({ message: "Stage successfully created", stage: params.Item, activity_error: error.message }) })
+                        }
+                    })
+                }
+                else {
+                    const message = isNaN(stage.project_id) ? "project_id " + stage.project_id + " is not a number" : "Incomplete stage supplied. Supply project_id, stage_name, descriptiom, status,  before_pic_url, start_date and estimated_duration"
+                    res.status(400).json({ error: message })
+                }
             }
-            const responseStatusCode = 201;
-            const response = {
-                stage: stage,
-                message: "Stage successfully created",
-            };
-            StageCount = StageCount + 1;
-            res.status(responseStatusCode).json(response);
-        });
-    }
-    else {
-        const errorStatusCode = 400;
-        const response = {
-            error: "Incomplete stage supplied. Supply poject_id, stage_name, descriptiom, status,  before_pic_url, start_date and estimated_duration",
-        }
-        res.status(errorStatusCode).json(response);
-    }
-});
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
+
 
 //endpoint function that updates  a stage by stageId
 app.put('/stages/:stageId', (req, res) => {
-    const stage = req.body;
-    if (isNaN(req.params.stageId) === false && stage.project_id && stage.stage_name && stage.description && stage.status && stage.before_pict_url && stage.after_pic_url) {
-        const params = {
-            TableName: STAGES_TABLE,
-            Key: {
-                stageId: parseInt(req.params.stageId),
-            },
-            ExpressionAttributeValues: {
-                ":project_id": stage.project_id,
-                ":stage_name": stage.stage_name,
-                ":description": stage.description,
-                ":status": stage.status,
-                ":before_pict_url": stage.before_pict_url,
-                ":after_pic_url": stage.after_pic_url,
-                ":start_date": stage.start_date,
-                ":end_date": stage.end_date,
-                ":estimated_duration": stage.estimated_duration,
-            },
-            UpdateExpression: "SET project_id = :project_id, stage_name = :stage_name, description = :description, status = :status, before_pict_url = :before_pict_url, after_pic_url = after_pic_url, start_date = :start_date, end_date = :end_date, estimated_duration = :estimated_duration",
-        };
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                const stage = req.body
+                if (!isNaN(req.params.stageId) && stage.project_id !== undefined && !isNaN(stage.project_id)) {
 
-        dynamoDb.update(params, (error, result) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
+                    var params = {
+                        TableName: STAGES_TABLE,
+                        Key: {
+                            stageId: parseInt(req.params.stageId)
+                        },
+                        ExpressionAttributeNames: { "#status": "status" },
+                        ExpressionAttributeValues: {
+                            ":project_id": parseInt(stage.project_id)
+                        },
+                        UpdateExpression: "SET project_id = :project_id",
+                        ReturnValues: "ALL_NEW"
+                    }
+
+                    if (stage.stage_name !== undefined) {
+                        params.ExpressionAttributeValues[":stage_name"] = stage.stage_name
+                        params.UpdateExpression = params.UpdateExpression + ", stage_name = :stage_name"
+                    }
+                    if (stage.description !== undefined) {
+                        params.ExpressionAttributeValues[":description"] = stage.description
+                        params.UpdateExpression = params.UpdateExpression + ",  description = :description"
+                    }
+                    if (stage.status !== undefined) {
+                        params.ExpressionAttributeValues[":status"] = stage.status
+                        params.UpdateExpression = params.UpdateExpression + ", #status = :status"
+                    }
+                    if (stage.before_pic_url !== undefined) {
+                        params.ExpressionAttributeValues[":before_pic_url"] = stage.before_pic_url
+                        params.UpdateExpression = params.UpdateExpression + ",  before_pic_url = :before_pic_url"
+                    }
+                    if (stage.after_pic_url !== undefined) {
+                        params.ExpressionAttributeValues[":after_pic_url"] = stage.after_pic_url
+                        params.UpdateExpression = params.UpdateExpression + ", after_pic_url = :after_pic_url"
+                    }
+                    if (stage.start_date !== undefined && !isNaN(stage.start_date)) {
+                        params.ExpressionAttributeValues[":start_date"] = parseInt(stage.start_date)
+                        params.UpdateExpression = params.UpdateExpression + ", start_date = :start_date"
+                    }
+                    if (stage.end_date !== undefined && !isNaN(stage.end_date)) {
+                        params.ExpressionAttributeValues[":end_date"] = parseInt(stage.end_date)
+                        params.UpdateExpression = params.UpdateExpression + ", end_date = :end_date"
+                    }
+                    if (stage.estimated_duration !== undefined) {
+                        params.ExpressionAttributeValues[":estimated_duration"] = stage.estimated_duration
+                        params.UpdateExpression = params.UpdateExpression + ", estimated_duration = :estimated_duration"
+                    }
+
+                    dynamoDb.update(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message });
+                        else {
+                            activityLogger.logActivity(parseInt(stage.project_id), activityLogger.activityType.UPDATE_STAGE, req.headers.token, parseInt(req.params.stageId))
+                                .then(() => res.status(200).json({ message: "Stage successfully updated", stage: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "Stage successfully updated", stage: result.Attributes, activity_error: error.message }) })
+                        }
+                    })
+                }
+                else {
+                    const message = isNaN(req.params.stageId) ? "StageId " + req.params.stageId + " is not a number" : "Incomplete stage supplied."
+                    res.status(400).json({ error: message })
+                }
             }
-            if (result) {
-                const responseStatusCode = 200;
-                const response = {
-                    message: "Stage updated successfully.",
-                };
-                res.status(responseStatusCode).json(response);
-            }
-        });
-    }
-    else {
-        const errorStatusCode = isNaN(req.params.stageId) ? 404 : 400;
-        const message = isNaN(req.params.stageId) ? "StageId " + req.params.userId + " not found" : "Incomplete stage supplied.";
-        const response = {
-            error: message,
-        }
-        res.status(errorStatusCode).json(response);
-    }
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
 
-});
-
-//endpoint function that deletes a users by id
+//endpoint function that deletes a stage by id
 app.delete('/stages/:stageId', (req, res) => {
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
 
-    if (!isNaN(req.params.stageId)) {
-        const stageId = parseInt(req.params.stageId);
-        const params = {
-            TableName: USERS_TABLE,
-            Key: {
-                stageId: stageId,
-            },
-        }
+                if (!isNaN(req.params.stageId)) {
+                    const stageId = parseInt(req.params.stageId)
+                    const params = {
+                        TableName: STAGES_TABLE,
+                        Key: {
+                            stageId: stageId
+                        },
+                        ReturnValues: 'ALL_OLD'
+                    }
 
-        dynamoDb.delete(params, (error, result) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
+                    dynamoDb.delete(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message });
+                        else {
+                            activityLogger.logActivity(parseInt(result.Attributes.project_id), activityLogger.activityType.DELETE_STAGE, req.headers.token, parseInt(req.params.stageId))
+                                .then(() => res.status(200).json({ message: "Stage successfully deleted", stage: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "Stage successfully deleted", stage: result.Attributes, activity_error: error.message }) })
+                        }
+                    })
+                }
+                else
+                    res.status(400).json({ error: "StageId " + req.params.stageId + " is not a number" })
             }
-            if (result) {
-                const responseStatusCode = 200;
-                const response = {
-                    stage: result.Item,
-                    message: "Stage successfully deleted",
-                };
-                res.status(responseStatusCode).json(response);
-            }
-        });
-    }
-    else {
-        const errorStatusCode = 404;
-        const message = "StageId " + req.params.stageId + " not found";
-        const response = {
-            error: message,
-        }
-        res.status(errorStatusCode).json(response);
-    }
-});
-///
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
 
 // Handle in-valid route
 app.all('*', function (req, res) {
     const response = { data: null, message: 'Route not found!!' }
     res.status(400).send(response)
-});
+})
 
 // wrap express app instance with serverless http function
-module.exports.handler = serverless(app);
+module.exports.handler = serverless(app)

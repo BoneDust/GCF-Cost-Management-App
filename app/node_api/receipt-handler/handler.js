@@ -1,217 +1,293 @@
-const express = require('express');
-const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
-const uuid = require('uuid');//will be used to create the jwt token boon
-const AWS = require('aws-sdk');
-const app = express();
+const express = require('express')
+const serverless = require('serverless-http')
+const bodyParser = require('body-parser')
+const AWS = require('aws-sdk')
+const verification = require('./../verification')
+const activityLogger = require('./../activity_logger')
+const app = express()
 
-const RECEIPTS_TABLE = process.env.RECEIPTS_TABLE;
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-var receiptCount = 0;
+const RECEIPTS_TABLE = process.env.RECEIPTS_TABLE
+const PROJECTS_TABLE = process.env.PROJECTS_TABLE
+const dynamoDb = new AWS.DynamoDB.DocumentClient()
+var receiptCount = 0
 
-app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
+app.use(bodyParser.json()) // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })) // to support URL-encoded bodies
 
-//endpoint function that returns all reciepts
-app.get('/reciepts', (req, res) => {
-    const params = {
-        TableName: RECEIPTS_TABLE,
-    };
+app.get('/receipts', (req, res) => {
+    verification.isValidAdmin(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                const params = {
+                    TableName: RECEIPTS_TABLE,
+                }
 
-    // fetch all receipt from the database might change later due to pagination
-    dynamoDb.scan(params, (error, result) => {
-        if (error) {
-            const errorStatusCode = error.statusCode || 503;
-            const response = {
-                error: error.message,
-            };
-            res.status(errorStatusCode).json(response);
-            return;
-        }
-        const response = {
-            receipt: result.Items,
-            message: "A list  of all receipts",
-        };
-        res.json(response);
-    });
-});
+                dynamoDb.scan(params, (error, result) => {
+                    if (error)
+                        res.status(error.statusCode || 503).json({ error: error.message })
+                    else
+                        res.status(200).json({ receipts: result.Items, size: result.Items.length })
+                })
+            }
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+
+})
+
+
+//get receipts by userID
+app.get('/receipts/receiptsByUser/:user_id', (req, res) => {
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                if (!isNaN(req.params.user_id)) {
+                    const params = {
+                        TableName: PROJECTS_TABLE,
+                        FilterExpression: "user_id = :user_id",
+                        ExpressionAttributeValues: {
+                            ":user_id": parseInt(req.params.user_id)
+                        }
+                    }
+
+                    dynamoDb.scan(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else {
+                            const projects = result.Items
+                            const params = {
+                                TableName: RECEIPTS_TABLE
+                            }
+
+                            dynamoDb.scan(params, (error, result) => {
+                                if (error)
+                                    res.status(error.statusCode || 503).json({ error: error.message })
+                                else {
+
+                                    var filteredReceipts = result.Items.filter((item) => {
+                                        var isFound = false
+                                        for (var project in projects) {
+                                            if (item.project_id === projects[project].projectId) {
+                                                isFound = true
+                                                break
+                                            }
+                                        }
+                                        return (isFound)
+                                    })
+                                }
+                                res.status(200).json({ receipts: filteredReceipts, size: filteredReceipts.length })
+                            })
+                        }
+                    })
+                }
+                else
+                    res.status(400).json({ error: "User id provided provided is not a number" })
+            }
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
+
+
+//endpoint function that returns all receipts by projectID
+app.get('/receipts/receiptsByProject/:project_id', (req, res) => {
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                if (!isNaN(req.params.project_id)) {
+                    const params = {
+                        TableName: RECEIPTS_TABLE,
+                        FilterExpression: "project_id = :project_id",
+                        ExpressionAttributeValues: {
+                            ":project_id": parseInt(req.params.project_id)
+                        }
+                    }
+
+                    dynamoDb.scan(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else
+                            res.status(200).json({ receipts: result.Items, size: result.Count || 0 })
+                    })
+                }
+                else
+                    res.status(400).json({ error: "Project id provided provided is not a number" })
+            }
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
 
 //endpoint function that returns a receipt by receiptID
 app.get('/receipts/:receiptId', (req, res) => {
-    if (isNaN(req.params.recieptId) === false) {
-        const params = {
-            TableName: RECEIPTS_TABLE,
-            Key: {
-                recieptId: parseInt(req.params.recieptId)
-            },
-        };
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                if (isNaN(req.params.receiptId) === false) {
+                    const params = {
+                        TableName: RECEIPTS_TABLE,
+                        Key: {
+                            receiptId: parseInt(req.params.receiptId)
+                        }
+                    }
 
-        dynamoDb.get(params, (error, result) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-                return;
+                    dynamoDb.get(params, (error, result) => {
+
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else if (result.Item)
+                            res.status(200).json({ receipt: result.Item, size: 1 })
+                        else
+                            res.status(404).json({ error: "Receipt with id " + req.params.receiptId + " not found" })
+                    })
+                }
+                else
+                    res.status(400).json({ error: "Receipt id provided is not a number" })
             }
-            if (result.Count > 0) {
-                const receipt = result.Item;
-                const responseStatusCode = 200;
-                const response = {
-                    receipt: receipt,
-                    message: "receipt retrieved successfully",
-                };
-                res.status(responseStatusCode).json(response);
-                return;
-            }
-        });
-    }
-    const errorStatusCode = 404;
-    const response = {
-        error: "RecieptId " + req.params.receiptId + " not found",
-    };
-    res.status(errorStatusCode).json(response);
-});
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
 
 //endpoint function that create a new receipt
 app.post('/receipts', (req, res) => {
-    const receipt = req.body;
-    if (receipt.project_id && receipt.supplier && receipt.description && receipt.total_cost && receipt.pic_url && receipt.purchase_date) {
-        const params = {
-            TableName: RECEIPTS_TABLE,
-            Item: {
-                recieptId: recieptCount + 1,
-                project_id: receipt.project_id,
-                supplier: receipt.supplier,
-                description: receipt.description,
-                total_cost: receipt.total_cost,
-                pic_url: receipt.pic_url,
-                purchase_date: receipt.purchase_date,
-            },
-        };
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                const receipt = req.body
+                if (receipt.project_id !== undefined && !isNaN(receipt.project_id) &&
+                    receipt.supplier !== undefined && receipt.description !== undefined &&
+                    receipt.total_cost !== undefined && receipt.pic_url !== undefined &&
+                    receipt.purchase_date !== undefined && !isNaN(receipt.purchase_date)) {
 
-        dynamoDb.put(params, (error) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-                return;
+                    const params = {
+                        TableName: RECEIPTS_TABLE,
+                        Item: {
+                            receiptId: receiptCount + 1,
+                            project_id: parseInt(receipt.project_id),
+                            supplier: receipt.supplier,
+                            description: receipt.description,
+                            total_cost: receipt.total_cost,
+                            pic_url: receipt.pic_url,
+                            purchase_date: parseInt(receipt.purchase_date)
+                        }
+                    }
+
+                    dynamoDb.put(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message })
+                        else {
+                            receiptCount = receiptCount + 1
+                            activityLogger.logActivity(parseInt(receipt.project_id), activityLogger.activityType.CREATE_RECEIPT, req.headers.token, receiptCount)
+                                .then(() => res.status(201).json({ message: "Receipt successfully created", receipt: params.Item }))
+                                .catch(error => { res.status(201).json({ message: "Receipt successfully created", receipt: params.Item, activity_error: error.message }) })
+                        }
+                    })
+                }
+                else {
+                    const message = isNaN(receipt.project_id) ? "project_id " + receipt.project_id + " is not a number" : "Incomplete receipt supplied. Supply supplier, description of purchase, total_cost, receipt_picture and purchase date"
+                    res.status(400).json({ error: message })
+                }
             }
-            const responseStatusCode = 201;
-            const response = {
-                receipt: receipt,
-                message: "receipt successfully created",
-            };
-            receiptCount = receiptCount + 1;
-            res.status(responseStatusCode).json(response);
-        });
-    }
-    else {
-        const errorStatusCode = 400;
-        const response = {
-            error: "Incomplete receipt supplied. Supply supplier_name, description of purchase, tota_cost, receipt_picture and purchase date",
-        }
-        res.status(errorStatusCode).json(response);
-    }
-});
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
 
 //endpoint function that updates  a receipt by receiptId
-app.put('/receipt/:receiptId', (req, res) => {
-    const receipt = req.body;
-    if (isNaN(req.params.receiptId) === false && receipt.project_id && receipt.supplier && receipt.description && receipt.total_cost && receipt.pic_url && receipt.purchase_date) {
-        const params = {
-            TableName: RECEIPTS_TABLE,
-            Key: {
-                receiptId: parseInt(req.params.receiptId),
-            },
-            ExpressionAttributeValues: {
-                ":project_id": receipt.project_id,
-                ":supplier": receipt.supplier,
-                ":description": receipt.description,
-                ":total_cost": receipt.total_cost,
-                ":pic_url": receipt.pic_url,
-                ":purchase_date": receipt.purchase_date,
-            },
-            UpdateExpression: "SET project_id = :project_id, supplier = :supplier, description = :description, total_cost = :total_cost, pic_url = :pic_url, purchase_date = :purchase_date",
-        };
+app.put('/receipts/:receiptId', (req, res) => {
+    verification.isValidUser(req.headers.token)
+        .then(isValid => {
+            if (isValid) {
+                const receipt = req.body;
+                if (!isNaN(req.params.receiptId) && receipt.project_id !== undefined && !isNaN(receipt.project_id) &&
+                    receipt.supplier !== undefined && receipt.description !== undefined &&
+                    receipt.total_cost !== undefined && receipt.pic_url !== undefined &&
+                    receipt.purchase_date !== undefined && !isNaN(receipt.purchase_date)) {
+                    const params = {
+                        TableName: RECEIPTS_TABLE,
+                        Key: {
+                            receiptId: parseInt(req.params.receiptId)
+                        },
+                        ExpressionAttributeValues: {
+                            ":project_id": parseInt(receipt.project_id),
+                            ":supplier": receipt.supplier,
+                            ":description": receipt.description,
+                            ":total_cost": receipt.total_cost,
+                            ":pic_url": receipt.pic_url,
+                            ":purchase_date": parseInt(receipt.purchase_date)
+                        },
+                        UpdateExpression: "SET project_id = :project_id, supplier = :supplier, description = :description, total_cost = :total_cost, pic_url = :pic_url, purchase_date = :purchase_date",
+                        ReturnValues: "ALL_NEW"
+                    }
 
-        dynamoDb.update(params, (error, result) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
-            }
-            if (result) {
-                const responseStatusCode = 200;
-                const response = {
-                    message: "receipt updated successfully.",
-                };
-                res.status(responseStatusCode).json(response);
-            }
-        });
-    }
-    else {
-        const errorStatusCode = isNaN(req.params.receiptId) ? 404 : 400;
-        const message = isNaN(req.params.recieptId) ? "recieptId " + req.params.receiptId + " not found" : "Incomplete reciept supplied.";
-        const response = {
-            error: message,
-        }
-        res.status(errorStatusCode).json(response);
-    }
+                    dynamoDb.update(params, (error, result) => {
+                        if (error)
+                            res.status(error.statusCode || 503).json({ error: error.message });
+                        else {
+                            activityLogger.logActivity(parseInt(receipt.project_id), activityLogger.activityType.UPDATE_RECEIPT, req.headers.token, parseInt(req.params.receiptId))
+                                .then(() => res.status(200).json({ message: "Receipt successfully updated", receipt: result.Attributes }))
+                                .catch(error => { res.status(200).json({ message: "Receipt successfully updated", receipt: result.Attributes, activity_error: error.message }) })
+                        }
+                    })
+                }
+                else {
 
-});
+                    const message = isNaN(req.params.receiptId) ? "receiptId " + req.params.receiptId + " is not a number" : "Incomplete receipt supplied."
+                    res.status(400).json({ error: message })
+                }
+            }
+            else
+                res.status(401).json({ error: "User not authorised to make this request." })
+        })
+        .catch(error => { res.status(400).json({ error: error.message }) })
+})
 
 //endpoint function that deletes a receipt by id
 app.delete('/receipts/:receiptId', (req, res) => {
+    verification.isValidUser(req.headers.token).then(isValid => {
+        if (isValid) {
 
-    if (!isNaN(req.params.receiptId)) {
-        const receiptId = parseInt(req.params.receiptId);
-        const params = {
-            TableName: RECEIPTS_TABLE,
-            Key: {
-                receiptId: receiptId,
-            },
-        }
+            if (!isNaN(req.params.receiptId)) {
+                const params = {
+                    TableName: RECEIPTS_TABLE,
+                    Key: {
+                        receiptId: parseInt(req.params.receiptId)
+                    },
+                    ReturnValues: 'ALL_OLD'
+                }
 
-        dynamoDb.delete(params, (error, result) => {
-            if (error) {
-                const errorStatusCode = error.statusCode || 503;
-                const response = {
-                    error: error.message,
-                };
-                res.status(errorStatusCode).json(response);
+                dynamoDb.delete(params, (error, result) => {
+                    if (error)
+                        res.status(error.statusCode || 503).json({ error: error.message });
+                    else {
+                        activityLogger.logActivity(parseInt(result.Attributes.project_id), activityLogger.activityType.DELETE_RECEIPT, req.headers.token, parseInt(req.params.receiptId))
+                            .then(() => res.status(200).json({ message: "Receipt successfully deleted", receipt: result.Attributes }))
+                            .catch(error => { res.status(200).json({ message: "Receipt successfully deleted", receipt: result.Attributes, activity_error: error.message }) })
+                    }
+                })
             }
-            if (result) {
-                const responseStatusCode = 200;
-                const response = {
-                    receipt: result.Item,
-                    message: "Receipt was successfully deleted",
-                };
-                res.status(responseStatusCode).json(response);
-            }
-        });
-    }
-    else {
-        const errorStatusCode = 404;
-        const message = "RecieptId " + req.params.receiptId + " not found";
-        const response = {
-            error: message,
+            else
+                res.status(400).json({ error: "receiptId " + req.params.receiptId + " is not a number" })
         }
-        res.status(errorStatusCode).json(response);
-    }
-});
-///
+        else
+            res.status(401).json({
+                error: "User not authorised to make this request."
+            })
+    }).catch(error => { res.status(400).json({ error: error.message }) })
+})
+
 
 // Handle in-valid route
 app.all('*', function (req, res) {
     const response = { data: null, message: 'Route not found!!' }
     res.status(400).send(response)
-});
+})
 
 // wrap express app instance with serverless http function
 module.exports.handler = serverless(app);
