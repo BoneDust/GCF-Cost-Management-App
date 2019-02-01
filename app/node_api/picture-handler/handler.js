@@ -8,7 +8,6 @@ const verification = require('./../verification')
 const bucket = process.env.S3_PICTURE_BUCKET
 const app = express()
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
-const fs = require('fs');
 
 const s3 = new AWS.S3()
 
@@ -23,9 +22,7 @@ var upload = multer({
         acl: 'public-read',
         key: function (req, file, cb) {
             cb(null, new Date().toISOString() + '-' + file.originalname)
-            //cb(null, file.originalname); //use Date.now() for unique file keys
-        },
-        contentType: 'application/octet-stream'
+        }
     })
 });
 
