@@ -9,7 +9,7 @@
     "author": "WeAreKnown_",
     "license": "ISC",
     "dependencies": {
-        "aws-sdk": "^2.359.0",
+        "aws-sdk": "^2.814.0",
         "axios": "^0.18.0",
         "body-parser": "^1.18.3",
         "express": "^4.16.4",
